@@ -199,6 +199,11 @@ struct LoginView: View {
                             // Uložíme informace o přihlášení do UserDefaults
                             UserDefaults.standard.set(true, forKey: "isLoggedIn")
                             
+                            // Uložíme také profilový obrázek, pokud existuje
+                            if let profileImage = userInfo.profileImage {
+                                UserDefaults.standard.set(profileImage, forKey: "userProfileImage")
+                            }
+                            
                             showSuccessToast("Přihlášení proběhlo úspěšně")
                             
                             DispatchQueue.main.asyncAfter(deadline: .now() + 1) {

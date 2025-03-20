@@ -40,14 +40,16 @@ struct ContentView: View {
                 .blur(radius: 0.5)
             
             VStack {
-                // Horní panel - nyní použijeme vlastní komponentu
+                // Horní panel - nyní použijeme vlastní komponentu s profilovým obrázkem
                 TopMenuBar(
                     onAddTap: {
                         // Akce pro přidání
                     },
                     onProfileTap: {
                         // Akce pro profil
-                    }
+                    },
+                    isLoggedIn: isLoggedIn,
+                    profileImage: UserDefaults.standard.string(forKey: "userProfileImage")
                 )
                 
                 Spacer()
