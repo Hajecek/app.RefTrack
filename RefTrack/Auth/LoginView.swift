@@ -27,6 +27,7 @@ struct LoginView: View {
                     .foregroundColor(.white)
                     .keyboardType(.emailAddress)
                     .textInputAutocapitalization(.never)
+                    .textContentType(.emailAddress)
             }
             
             // Heslo field
@@ -40,6 +41,7 @@ struct LoginView: View {
                     .background(Color.white.opacity(0.1))
                     .cornerRadius(10)
                     .foregroundColor(.white)
+                    .textContentType(.password)
             }
             
             // Přihlásit se tlačítko
@@ -95,5 +97,6 @@ struct LoginView: View {
             )
             .ignoresSafeArea()
         )
+        .ignoresSafeArea(.keyboard)
     }
 } 
