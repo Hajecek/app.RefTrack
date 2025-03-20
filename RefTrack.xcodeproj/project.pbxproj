@@ -6,6 +6,10 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		07A077022D8C69D400A8FA05 /* WatchRefTrack Watch App.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 07A076DF2D8C69D300A8FA05 /* WatchRefTrack Watch App.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		07A0766C2D8C613900A8FA05 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -21,12 +25,50 @@
 			remoteGlobalIDString = 07A0765A2D8C613900A8FA05;
 			remoteInfo = RefTrack;
 		};
+		07A076EF2D8C69D400A8FA05 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 07A076532D8C613900A8FA05 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 07A076DE2D8C69D300A8FA05;
+			remoteInfo = "WatchRefTrack Watch App";
+		};
+		07A076F92D8C69D400A8FA05 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 07A076532D8C613900A8FA05 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 07A076DE2D8C69D300A8FA05;
+			remoteInfo = "WatchRefTrack Watch App";
+		};
+		07A077002D8C69D400A8FA05 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 07A076532D8C613900A8FA05 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 07A076DE2D8C69D300A8FA05;
+			remoteInfo = "WatchRefTrack Watch App";
+		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		07A077062D8C69D400A8FA05 /* Embed Watch Content */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "$(CONTENTS_FOLDER_PATH)/Watch";
+			dstSubfolderSpec = 16;
+			files = (
+				07A077022D8C69D400A8FA05 /* WatchRefTrack Watch App.app in Embed Watch Content */,
+			);
+			name = "Embed Watch Content";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		07A0765B2D8C613900A8FA05 /* RefTrack.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RefTrack.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		07A0766B2D8C613900A8FA05 /* RefTrackTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RefTrackTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		07A076752D8C613900A8FA05 /* RefTrackUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RefTrackUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		07A076DF2D8C69D300A8FA05 /* WatchRefTrack Watch App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "WatchRefTrack Watch App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		07A076EE2D8C69D400A8FA05 /* WatchRefTrack Watch AppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "WatchRefTrack Watch AppTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		07A076F82D8C69D400A8FA05 /* WatchRefTrack Watch AppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "WatchRefTrack Watch AppUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -43,6 +85,21 @@
 		07A076782D8C613900A8FA05 /* RefTrackUITests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = RefTrackUITests;
+			sourceTree = "<group>";
+		};
+		07A076E02D8C69D300A8FA05 /* WatchRefTrack Watch App */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = "WatchRefTrack Watch App";
+			sourceTree = "<group>";
+		};
+		07A076F12D8C69D400A8FA05 /* WatchRefTrack Watch AppTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = "WatchRefTrack Watch AppTests";
+			sourceTree = "<group>";
+		};
+		07A076FB2D8C69D400A8FA05 /* WatchRefTrack Watch AppUITests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = "WatchRefTrack Watch AppUITests";
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -69,6 +126,27 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		07A076DC2D8C69D300A8FA05 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		07A076EB2D8C69D400A8FA05 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		07A076F52D8C69D400A8FA05 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -78,6 +156,9 @@
 				07A0765D2D8C613900A8FA05 /* RefTrack */,
 				07A0766E2D8C613900A8FA05 /* RefTrackTests */,
 				07A076782D8C613900A8FA05 /* RefTrackUITests */,
+				07A076E02D8C69D300A8FA05 /* WatchRefTrack Watch App */,
+				07A076F12D8C69D400A8FA05 /* WatchRefTrack Watch AppTests */,
+				07A076FB2D8C69D400A8FA05 /* WatchRefTrack Watch AppUITests */,
 				07A0765C2D8C613900A8FA05 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -88,6 +169,9 @@
 				07A0765B2D8C613900A8FA05 /* RefTrack.app */,
 				07A0766B2D8C613900A8FA05 /* RefTrackTests.xctest */,
 				07A076752D8C613900A8FA05 /* RefTrackUITests.xctest */,
+				07A076DF2D8C69D300A8FA05 /* WatchRefTrack Watch App.app */,
+				07A076EE2D8C69D400A8FA05 /* WatchRefTrack Watch AppTests.xctest */,
+				07A076F82D8C69D400A8FA05 /* WatchRefTrack Watch AppUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -102,10 +186,12 @@
 				07A076572D8C613900A8FA05 /* Sources */,
 				07A076582D8C613900A8FA05 /* Frameworks */,
 				07A076592D8C613900A8FA05 /* Resources */,
+				07A077062D8C69D400A8FA05 /* Embed Watch Content */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				07A077012D8C69D400A8FA05 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				07A0765D2D8C613900A8FA05 /* RefTrack */,
@@ -163,6 +249,74 @@
 			productReference = 07A076752D8C613900A8FA05 /* RefTrackUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
+		07A076DE2D8C69D300A8FA05 /* WatchRefTrack Watch App */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 07A077032D8C69D400A8FA05 /* Build configuration list for PBXNativeTarget "WatchRefTrack Watch App" */;
+			buildPhases = (
+				07A076DB2D8C69D300A8FA05 /* Sources */,
+				07A076DC2D8C69D300A8FA05 /* Frameworks */,
+				07A076DD2D8C69D300A8FA05 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				07A076E02D8C69D300A8FA05 /* WatchRefTrack Watch App */,
+			);
+			name = "WatchRefTrack Watch App";
+			packageProductDependencies = (
+			);
+			productName = "WatchRefTrack Watch App";
+			productReference = 07A076DF2D8C69D300A8FA05 /* WatchRefTrack Watch App.app */;
+			productType = "com.apple.product-type.application";
+		};
+		07A076ED2D8C69D400A8FA05 /* WatchRefTrack Watch AppTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 07A077072D8C69D400A8FA05 /* Build configuration list for PBXNativeTarget "WatchRefTrack Watch AppTests" */;
+			buildPhases = (
+				07A076EA2D8C69D400A8FA05 /* Sources */,
+				07A076EB2D8C69D400A8FA05 /* Frameworks */,
+				07A076EC2D8C69D400A8FA05 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				07A076F02D8C69D400A8FA05 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				07A076F12D8C69D400A8FA05 /* WatchRefTrack Watch AppTests */,
+			);
+			name = "WatchRefTrack Watch AppTests";
+			packageProductDependencies = (
+			);
+			productName = "WatchRefTrack Watch AppTests";
+			productReference = 07A076EE2D8C69D400A8FA05 /* WatchRefTrack Watch AppTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		07A076F72D8C69D400A8FA05 /* WatchRefTrack Watch AppUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 07A0770A2D8C69D400A8FA05 /* Build configuration list for PBXNativeTarget "WatchRefTrack Watch AppUITests" */;
+			buildPhases = (
+				07A076F42D8C69D400A8FA05 /* Sources */,
+				07A076F52D8C69D400A8FA05 /* Frameworks */,
+				07A076F62D8C69D400A8FA05 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				07A076FA2D8C69D400A8FA05 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				07A076FB2D8C69D400A8FA05 /* WatchRefTrack Watch AppUITests */,
+			);
+			name = "WatchRefTrack Watch AppUITests";
+			packageProductDependencies = (
+			);
+			productName = "WatchRefTrack Watch AppUITests";
+			productReference = 07A076F82D8C69D400A8FA05 /* WatchRefTrack Watch AppUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -184,6 +338,17 @@
 						CreatedOnToolsVersion = 16.2;
 						TestTargetID = 07A0765A2D8C613900A8FA05;
 					};
+					07A076DE2D8C69D300A8FA05 = {
+						CreatedOnToolsVersion = 16.2;
+					};
+					07A076ED2D8C69D400A8FA05 = {
+						CreatedOnToolsVersion = 16.2;
+						TestTargetID = 07A076DE2D8C69D300A8FA05;
+					};
+					07A076F72D8C69D400A8FA05 = {
+						CreatedOnToolsVersion = 16.2;
+						TestTargetID = 07A076DE2D8C69D300A8FA05;
+					};
 				};
 			};
 			buildConfigurationList = 07A076562D8C613900A8FA05 /* Build configuration list for PBXProject "RefTrack" */;
@@ -203,6 +368,9 @@
 				07A0765A2D8C613900A8FA05 /* RefTrack */,
 				07A0766A2D8C613900A8FA05 /* RefTrackTests */,
 				07A076742D8C613900A8FA05 /* RefTrackUITests */,
+				07A076DE2D8C69D300A8FA05 /* WatchRefTrack Watch App */,
+				07A076ED2D8C69D400A8FA05 /* WatchRefTrack Watch AppTests */,
+				07A076F72D8C69D400A8FA05 /* WatchRefTrack Watch AppUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -223,6 +391,27 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		07A076732D8C613900A8FA05 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		07A076DD2D8C69D300A8FA05 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		07A076EC2D8C69D400A8FA05 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		07A076F62D8C69D400A8FA05 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -253,6 +442,27 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		07A076DB2D8C69D300A8FA05 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		07A076EA2D8C69D400A8FA05 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		07A076F42D8C69D400A8FA05 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -265,6 +475,21 @@
 			isa = PBXTargetDependency;
 			target = 07A0765A2D8C613900A8FA05 /* RefTrack */;
 			targetProxy = 07A076762D8C613900A8FA05 /* PBXContainerItemProxy */;
+		};
+		07A076F02D8C69D400A8FA05 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 07A076DE2D8C69D300A8FA05 /* WatchRefTrack Watch App */;
+			targetProxy = 07A076EF2D8C69D400A8FA05 /* PBXContainerItemProxy */;
+		};
+		07A076FA2D8C69D400A8FA05 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 07A076DE2D8C69D300A8FA05 /* WatchRefTrack Watch App */;
+			targetProxy = 07A076F92D8C69D400A8FA05 /* PBXContainerItemProxy */;
+		};
+		07A077012D8C69D400A8FA05 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 07A076DE2D8C69D300A8FA05 /* WatchRefTrack Watch App */;
+			targetProxy = 07A077002D8C69D400A8FA05 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -522,6 +747,144 @@
 			};
 			name = Release;
 		};
+		07A077042D8C69D400A8FA05 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"WatchRefTrack Watch App/Preview Content\"";
+				DEVELOPMENT_TEAM = W6R3HZD7R4;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = WatchRefTrack;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = com.hajecek.RefTrack;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.hajecek.RefTrack.watchkitapp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 11.2;
+			};
+			name = Debug;
+		};
+		07A077052D8C69D400A8FA05 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"WatchRefTrack Watch App/Preview Content\"";
+				DEVELOPMENT_TEAM = W6R3HZD7R4;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = WatchRefTrack;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = com.hajecek.RefTrack;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.hajecek.RefTrack.watchkitapp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 11.2;
+			};
+			name = Release;
+		};
+		07A077082D8C69D400A8FA05 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = W6R3HZD7R4;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.hajecek.WatchRefTrack-Watch-AppTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/WatchRefTrack Watch App.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/WatchRefTrack Watch App";
+				WATCHOS_DEPLOYMENT_TARGET = 11.2;
+			};
+			name = Debug;
+		};
+		07A077092D8C69D400A8FA05 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = W6R3HZD7R4;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.hajecek.WatchRefTrack-Watch-AppTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/WatchRefTrack Watch App.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/WatchRefTrack Watch App";
+				WATCHOS_DEPLOYMENT_TARGET = 11.2;
+			};
+			name = Release;
+		};
+		07A0770B2D8C69D400A8FA05 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = W6R3HZD7R4;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.hajecek.WatchRefTrack-Watch-AppUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				TEST_TARGET_NAME = "WatchRefTrack Watch App";
+				WATCHOS_DEPLOYMENT_TARGET = 11.2;
+			};
+			name = Debug;
+		};
+		07A0770C2D8C69D400A8FA05 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = W6R3HZD7R4;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.hajecek.WatchRefTrack-Watch-AppUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				TEST_TARGET_NAME = "WatchRefTrack Watch App";
+				WATCHOS_DEPLOYMENT_TARGET = 11.2;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -557,6 +920,33 @@
 			buildConfigurations = (
 				07A076862D8C613900A8FA05 /* Debug */,
 				07A076872D8C613900A8FA05 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		07A077032D8C69D400A8FA05 /* Build configuration list for PBXNativeTarget "WatchRefTrack Watch App" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				07A077042D8C69D400A8FA05 /* Debug */,
+				07A077052D8C69D400A8FA05 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		07A077072D8C69D400A8FA05 /* Build configuration list for PBXNativeTarget "WatchRefTrack Watch AppTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				07A077082D8C69D400A8FA05 /* Debug */,
+				07A077092D8C69D400A8FA05 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		07A0770A2D8C69D400A8FA05 /* Build configuration list for PBXNativeTarget "WatchRefTrack Watch AppUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				07A0770B2D8C69D400A8FA05 /* Debug */,
+				07A0770C2D8C69D400A8FA05 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
