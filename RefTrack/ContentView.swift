@@ -34,7 +34,8 @@ struct ContentView: View {
             RoundedRectangle(cornerRadius: 30)
                 .fill(Color.black.opacity(0.4))
                 .padding(.horizontal, 16)
-                .padding(.vertical, 80)
+                .padding(.top, 120)
+                .padding(.bottom, 40)
                 .blur(radius: 0.5)
             
             VStack {
