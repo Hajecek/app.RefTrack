@@ -33,6 +33,9 @@ struct LoginView: View {
         .onReceive(NotificationCenter.default.publisher(for: Notification.Name("ShowToast"))) { notification in
             handleToastNotification(notification)
         }
+        .onReceive(NotificationCenter.default.publisher(for: Notification.Name("AutoSubmitOTP"))) { _ in
+            login()
+        }
     }
     
     // MARK: - UI Components

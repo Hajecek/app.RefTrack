@@ -229,15 +229,12 @@ struct OTPDigitField: View {
             
             // Verifikace po dokončení
             if text.count == otpLength {
-                validateCompletedCode()
+                // Tady můžeme vyvolat akci přihlášení místo validace
+                NotificationCenter.default.post(
+                    name: Notification.Name("AutoSubmitOTP"),
+                    object: nil
+                )
             }
-        }
-    }
-    
-    private func validateCompletedCode() {
-        // Zde můžete přidat skutečnou validaci
-        if text == "12345" {
-            onInvalidInput("Neplatný ověřovací kód")
         }
     }
 }
