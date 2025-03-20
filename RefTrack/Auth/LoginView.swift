@@ -9,6 +9,10 @@ struct LoginView: View {
     @State private var toastMessage: String = ""
     @State private var toastIsSuccess: Bool = false
     
+    @State private var isLoading: Bool = false
+    @State private var userData: UserData = UserData()
+    @State private var isLoggedIn: Bool = false
+    
     var body: some View {
         ZStack(alignment: .top) {
             // Hlavní obsah
@@ -70,7 +74,7 @@ struct LoginView: View {
             
             // Přihlásit se tlačítko
             Button(action: {
-                // TODO: Přihlašovací logika
+                login()
             }) {
                 Text("Přihlásit se")
                     .font(.headline)
@@ -144,4 +148,137 @@ struct LoginView: View {
             }
         }
     }
+    
+    private func login() {
+        isLoading = true
+        
+        guard let url = URL(string: "http://10.0.0.15/reftrack/admin/api/login.php") else {
+            showErrorToast("Neplatná URL adresa")
+            isLoading = false
+            return
+        }
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
+        
+        // Upraveno - použijeme správné parametry: login_id místo email
+        let bodyData = "login_id=\(email)&password=\(password)"
+        request.httpBody = bodyData.data(using: .utf8)
+        
+        URLSession.shared.dataTask(with: request) { data, response, error in
+            DispatchQueue.main.async {
+                isLoading = false
+                
+                if let error = error {
+                    showErrorToast("Chyba při připojení: \(error.localizedDescription)")
+                    return
+                }
+                
+                guard let data = data else {
+                    showErrorToast("Neplatná odpověď ze serveru")
+                    return
+                }
+                
+                // DEBUG: Vypíšeme odpověď pro ladění
+                if let jsonString = String(data: data, encoding: .utf8) {
+                    print("JSON Response: \(jsonString)")
+                }
+                
+                do {
+                    // Nejprve zjistíme, jestli je to úspěšná odpověď nebo chybová
+                    if let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
+                       let status = json["status"] as? String {
+                        
+                        if status == "success" {
+                            // Úspěšná odpověď, dekódujeme kompletní UserInfo
+                            let userInfo = try JSONDecoder().decode(UserInfo.self, from: data)
+                            userData.userInfo = userInfo
+                            userData.isLoggedIn = true
+                            
+                            showSuccessToast("Přihlášení proběhlo úspěšně")
+                            
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                                isLoggedIn = true
+                            }
+                        } else {
+                            // Chybová odpověď, zobrazíme pouze zprávu
+                            if let message = json["message"] as? String {
+                                showErrorToast(message)
+                            } else {
+                                showErrorToast("Neznámá chyba")
+                            }
+                        }
+                    } else {
+                        showErrorToast("Neplatný formát odpovědi")
+                    }
+                } catch {
+                    print("Chyba zpracování odpovědi: \(error)")
+                    showErrorToast("Chyba při zpracování odpovědi")
+                }
+            }
+        }.resume()
+    }
+    
+    private func showErrorToast(_ message: String) {
+        showToast(message: message, isSuccess: false)
+    }
+    
+    private func showSuccessToast(_ message: String) {
+        showToast(message: message, isSuccess: true)
+    }
+    
+    private func showToast(message: String, isSuccess: Bool) {
+        toastMessage = message
+        toastIsSuccess = isSuccess
+        
+        withAnimation(.spring()) {
+            showToast = true
+        }
+        
+        // Automaticky skrýt toast po 3 sekundách
+        DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+            withAnimation(.easeOut) {
+                showToast = false
+            }
+        }
+    }
+}
+
+// MARK: - UserInfo Model
+
+struct UserInfo: Codable {
+    let status: String
+    let message: String?
+    let id: Int
+    let firstName: String
+    let lastName: String
+    let username: String
+    let email: String
+    let birthDate: String
+    let sport: String?
+    let profileImage: String?
+    let role: String
+    let createdAt: String
+    
+    enum CodingKeys: String, CodingKey {
+        case status, message
+        case id
+        case firstName = "first_name"
+        case lastName = "last_name"
+        case username
+        case email
+        case birthDate = "birth_date"
+        case sport
+        case profileImage = "profile_image"
+        case role
+        case createdAt = "created_at"
+    }
+}
+
+// MARK: - UserData Class
+
+class UserData: ObservableObject {
+    @Published var userInfo: UserInfo?
+    @Published var isLoggedIn: Bool = false
 } 
