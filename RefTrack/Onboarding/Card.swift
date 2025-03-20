@@ -15,7 +15,8 @@ struct Card: Identifiable, Hashable {
 
 let cards: [Card] = [
     .init(image: "create-matches"),
-    .init(image: "edit"),
     .init(image: "distance"),
-    .init(image: "test"),
+    .init(image: "edit"),
+    .init(image: "set-homepage"),
+    .init(image: "sports"),
 ]
