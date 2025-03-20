@@ -31,17 +31,14 @@ struct LoginView: View {
             }
             
             // Heslo field
-            VStack(alignment: .leading, spacing: 8) {
-                Text("Heslo")
+            VStack(alignment: .leading, spacing: 12) {
+                Text("Ověřovací kód")
                     .font(.headline)
                     .foregroundColor(.white.opacity(0.8))
                 
-                SecureField("Zadejte své heslo", text: $password)
-                    .padding()
-                    .background(Color.white.opacity(0.1))
-                    .cornerRadius(10)
-                    .foregroundColor(.white)
-                    .textContentType(.password)
+                OTPFieldView(otpCode: $password, otpLength: 5)
+                    .padding(.vertical, 8)
+                    .padding(.horizontal, 4)
             }
             
             // Přihlásit se tlačítko
