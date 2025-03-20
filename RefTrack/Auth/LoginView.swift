@@ -196,10 +196,15 @@ struct LoginView: View {
                             userData.userInfo = userInfo
                             userData.isLoggedIn = true
                             
+                            // Uložíme informace o přihlášení do UserDefaults
+                            UserDefaults.standard.set(true, forKey: "isLoggedIn")
+                            
                             showSuccessToast("Přihlášení proběhlo úspěšně")
                             
                             DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                                 isLoggedIn = true
+                                // Zavřeme přihlašovací obrazovku
+                                dismiss()
                             }
                         } else {
                             // Chybová odpověď, zobrazíme pouze zprávu
@@ -250,7 +255,7 @@ struct LoginView: View {
 struct UserInfo: Codable {
     let status: String
     let message: String?
-    let id: Int
+    let id: String
     let firstName: String
     let lastName: String
     let username: String
@@ -259,7 +264,7 @@ struct UserInfo: Codable {
     let sport: String?
     let profileImage: String?
     let role: String
-    let createdAt: String
+    let createdAt: String?
     
     enum CodingKeys: String, CodingKey {
         case status, message

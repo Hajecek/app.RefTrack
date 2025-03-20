@@ -9,6 +9,7 @@ import SwiftUI
 
 struct ContentView: View {
     @State private var showLoginView = false
+    @State private var isLoggedIn = UserDefaults.standard.bool(forKey: "isLoggedIn")
     
     var body: some View {
         ZStack {
@@ -51,45 +52,85 @@ struct ContentView: View {
                 
                 Spacer()
                 
-                // Obsah pro prázdný stav
-                VStack(spacing: 20) {
-                    Image(systemName: "lock.fill")
-                        .font(.system(size: 60))
-                        .foregroundColor(.gray)
-                    
-                    Text("Přihlaste se")
-                        .font(.title2)
-                        .fontWeight(.bold)
-                        .foregroundColor(.white)
-                    
-                    Text("Pro přidání a zobrazení událostí se musíte nejprve přihlásit.")
-                        .multilineTextAlignment(.center)
-                        .foregroundColor(.gray)
-                        .padding(.horizontal, 40)
-                    
-                    Button(action: {
-                        showLoginView = true
-                    }) {
-                        Text("Přihlásit se")
-                            .font(.headline)
-                            .foregroundColor(.black)
-                            .padding()
-                            .frame(width: 250)
-                            .background(Color.white)
-                            .cornerRadius(30)
+                if isLoggedIn {
+                    // Obsah pro přihlášeného uživatele
+                    VStack(spacing: 20) {
+                        Image(systemName: "checkmark.circle.fill")
+                            .font(.system(size: 60))
+                            .foregroundColor(.green)
+                        
+                        Text("Jste přihlášeni")
+                            .font(.title2)
+                            .fontWeight(.bold)
+                            .foregroundColor(.white)
+                        
+                        Text("Nyní můžete přidávat a zobrazovat události.")
+                            .multilineTextAlignment(.center)
+                            .foregroundColor(.gray)
+                            .padding(.horizontal, 40)
+                        
+                        Button(action: {
+                            // Akce pro odhlášení
+                            UserDefaults.standard.set(false, forKey: "isLoggedIn")
+                            isLoggedIn = false
+                        }) {
+                            Text("Odhlásit se")
+                                .font(.headline)
+                                .foregroundColor(.black)
+                                .padding()
+                                .frame(width: 250)
+                                .background(Color.white)
+                                .cornerRadius(30)
+                        }
+                        .padding(.top, 20)
                     }
+                    .padding()
                     .padding(.top, 20)
-                    .sheet(isPresented: $showLoginView) {
-                        LoginView()
+                } else {
+                    // Obsah pro nepřihlášeného uživatele
+                    VStack(spacing: 20) {
+                        Image(systemName: "lock.fill")
+                            .font(.system(size: 60))
+                            .foregroundColor(.gray)
+                        
+                        Text("Přihlaste se")
+                            .font(.title2)
+                            .fontWeight(.bold)
+                            .foregroundColor(.white)
+                        
+                        Text("Pro přidání a zobrazení událostí se musíte nejprve přihlásit.")
+                            .multilineTextAlignment(.center)
+                            .foregroundColor(.gray)
+                            .padding(.horizontal, 40)
+                        
+                        Button(action: {
+                            showLoginView = true
+                        }) {
+                            Text("Přihlásit se")
+                                .font(.headline)
+                                .foregroundColor(.black)
+                                .padding()
+                                .frame(width: 250)
+                                .background(Color.white)
+                                .cornerRadius(30)
+                        }
+                        .padding(.top, 20)
                     }
+                    .padding()
+                    .padding(.top, 20)
                 }
-                .padding()
-                .padding(.top, 20)
                 
                 Spacer()
             }
         }
         .preferredColorScheme(.dark)
+        .sheet(isPresented: $showLoginView) {
+            LoginView()
+                .onDisappear {
+                    // Kontrola stavu přihlášení při zavření přihlašovacího okna
+                    isLoggedIn = UserDefaults.standard.bool(forKey: "isLoggedIn")
+                }
+        }
     }
 }
 
