@@ -5,7 +5,35 @@ struct LoginView: View {
     @State private var password: String = ""
     @Environment(\.dismiss) var dismiss
     
+    @State private var showToast: Bool = false
+    @State private var toastMessage: String = ""
+    @State private var toastIsSuccess: Bool = false
+    
     var body: some View {
+        ZStack(alignment: .top) {
+            // Hlavní obsah
+            mainContent
+            
+            // Toast notifikace
+            if showToast {
+                ToastView(
+                    message: toastMessage,
+                    isSuccess: toastIsSuccess,
+                    isShowing: $showToast
+                )
+                .zIndex(1)
+            }
+        }
+        .background(backgroundGradient)
+        .ignoresSafeArea(.keyboard)
+        .onReceive(NotificationCenter.default.publisher(for: Notification.Name("ShowToast"))) { notification in
+            handleToastNotification(notification)
+        }
+    }
+    
+    // MARK: - UI Components
+    
+    private var mainContent: some View {
         VStack(spacing: 20) {
             // Nadpis
             Text("Přihlášení")
@@ -30,15 +58,14 @@ struct LoginView: View {
                     .textContentType(.emailAddress)
             }
             
-            // Heslo field
-            VStack(alignment: .leading, spacing: 12) {
+            // Ověřovací kód field
+            VStack(alignment: .leading, spacing: 8) {
                 Text("Ověřovací kód")
                     .font(.headline)
                     .foregroundColor(.white.opacity(0.8))
                 
                 OTPFieldView(otpCode: $password, otpLength: 5)
                     .padding(.vertical, 8)
-                    .padding(.horizontal, 4)
             }
             
             // Přihlásit se tlačítko
@@ -83,17 +110,38 @@ struct LoginView: View {
             .padding(.bottom, 20)
         }
         .padding(.horizontal, 30)
-        .background(
-            LinearGradient(
-                gradient: Gradient(colors: [
-                    Color(red: 0.15, green: 0.2, blue: 0.35),
-                    Color(red: 0.1, green: 0.15, blue: 0.25)
-                ]),
-                startPoint: .top,
-                endPoint: .bottom
-            )
-            .ignoresSafeArea()
+    }
+    
+    private var backgroundGradient: some View {
+        LinearGradient(
+            gradient: Gradient(colors: [
+                Color(red: 0.15, green: 0.2, blue: 0.35),
+                Color(red: 0.1, green: 0.15, blue: 0.25)
+            ]),
+            startPoint: .top,
+            endPoint: .bottom
         )
-        .ignoresSafeArea(.keyboard)
+        .ignoresSafeArea()
+    }
+    
+    // MARK: - Helper Methods
+    
+    private func handleToastNotification(_ notification: Notification) {
+        if let message = notification.userInfo?["message"] as? String,
+           let isSuccess = notification.userInfo?["isSuccess"] as? Bool {
+            toastMessage = message
+            toastIsSuccess = isSuccess
+            
+            withAnimation(.spring()) {
+                showToast = true
+            }
+            
+            // Automaticky skrýt toast po 3 sekundách
+            DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                withAnimation(.easeOut) {
+                    showToast = false
+                }
+            }
+        }
     }
 } 
