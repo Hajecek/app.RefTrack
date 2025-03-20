@@ -39,34 +39,15 @@ struct ContentView: View {
                 .blur(radius: 0.5)
             
             VStack {
-                // Horní panel
-                HStack(alignment: .center) {
-                    Text("Nadcházející")
-                        .font(.system(size: 34, weight: .bold))
-                        .foregroundColor(.white)
-                    
-                    Spacer()
-                    
-                    Button(action: {
+                // Horní panel - nyní použijeme vlastní komponentu
+                TopMenuBar(
+                    onAddTap: {
                         // Akce pro přidání
-                    }) {
-                        Image(systemName: "plus.circle.fill")
-                            .font(.system(size: 36))
-                            .foregroundColor(.white)
-                    }
-                    .padding(.trailing, 2)
-                    
-                    Button(action: {
+                    },
+                    onProfileTap: {
                         // Akce pro profil
-                    }) {
-                        Image(systemName: "person.circle.fill")
-                            .font(.system(size: 36))
-                            .foregroundColor(.white)
                     }
-                }
-                .padding(.horizontal)
-                .padding(.top, 20)
-                .frame(height: 60)
+                )
                 
                 Spacer()
                 
