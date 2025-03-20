@@ -632,6 +632,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"RefTrack/Preview Content\"";
@@ -651,8 +652,9 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.hajecek.RefTrack;
+				PRODUCT_BUNDLE_IDENTIFIER = com.hajecek.RefTrackApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -664,6 +666,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"RefTrack/Preview Content\"";
@@ -683,8 +686,9 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.hajecek.RefTrack;
+				PRODUCT_BUNDLE_IDENTIFIER = com.hajecek.RefTrackApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -701,7 +705,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 18.2;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.hajecek.RefTrackTests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.hajecek.RefTrackAppTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
@@ -720,7 +724,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 18.2;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.hajecek.RefTrackTests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.hajecek.RefTrackAppTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
@@ -737,7 +741,7 @@
 				DEVELOPMENT_TEAM = W6R3HZD7R4;
 				GENERATE_INFOPLIST_FILE = YES;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.hajecek.RefTrack-UITests";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.hajecek.RefTrackApp-UITests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
@@ -754,7 +758,7 @@
 				DEVELOPMENT_TEAM = W6R3HZD7R4;
 				GENERATE_INFOPLIST_FILE = YES;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.hajecek.RefTrack-UITests";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.hajecek.RefTrackApp-UITests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
@@ -777,13 +781,13 @@
 				INFOPLIST_FILE = "WatchRefTrack-Watch-App-Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = WatchRefTrack;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
-				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = com.hajecek.RefTrack;
+				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = com.hajecek.RefTrackApp;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.hajecek.RefTrack.watchkitapp;
+				PRODUCT_BUNDLE_IDENTIFIER = com.hajecek.RefTrackApp.watchkitapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
@@ -808,13 +812,13 @@
 				INFOPLIST_FILE = "WatchRefTrack-Watch-App-Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = WatchRefTrack;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
-				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = com.hajecek.RefTrack;
+				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = com.hajecek.RefTrackApp;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.hajecek.RefTrack.watchkitapp;
+				PRODUCT_BUNDLE_IDENTIFIER = com.hajecek.RefTrackApp.watchkitapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
@@ -834,7 +838,7 @@
 				DEVELOPMENT_TEAM = W6R3HZD7R4;
 				GENERATE_INFOPLIST_FILE = YES;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.hajecek.WatchRefTrack-Watch-AppTests";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.hajecek.WatchRefTrackApp-Watch-AppTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = watchos;
 				SWIFT_EMIT_LOC_STRINGS = NO;
@@ -854,7 +858,7 @@
 				DEVELOPMENT_TEAM = W6R3HZD7R4;
 				GENERATE_INFOPLIST_FILE = YES;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.hajecek.WatchRefTrack-Watch-AppTests";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.hajecek.WatchRefTrackApp-Watch-AppTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = watchos;
 				SWIFT_EMIT_LOC_STRINGS = NO;
@@ -873,7 +877,7 @@
 				DEVELOPMENT_TEAM = W6R3HZD7R4;
 				GENERATE_INFOPLIST_FILE = YES;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.hajecek.WatchRefTrack-Watch-AppUITests";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.hajecek.WatchRefTrackApp-Watch-AppUITests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = watchos;
 				SWIFT_EMIT_LOC_STRINGS = NO;
@@ -892,7 +896,7 @@
 				DEVELOPMENT_TEAM = W6R3HZD7R4;
 				GENERATE_INFOPLIST_FILE = YES;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.hajecek.WatchRefTrack-Watch-AppUITests";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.hajecek.WatchRefTrackApp-Watch-AppUITests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = watchos;
 				SWIFT_EMIT_LOC_STRINGS = NO;
