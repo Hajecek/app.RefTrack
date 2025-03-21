@@ -194,71 +194,41 @@ struct ProfileView: View {
         if UserDefaults.standard.bool(forKey: "isLoggedIn") {
             userData.isLoggedIn = true
             
-            // Načtení dat uživatele ze serveru nebo z lokálního úložiště
-            fetchUserData()
+            // Načtení dat uživatele z UserDefaults
+            loadUserDataFromDefaults()
         }
-    }
-    
-    // Metoda pro získání dat uživatele ze serveru
-    private func fetchUserData() {
-        guard let url = URL(string: "http://10.0.0.15/reftrack/admin/api/get_user_info.php") else {
-            print("Neplatná URL adresa")
-            return
-        }
-        
-        var request = URLRequest(url: url)
-        request.httpMethod = "GET"
-        
-        // Přidáme autentizační token nebo session ID, pokud je to potřeba
-        // request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
-        
-        URLSession.shared.dataTask(with: request) { data, response, error in
-            if let error = error {
-                print("Chyba při načítání dat uživatele: \(error.localizedDescription)")
-                return
-            }
-            
-            guard let data = data else {
-                print("Žádná data nebyla přijata")
-                return
-            }
-            
-            // DEBUG: Vypíšeme odpověď pro ladění
-            if let jsonString = String(data: data, encoding: .utf8) {
-                print("JSON Response (user data): \(jsonString)")
-            }
-            
-            do {
-                let userInfo = try JSONDecoder().decode(UserInfo.self, from: data)
-                
-                // Aktualizujeme userData na hlavním vlákně
-                DispatchQueue.main.async {
-                    self.userData.userInfo = userInfo
-                }
-            } catch {
-                print("Chyba dekódování dat uživatele: \(error)")
-                
-                // Pokud se nepodaří načíst data ze serveru, zkusíme načíst uložená data
-                loadUserDataFromDefaults()
-            }
-        }.resume()
     }
     
     // Metoda pro načtení dat uživatele z UserDefaults
     private func loadUserDataFromDefaults() {
-        // Vytvoříme dočasné placeholder údaje
+        guard UserDefaults.standard.bool(forKey: "isLoggedIn") else {
+            return
+        }
+        
+        // Načteme všechna data z UserDefaults
+        let userId = UserDefaults.standard.string(forKey: "userId") ?? ""
+        let firstName = UserDefaults.standard.string(forKey: "userFirstName") ?? ""
+        let lastName = UserDefaults.standard.string(forKey: "userLastName") ?? ""
+        let username = UserDefaults.standard.string(forKey: "username") ?? ""
+        let email = UserDefaults.standard.string(forKey: "userEmail") ?? ""
+        let birthDate = UserDefaults.standard.string(forKey: "userBirthDate") ?? ""
+        let sport = UserDefaults.standard.string(forKey: "userSport") ?? ""
+        let profileImage = UserDefaults.standard.string(forKey: "userProfileImage")
+        let role = UserDefaults.standard.string(forKey: "userRole") ?? "Uživatel"
+        
+        // Vytvoříme objekt UserInfo z načtených dat
         userData.userInfo = UserInfo(
             status: "success",
             message: nil,
-            id: UserDefaults.standard.string(forKey: "userId") ?? "",
-            firstName: UserDefaults.standard.string(forKey: "userFirstName") ?? "Přihlášený",
-            lastName: UserDefaults.standard.string(forKey: "userLastName") ?? "Uživatel",
-            username: UserDefaults.standard.string(forKey: "username") ?? "",
-            email: UserDefaults.standard.string(forKey: "userEmail") ?? "",
-            birthDate: UserDefaults.standard.string(forKey: "userBirthDate") ?? "",
-            sport: UserDefaults.standard.string(forKey: "userSport") ?? "Neurčeno",
-            profileImage: UserDefaults.standard.string(forKey: "userProfileImage"),
-            role: UserDefaults.standard.string(forKey: "userRole") ?? "Uživatel",
+            id: userId,
+            firstName: firstName,
+            lastName: lastName,
+            username: username,
+            email: email,
+            birthDate: birthDate,
+            sport: sport,
+            profileImage: profileImage,
+            role: role,
             createdAt: nil
         )
     }
@@ -297,7 +267,14 @@ struct ProfileView: View {
     
     // Pomocná funkce pro formátování data
     private func formatDate(_ dateString: String) -> String {
-        // Zde můžete implementovat formátování data dle potřeby
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd"
+        
+        if let date = dateFormatter.date(from: dateString) {
+            dateFormatter.dateFormat = "dd.MM.yyyy"
+            return dateFormatter.string(from: date)
+        }
+        
         return dateString
     }
 }

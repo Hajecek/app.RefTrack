@@ -201,10 +201,20 @@ struct LoginView: View {
                             
                             // Uložíme informace o přihlášení do UserDefaults
                             UserDefaults.standard.set(true, forKey: "isLoggedIn")
+                            UserDefaults.standard.set(userInfo.id, forKey: "userId")
+                            UserDefaults.standard.set(userInfo.firstName, forKey: "userFirstName")
+                            UserDefaults.standard.set(userInfo.lastName, forKey: "userLastName")
+                            UserDefaults.standard.set(userInfo.username, forKey: "username")
+                            UserDefaults.standard.set(userInfo.email, forKey: "userEmail")
+                            UserDefaults.standard.set(userInfo.birthDate, forKey: "userBirthDate")
+                            UserDefaults.standard.set(userInfo.role, forKey: "userRole")
                             
-                            // Uložíme také profilový obrázek, pokud existuje
+                            // Uložíme také profilový obrázek a sport, pokud existují
                             if let profileImage = userInfo.profileImage {
                                 UserDefaults.standard.set(profileImage, forKey: "userProfileImage")
+                            }
+                            if let sport = userInfo.sport {
+                                UserDefaults.standard.set(sport, forKey: "userSport")
                             }
                             
                             showSuccessToast("Přihlášení proběhlo úspěšně")
