@@ -131,21 +131,6 @@ struct ContentView: View {
                                 .multilineTextAlignment(.center)
                                 .foregroundColor(.gray)
                         }
-                        
-                        Button(action: {
-                            // Akce pro odhlášení
-                            UserDefaults.standard.set(false, forKey: "isLoggedIn")
-                            isLoggedIn = false
-                        }) {
-                            Text("Odhlásit se")
-                                .font(.headline)
-                                .foregroundColor(.black)
-                                .padding()
-                                .frame(width: 250)
-                                .background(Color.white)
-                                .cornerRadius(30)
-                        }
-                        .padding(.top, 20)
                     }
                     .padding()
                     .padding(.top, 20)
