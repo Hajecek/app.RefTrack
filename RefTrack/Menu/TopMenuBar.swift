@@ -8,8 +8,9 @@ import SwiftUI
 struct TopMenuBar: View {
     var onAddTap: () -> Void
     var onProfileTap: () -> Void
-    var isLoggedIn: Bool = false
-    var profileImage: String? = nil
+    var isLoggedIn: Bool
+    var profileImage: String?
+    var onLoginStatusChanged: (() -> Void)?
     @State private var selectedFilter = "Nadcházející"
     @State private var showFilterMenu = false
     @Binding var currentFilter: String
@@ -120,7 +121,7 @@ struct TopMenuBar: View {
                 }
             }
             .sheet(isPresented: $showProfileView) {
-                ProfileView()
+                ProfileView(initialIsLoggedIn: isLoggedIn)
             }
         }
         .padding(.horizontal)
@@ -135,6 +136,8 @@ struct TopMenuBar: View {
         TopMenuBar(
             onAddTap: {},
             onProfileTap: {},
+            isLoggedIn: false,
+            profileImage: nil,
             currentFilter: .constant("Nadcházející")
         )
     }

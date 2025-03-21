@@ -51,6 +51,10 @@ struct ContentView: View {
                     },
                     isLoggedIn: isLoggedIn,
                     profileImage: UserDefaults.standard.string(forKey: "userProfileImage"),
+                    onLoginStatusChanged: {
+                        // Aktualizace stavu přihlášení v ContentView
+                        isLoggedIn = UserDefaults.standard.bool(forKey: "isLoggedIn")
+                    },
                     currentFilter: $currentFilter
                 )
                 
@@ -189,6 +193,14 @@ struct ContentView: View {
                     // Kontrola stavu přihlášení při zavření přihlašovacího okna
                     isLoggedIn = UserDefaults.standard.bool(forKey: "isLoggedIn")
                 }
+        }
+        .onAppear {
+            // Zkontrolujeme stav přihlášení při zobrazení
+            isLoggedIn = UserDefaults.standard.bool(forKey: "isLoggedIn")
+        }
+        .onReceive(NotificationCenter.default.publisher(for: Notification.Name("LoginStatusChanged"))) { _ in
+            // Aktualizace stavu přihlášení při přijetí notifikace
+            isLoggedIn = UserDefaults.standard.bool(forKey: "isLoggedIn")
         }
     }
 }
