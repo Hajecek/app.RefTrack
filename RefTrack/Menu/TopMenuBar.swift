@@ -10,21 +10,69 @@ struct TopMenuBar: View {
     var onProfileTap: () -> Void
     var isLoggedIn: Bool = false
     var profileImage: String? = nil
+    @State private var selectedFilter = "Nadcházející"
+    @State private var showFilterMenu = false
     
     var body: some View {
         HStack(alignment: .center) {
-            Text("Nadcházející")
-                .font(.system(size: 34, weight: .bold))
-                .foregroundColor(.white)
+            Menu {
+                Button(action: {
+                    selectedFilter = "Nadcházející"
+                }) {
+                    Label("Nadcházející (2)", systemImage: "calendar")
+                }
+                
+                Button(action: {
+                    selectedFilter = "Minulé události"
+                }) {
+                    Label("Minulé události", systemImage: "arrow.clockwise")
+                }
+                
+                Button(action: {
+                    selectedFilter = "Koncepty"
+                }) {
+                    Label("Koncepty", systemImage: "pencil")
+                }
+                
+                Button(action: {
+                    selectedFilter = "Pořádám"
+                }) {
+                    Label("Pořádám (2)", systemImage: "crown")
+                }
+                
+                Button(action: {
+                    selectedFilter = "Zúčastním se"
+                }) {
+                    Label("Zúčastním se", systemImage: "checkmark.circle")
+                }
+            } label: {
+                HStack(spacing: 4) {
+                    Text(selectedFilter)
+                        .font(.system(size: 34, weight: .bold))
+                        .foregroundColor(.white)
+                    
+                    Image(systemName: "chevron.down")
+                        .foregroundColor(.white)
+                        .font(.title3)
+                        .padding(.top, 4)
+                }
+            }
+            .menuStyle(DefaultMenuStyle())
+            .foregroundColor(.white)
             
             Spacer()
             
             Button(action: onAddTap) {
-                Image(systemName: "plus.circle.fill")
-                    .font(.system(size: 36))
-                    .foregroundColor(.white)
+                Circle()
+                    .fill(Color.white.opacity(0.3))
+                    .frame(width: 40, height: 40)
+                    .overlay(
+                        Image(systemName: "plus")
+                            .font(.system(size: 20, weight: .bold))
+                            .foregroundColor(.white)
+                    )
             }
-            .padding(.trailing, 2)
+            .padding(.trailing, 8)
             
             Button(action: onProfileTap) {
                 if isLoggedIn && profileImage != nil {
@@ -41,7 +89,7 @@ struct TopMenuBar: View {
                             image
                                 .resizable()
                                 .scaledToFill()
-                                .frame(width: 36, height: 36)
+                                .frame(width: 40, height: 40)
                                 .clipShape(Circle())
                         case .failure:
                             // Pokud se obrázek nepodaří načíst
