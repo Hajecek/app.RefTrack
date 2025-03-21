@@ -23,11 +23,11 @@ struct ProfileView: View {
         if let userInfo = userData.userInfo {
             return "\(userInfo.firstName) \(userInfo.lastName)"
         }
-        return "Nepřihlášený uživatel"
+        return "Nejsi přihlášen"
     }
     
     private var email: String {
-        return userData.userInfo?.email ?? "Pro zobrazení emailu se přihlaste"
+        return userData.userInfo?.email ?? "Přihlas se a získej přístup k informacím o svém účtu"
     }
     
     private var profileImage: String? {
@@ -89,11 +89,7 @@ struct ProfileView: View {
                     }
                     .padding(.vertical, 10)
                     
-                    if isLoggedIn {
-                        NavigationLink(destination: Text("Úprava profilu")) {
-                            Text("Upravit profil")
-                        }
-                    } else {
+                    if !isLoggedIn {
                         Button(action: {
                             showLoginView = true
                         }) {
@@ -134,27 +130,7 @@ struct ProfileView: View {
                         }
                     }
                     
-                    Section(header: Text("Nastavení")) {
-                        Toggle("Oznámení", isOn: $notifications)
-                        
-                        NavigationLink(destination: Text("Nastavení soukromí")) {
-                            Text("Soukromí")
-                        }
-                        
-                        NavigationLink(destination: Text("Zabezpečení")) {
-                            Text("Zabezpečení")
-                        }
-                    }
-                    
-                    Section(header: Text("Aplikace")) {
-                        NavigationLink(destination: Text("O aplikaci")) {
-                            Text("O aplikaci")
-                        }
-                        
-                        NavigationLink(destination: Text("Nápověda a podpora")) {
-                            Text("Nápověda a podpora")
-                        }
-                        
+                    Section {
                         Button(action: {
                             // Akce pro odhlášení
                             logout()
