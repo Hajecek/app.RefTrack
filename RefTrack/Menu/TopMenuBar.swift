@@ -13,6 +13,7 @@ struct TopMenuBar: View {
     @State private var selectedFilter = "Nadcházející"
     @State private var showFilterMenu = false
     @Binding var currentFilter: String
+    @State private var showProfileView = false
     
     var body: some View {
         HStack(alignment: .center) {
@@ -80,7 +81,10 @@ struct TopMenuBar: View {
             }
             .padding(.trailing, 8)
             
-            Button(action: onProfileTap) {
+            Button(action: {
+                showProfileView = true
+                onProfileTap()
+            }) {
                 if isLoggedIn && profileImage != nil {
                     // Zobrazení profilového obrázku
                     AsyncImage(url: URL(string: "http://10.0.0.15/reftrack/auth/images/\(profileImage!)")) { phase in
@@ -114,6 +118,9 @@ struct TopMenuBar: View {
                         .font(.system(size: 36))
                         .foregroundColor(.white)
                 }
+            }
+            .sheet(isPresented: $showProfileView) {
+                ProfileView()
             }
         }
         .padding(.horizontal)
