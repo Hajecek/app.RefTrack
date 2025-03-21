@@ -223,6 +223,12 @@ struct LoginView: View {
                                 isLoggedIn = true
                                 // Zavřeme přihlašovací obrazovku
                                 dismiss()
+                                
+                                // Přidáme notifikaci pro zavření profilové stránky
+                                NotificationCenter.default.post(
+                                    name: Notification.Name("CloseProfileView"),
+                                    object: nil
+                                )
                             }
                         } else {
                             // Chybová odpověď, zobrazíme pouze zprávu

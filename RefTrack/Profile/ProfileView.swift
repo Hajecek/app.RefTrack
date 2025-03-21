@@ -10,6 +10,7 @@ struct ProfileView: View {
     @StateObject private var userData = UserData()
     @State private var notifications = true
     @State private var showLoginView = false
+    @Environment(\.presentationMode) var presentationMode
     
     // Nastavit výchozí hodnotu pro isLoggedIn
     var initialIsLoggedIn: Bool = false
@@ -160,6 +161,10 @@ struct ProfileView: View {
             .onAppear {
                 userData.isLoggedIn = initialIsLoggedIn
                 checkLoginStatus()
+            }
+            .onReceive(NotificationCenter.default.publisher(for: Notification.Name("CloseProfileView"))) { _ in
+                // Zavřeme profilovou stránku
+                presentationMode.wrappedValue.dismiss()
             }
         }
     }
