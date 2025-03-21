@@ -25,10 +25,10 @@ struct TopMenuBar: View {
                 }
                 
                 Button(action: {
-                    selectedFilter = "Minulé události"
-                    currentFilter = "Minulé události"
+                    selectedFilter = "Předchozí"
+                    currentFilter = "Předchozí"
                 }) {
-                    Label("Minulé události", systemImage: "arrow.clockwise")
+                    Label("Předchozí", systemImage: "arrow.clockwise")
                 }
                 
                 Button(action: {

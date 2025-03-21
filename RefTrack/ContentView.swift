@@ -71,11 +71,11 @@ struct ContentView: View {
                             Text("Zde uvidíte své plánované události.")
                                 .multilineTextAlignment(.center)
                                 .foregroundColor(.gray)
-                        case "Minulé události":
+                        case "Předchozí":
                             Image(systemName: "arrow.clockwise")
                                 .font(.system(size: 60))
                                 .foregroundColor(.purple)
-                            Text("Minulé události")
+                            Text("Předchozí")
                                 .font(.title2)
                                 .fontWeight(.bold)
                                 .foregroundColor(.white)
