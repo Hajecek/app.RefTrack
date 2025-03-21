@@ -10,6 +10,7 @@ import SwiftUI
 struct ContentView: View {
     @State private var showLoginView = false
     @State private var isLoggedIn = UserDefaults.standard.bool(forKey: "isLoggedIn")
+    @State private var currentFilter = "Nadcházející"
     
     var body: some View {
         ZStack {
@@ -49,27 +50,83 @@ struct ContentView: View {
                         // Akce pro profil
                     },
                     isLoggedIn: isLoggedIn,
-                    profileImage: UserDefaults.standard.string(forKey: "userProfileImage")
+                    profileImage: UserDefaults.standard.string(forKey: "userProfileImage"),
+                    currentFilter: $currentFilter
                 )
                 
                 Spacer()
                 
                 if isLoggedIn {
-                    // Obsah pro přihlášeného uživatele
+                    // Obsah pro přihlášeného uživatele podle vybraného filtru
                     VStack(spacing: 20) {
-                        Image(systemName: "checkmark.circle.fill")
-                            .font(.system(size: 60))
-                            .foregroundColor(.green)
-                        
-                        Text("Jste přihlášeni")
-                            .font(.title2)
-                            .fontWeight(.bold)
-                            .foregroundColor(.white)
-                        
-                        Text("Nyní můžete přidávat a zobrazovat události.")
-                            .multilineTextAlignment(.center)
-                            .foregroundColor(.gray)
-                            .padding(.horizontal, 40)
+                        switch currentFilter {
+                        case "Nadcházející":
+                            Image(systemName: "calendar")
+                                .font(.system(size: 60))
+                                .foregroundColor(.blue)
+                            Text("Nadcházející události")
+                                .font(.title2)
+                                .fontWeight(.bold)
+                                .foregroundColor(.white)
+                            Text("Zde uvidíte své plánované události.")
+                                .multilineTextAlignment(.center)
+                                .foregroundColor(.gray)
+                        case "Minulé události":
+                            Image(systemName: "arrow.clockwise")
+                                .font(.system(size: 60))
+                                .foregroundColor(.purple)
+                            Text("Minulé události")
+                                .font(.title2)
+                                .fontWeight(.bold)
+                                .foregroundColor(.white)
+                            Text("Přehled událostí, kterých jste se již zúčastnili.")
+                                .multilineTextAlignment(.center)
+                                .foregroundColor(.gray)
+                        case "Koncepty":
+                            Image(systemName: "pencil")
+                                .font(.system(size: 60))
+                                .foregroundColor(.orange)
+                            Text("Vaše koncepty")
+                                .font(.title2)
+                                .fontWeight(.bold)
+                                .foregroundColor(.white)
+                            Text("Rozpracované události čekající na dokončení.")
+                                .multilineTextAlignment(.center)
+                                .foregroundColor(.gray)
+                        case "Pořádám":
+                            Image(systemName: "crown")
+                                .font(.system(size: 60))
+                                .foregroundColor(.yellow)
+                            Text("Pořádané události")
+                                .font(.title2)
+                                .fontWeight(.bold)
+                                .foregroundColor(.white)
+                            Text("Seznam událostí, které organizujete.")
+                                .multilineTextAlignment(.center)
+                                .foregroundColor(.gray)
+                        case "Zúčastním se":
+                            Image(systemName: "checkmark.circle")
+                                .font(.system(size: 60))
+                                .foregroundColor(.green)
+                            Text("Události s vaší účastí")
+                                .font(.title2)
+                                .fontWeight(.bold)
+                                .foregroundColor(.white)
+                            Text("Události, na které jste potvrdili svou účast.")
+                                .multilineTextAlignment(.center)
+                                .foregroundColor(.gray)
+                        default:
+                            Image(systemName: "checkmark.circle.fill")
+                                .font(.system(size: 60))
+                                .foregroundColor(.green)
+                            Text("Jste přihlášeni")
+                                .font(.title2)
+                                .fontWeight(.bold)
+                                .foregroundColor(.white)
+                            Text("Nyní můžete přidávat a zobrazovat události.")
+                                .multilineTextAlignment(.center)
+                                .foregroundColor(.gray)
+                        }
                         
                         Button(action: {
                             // Akce pro odhlášení

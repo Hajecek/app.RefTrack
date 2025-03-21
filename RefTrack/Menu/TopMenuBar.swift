@@ -12,36 +12,42 @@ struct TopMenuBar: View {
     var profileImage: String? = nil
     @State private var selectedFilter = "Nadcházející"
     @State private var showFilterMenu = false
+    @Binding var currentFilter: String
     
     var body: some View {
         HStack(alignment: .center) {
             Menu {
                 Button(action: {
                     selectedFilter = "Nadcházející"
+                    currentFilter = "Nadcházející"
                 }) {
                     Label("Nadcházející (2)", systemImage: "calendar")
                 }
                 
                 Button(action: {
                     selectedFilter = "Minulé události"
+                    currentFilter = "Minulé události"
                 }) {
                     Label("Minulé události", systemImage: "arrow.clockwise")
                 }
                 
                 Button(action: {
                     selectedFilter = "Koncepty"
+                    currentFilter = "Koncepty"
                 }) {
                     Label("Koncepty", systemImage: "pencil")
                 }
                 
                 Button(action: {
                     selectedFilter = "Pořádám"
+                    currentFilter = "Pořádám"
                 }) {
                     Label("Pořádám (2)", systemImage: "crown")
                 }
                 
                 Button(action: {
                     selectedFilter = "Zúčastním se"
+                    currentFilter = "Zúčastním se"
                 }) {
                     Label("Zúčastním se", systemImage: "checkmark.circle")
                 }
@@ -121,7 +127,8 @@ struct TopMenuBar: View {
         Color.black
         TopMenuBar(
             onAddTap: {},
-            onProfileTap: {}
+            onProfileTap: {},
+            currentFilter: .constant("Nadcházející")
         )
     }
 } 
