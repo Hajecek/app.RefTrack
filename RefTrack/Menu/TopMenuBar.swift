@@ -34,10 +34,10 @@ struct TopMenuBar: View {
                 }
                 
                 Button(action: {
-                    selectedFilter = "Koncepty"
-                    currentFilter = "Koncepty"
+                    selectedFilter = "Probíhá"
+                    currentFilter = "Probíhá"
                 }) {
-                    Label("Koncepty", systemImage: "pencil")
+                    Label("Probíhá", systemImage: "pencil")
                 }
                 
                 Button(action: {

@@ -72,9 +72,10 @@ struct ContentView: View {
                                 .font(.title2)
                                 .fontWeight(.bold)
                                 .foregroundColor(.white)
-                            Text("Zde uvidíte své plánované události.")
+                            Text("Zde uvidíte své plánované nadcházející události.")
                                 .multilineTextAlignment(.center)
                                 .foregroundColor(.gray)
+                                .padding(.horizontal, 40)
                         case "Předchozí":
                             Image(systemName: "arrow.clockwise")
                                 .font(.system(size: 60))
@@ -83,20 +84,22 @@ struct ContentView: View {
                                 .font(.title2)
                                 .fontWeight(.bold)
                                 .foregroundColor(.white)
-                            Text("Přehled událostí, kterých jste se již zúčastnili.")
+                            Text("Přehled událostí, které už skončily.")
                                 .multilineTextAlignment(.center)
                                 .foregroundColor(.gray)
-                        case "Koncepty":
+                                .padding(.horizontal, 40)
+                        case "Probíhá":
                             Image(systemName: "pencil")
                                 .font(.system(size: 60))
                                 .foregroundColor(.orange)
-                            Text("Vaše koncepty")
+                            Text("Právě se děje")
                                 .font(.title2)
                                 .fontWeight(.bold)
                                 .foregroundColor(.white)
-                            Text("Rozpracované události čekající na dokončení.")
+                            Text("Události, které jsou právě Live.")
                                 .multilineTextAlignment(.center)
                                 .foregroundColor(.gray)
+                                .padding(.horizontal, 40)
                         case "Pořádám":
                             Image(systemName: "crown")
                                 .font(.system(size: 60))
@@ -108,6 +111,7 @@ struct ContentView: View {
                             Text("Seznam událostí, které organizujete.")
                                 .multilineTextAlignment(.center)
                                 .foregroundColor(.gray)
+                                .padding(.horizontal, 40)
                         case "Zúčastním se":
                             Image(systemName: "checkmark.circle")
                                 .font(.system(size: 60))
@@ -119,6 +123,7 @@ struct ContentView: View {
                             Text("Události, na které jste potvrdili svou účast.")
                                 .multilineTextAlignment(.center)
                                 .foregroundColor(.gray)
+                                .padding(.horizontal, 40)
                         default:
                             Image(systemName: "checkmark.circle.fill")
                                 .font(.system(size: 60))
@@ -130,6 +135,7 @@ struct ContentView: View {
                             Text("Nyní můžete přidávat a zobrazovat události.")
                                 .multilineTextAlignment(.center)
                                 .foregroundColor(.gray)
+                                .padding(.horizontal, 40)
                         }
                     }
                     .padding()
