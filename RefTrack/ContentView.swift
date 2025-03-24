@@ -10,7 +10,13 @@ import SwiftUI
 struct ContentView: View {
     @State private var showLoginView = false
     @State private var isLoggedIn = UserDefaults.standard.bool(forKey: "isLoggedIn")
-    @State private var currentFilter = "Nadcházející"
+    @State private var currentFilter: String
+    
+    init() {
+        // Nastavíme výchozí filtr podle stavu přihlášení
+        let isLoggedIn = UserDefaults.standard.bool(forKey: "isLoggedIn")
+        _currentFilter = State(initialValue: isLoggedIn ? "Nadcházející" : "Veřejné")
+    }
     
     var body: some View {
         ZStack {
@@ -52,16 +58,53 @@ struct ContentView: View {
                     isLoggedIn: isLoggedIn,
                     profileImage: UserDefaults.standard.string(forKey: "userProfileImage"),
                     onLoginStatusChanged: {
-                        // Aktualizace stavu přihlášení v ContentView
                         isLoggedIn = UserDefaults.standard.bool(forKey: "isLoggedIn")
+                        // Pokud se uživatel přihlásí, změníme filtr na "Nadcházející"
+                        if isLoggedIn {
+                            currentFilter = "Nadcházející"
+                        } else {
+                            currentFilter = "Veřejné"
+                        }
                     },
                     currentFilter: $currentFilter
                 )
                 
                 Spacer()
                 
-                if isLoggedIn {
-                    // Obsah pro přihlášeného uživatele podle vybraného filtru
+                if !isLoggedIn && currentFilter != "Veřejné" {
+                    // Obsah pro nepřihlášeného uživatele (pouze pro jiné filtry než "Veřejné")
+                    VStack(spacing: 20) {
+                        Image(systemName: "lock.fill")
+                            .font(.system(size: 60))
+                            .foregroundColor(.gray)
+                        
+                        Text("Přihlaste se")
+                            .font(.title2)
+                            .fontWeight(.bold)
+                            .foregroundColor(.white)
+                        
+                        Text("Pro přidání a zobrazení událostí se musíte nejprve přihlásit.")
+                            .multilineTextAlignment(.center)
+                            .foregroundColor(.gray)
+                            .padding(.horizontal, 40)
+                        
+                        Button(action: {
+                            showLoginView = true
+                        }) {
+                            Text("Přihlásit se")
+                                .font(.headline)
+                                .foregroundColor(.black)
+                                .padding()
+                                .frame(width: 250)
+                                .background(Color.white)
+                                .cornerRadius(30)
+                        }
+                        .padding(.top, 20)
+                    }
+                    .padding()
+                    .padding(.top, 20)
+                } else {
+                    // Obsah podle vybraného filtru (pro přihlášené uživatele nebo filtr "Veřejné")
                     VStack(spacing: 20) {
                         switch currentFilter {
                         case "Nadcházející":
@@ -140,38 +183,6 @@ struct ContentView: View {
                     }
                     .padding()
                     .padding(.top, 20)
-                } else {
-                    // Obsah pro nepřihlášeného uživatele
-                    VStack(spacing: 20) {
-                        Image(systemName: "lock.fill")
-                            .font(.system(size: 60))
-                            .foregroundColor(.gray)
-                        
-                        Text("Přihlaste se")
-                            .font(.title2)
-                            .fontWeight(.bold)
-                            .foregroundColor(.white)
-                        
-                        Text("Pro přidání a zobrazení událostí se musíte nejprve přihlásit.")
-                            .multilineTextAlignment(.center)
-                            .foregroundColor(.gray)
-                            .padding(.horizontal, 40)
-                        
-                        Button(action: {
-                            showLoginView = true
-                        }) {
-                            Text("Přihlásit se")
-                                .font(.headline)
-                                .foregroundColor(.black)
-                                .padding()
-                                .frame(width: 250)
-                                .background(Color.white)
-                                .cornerRadius(30)
-                        }
-                        .padding(.top, 20)
-                    }
-                    .padding()
-                    .padding(.top, 20)
                 }
                 
                 Spacer()
@@ -186,12 +197,19 @@ struct ContentView: View {
                 }
         }
         .onAppear {
-            // Zkontrolujeme stav přihlášení při zobrazení
             isLoggedIn = UserDefaults.standard.bool(forKey: "isLoggedIn")
+            if !isLoggedIn {
+                currentFilter = "Veřejné"
+            }
         }
         .onReceive(NotificationCenter.default.publisher(for: Notification.Name("LoginStatusChanged"))) { _ in
-            // Aktualizace stavu přihlášení při přijetí notifikace
             isLoggedIn = UserDefaults.standard.bool(forKey: "isLoggedIn")
+            // Při přihlášení změníme filtr na "Nadcházející"
+            if isLoggedIn {
+                currentFilter = "Nadcházející"
+            } else {
+                currentFilter = "Veřejné"
+            }
         }
     }
 }

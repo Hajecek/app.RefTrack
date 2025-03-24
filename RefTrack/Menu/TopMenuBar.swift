@@ -11,10 +11,25 @@ struct TopMenuBar: View {
     var isLoggedIn: Bool
     var profileImage: String?
     var onLoginStatusChanged: (() -> Void)?
-    @State private var selectedFilter = "Nadcházející"
+    @State private var selectedFilter: String
     @State private var showFilterMenu = false
     @Binding var currentFilter: String
     @State private var showProfileView = false
+    
+    init(onAddTap: @escaping () -> Void, 
+         onProfileTap: @escaping () -> Void, 
+         isLoggedIn: Bool, 
+         profileImage: String?, 
+         onLoginStatusChanged: (() -> Void)?, 
+         currentFilter: Binding<String>) {
+        self.onAddTap = onAddTap
+        self.onProfileTap = onProfileTap
+        self.isLoggedIn = isLoggedIn
+        self.profileImage = profileImage
+        self.onLoginStatusChanged = onLoginStatusChanged
+        self._currentFilter = currentFilter
+        self._selectedFilter = State(initialValue: currentFilter.wrappedValue)
+    }
     
     var body: some View {
         HStack(alignment: .center) {
@@ -124,6 +139,9 @@ struct TopMenuBar: View {
                 ProfileView(initialIsLoggedIn: isLoggedIn)
             }
         }
+        .onChange(of: currentFilter) { newValue in
+            selectedFilter = newValue
+        }
         .padding(.horizontal)
         .padding(.top, 20)
         .frame(height: 60)
@@ -138,6 +156,7 @@ struct TopMenuBar: View {
             onProfileTap: {},
             isLoggedIn: false,
             profileImage: nil,
+            onLoginStatusChanged: nil,
             currentFilter: .constant("Nadcházející")
         )
     }
