@@ -155,7 +155,7 @@ struct LoginView: View {
     private func login() {
         isLoading = true
         
-        guard let url = URL(string: "http://10.0.0.15/reftrack/admin/api/login.php") else {
+        guard let url = URL(string: "http://10.0.0.15/reftrack/admin/api/login-api.php") else {
             showErrorToast("Neplatná URL adresa")
             isLoading = false
             return
