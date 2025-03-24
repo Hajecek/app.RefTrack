@@ -73,116 +73,46 @@ struct ContentView: View {
                 
                 if !isLoggedIn && currentFilter != "Veřejné" {
                     // Obsah pro nepřihlášeného uživatele (pouze pro jiné filtry než "Veřejné")
-                    VStack(spacing: 20) {
-                        Image(systemName: "lock.fill")
-                            .font(.system(size: 60))
-                            .foregroundColor(.gray)
-                        
-                        Text("Přihlaste se")
-                            .font(.title2)
-                            .fontWeight(.bold)
-                            .foregroundColor(.white)
-                        
-                        Text("Pro přidání a zobrazení událostí se musíte nejprve přihlásit.")
-                            .multilineTextAlignment(.center)
-                            .foregroundColor(.gray)
-                            .padding(.horizontal, 40)
-                        
-                        Button(action: {
-                            showLoginView = true
-                        }) {
-                            Text("Přihlásit se")
-                                .font(.headline)
-                                .foregroundColor(.black)
-                                .padding()
-                                .frame(width: 250)
-                                .background(Color.white)
-                                .cornerRadius(30)
-                        }
-                        .padding(.top, 20)
+                    EventView(
+                        iconName: "lock.fill",
+                        iconColor: .gray,
+                        title: "Přihlaste se",
+                        description: "Pro přidání a zobrazení událostí se musíte nejprve přihlásit."
+                    )
+                    
+                    Button(action: {
+                        showLoginView = true
+                    }) {
+                        Text("Přihlásit se")
+                            .font(.headline)
+                            .foregroundColor(.black)
+                            .padding()
+                            .frame(width: 250)
+                            .background(Color.white)
+                            .cornerRadius(30)
                     }
-                    .padding()
                     .padding(.top, 20)
                 } else {
                     // Obsah podle vybraného filtru (pro přihlášené uživatele nebo filtr "Veřejné")
-                    VStack(spacing: 20) {
-                        switch currentFilter {
-                        case "Nadcházející":
-                            Image(systemName: "calendar")
-                                .font(.system(size: 60))
-                                .foregroundColor(.blue)
-                            Text("Nadcházející události")
-                                .font(.title2)
-                                .fontWeight(.bold)
-                                .foregroundColor(.white)
-                            Text("Zde uvidíte své plánované nadcházející události.")
-                                .multilineTextAlignment(.center)
-                                .foregroundColor(.gray)
-                                .padding(.horizontal, 40)
-                        case "Předchozí":
-                            Image(systemName: "arrow.clockwise")
-                                .font(.system(size: 60))
-                                .foregroundColor(.purple)
-                            Text("Předchozí")
-                                .font(.title2)
-                                .fontWeight(.bold)
-                                .foregroundColor(.white)
-                            Text("Přehled událostí, které už skončily.")
-                                .multilineTextAlignment(.center)
-                                .foregroundColor(.gray)
-                                .padding(.horizontal, 40)
-                        case "Probíhá":
-                            Image(systemName: "pencil")
-                                .font(.system(size: 60))
-                                .foregroundColor(.orange)
-                            Text("Právě se děje")
-                                .font(.title2)
-                                .fontWeight(.bold)
-                                .foregroundColor(.white)
-                            Text("Události, které jsou právě Live.")
-                                .multilineTextAlignment(.center)
-                                .foregroundColor(.gray)
-                                .padding(.horizontal, 40)
-                        case "Pořádám":
-                            Image(systemName: "crown")
-                                .font(.system(size: 60))
-                                .foregroundColor(.yellow)
-                            Text("Pořádané události")
-                                .font(.title2)
-                                .fontWeight(.bold)
-                                .foregroundColor(.white)
-                            Text("Seznam událostí, které organizujete.")
-                                .multilineTextAlignment(.center)
-                                .foregroundColor(.gray)
-                                .padding(.horizontal, 40)
-                        case "Veřejné":
-                            Image(systemName: "checkmark.circle")
-                                .font(.system(size: 60))
-                                .foregroundColor(.green)
-                            Text("Veřejné události")
-                                .font(.title2)
-                                .fontWeight(.bold)
-                                .foregroundColor(.white)
-                            Text("Události, které ostatní uživatelé označili za veřejné.")
-                                .multilineTextAlignment(.center)
-                                .foregroundColor(.gray)
-                                .padding(.horizontal, 40)
-                        default:
-                            Image(systemName: "checkmark.circle.fill")
-                                .font(.system(size: 60))
-                                .foregroundColor(.green)
-                            Text("Jste přihlášeni")
-                                .font(.title2)
-                                .fontWeight(.bold)
-                                .foregroundColor(.white)
-                            Text("Nyní můžete přidávat a zobrazovat události.")
-                                .multilineTextAlignment(.center)
-                                .foregroundColor(.gray)
-                                .padding(.horizontal, 40)
-                        }
+                    switch currentFilter {
+                    case "Nadcházející":
+                        UpcomingEventsView()
+                    case "Předchozí":
+                        PastEventsView()
+                    case "Probíhá":
+                        LiveEventsView()
+                    case "Pořádám":
+                        OrganizedEventsView()
+                    case "Veřejné":
+                        PublicEventsView()
+                    default:
+                        EventView(
+                            iconName: "checkmark.circle.fill",
+                            iconColor: .green,
+                            title: "Jste přihlášeni",
+                            description: "Nyní můžete přidávat a zobrazovat události."
+                        )
                     }
-                    .padding()
-                    .padding(.top, 20)
                 }
                 
                 Spacer()
