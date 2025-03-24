@@ -112,15 +112,15 @@ struct ContentView: View {
                                 .multilineTextAlignment(.center)
                                 .foregroundColor(.gray)
                                 .padding(.horizontal, 40)
-                        case "Zúčastním se":
+                        case "Veřejné":
                             Image(systemName: "checkmark.circle")
                                 .font(.system(size: 60))
                                 .foregroundColor(.green)
-                            Text("Události s vaší účastí")
+                            Text("Veřejné události")
                                 .font(.title2)
                                 .fontWeight(.bold)
                                 .foregroundColor(.white)
-                            Text("Události, na které jste potvrdili svou účast.")
+                            Text("Události, které ostatní uživatelé označili za veřejné.")
                                 .multilineTextAlignment(.center)
                                 .foregroundColor(.gray)
                                 .padding(.horizontal, 40)

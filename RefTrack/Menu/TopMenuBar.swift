@@ -48,10 +48,10 @@ struct TopMenuBar: View {
                 }
                 
                 Button(action: {
-                    selectedFilter = "Zúčastním se"
-                    currentFilter = "Zúčastním se"
+                    selectedFilter = "Veřejné"
+                    currentFilter = "Veřejné"
                 }) {
-                    Label("Zúčastním se", systemImage: "checkmark.circle")
+                    Label("Veřejné", systemImage: "checkmark.circle")
                 }
             } label: {
                 HStack(spacing: 4) {
