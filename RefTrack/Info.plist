@@ -7,7 +7,7 @@
         <string>Intent</string>
     </array>
 
-    <!-- Povolení nezabezpečených HTTP požadavků -->
+    <!-- Povolení nezabezpečených HTTP požadavků. -->
     <key>NSAppTransportSecurity</key>
     <dict>
         <key>NSAllowsArbitraryLoads</key>
