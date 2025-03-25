@@ -43,6 +43,10 @@ struct MatchCardDesign: View {
             
             Spacer() // Automatické roztažení prostoru mezi týmy a datem
             
+            // Přidaná testovací bublina
+            testBubble
+                .padding(.bottom, 10)
+            
             dateTimeBottomSection
         }
         .padding(30)
@@ -207,6 +211,16 @@ struct MatchCardDesign: View {
             
             Spacer()
         }
+    }
+    
+    // Nově přidaná testovací bublina
+    private var testBubble: some View {
+        bubbleView(
+            icon: "info.circle",
+            text: "test",
+            backgroundColor: Color.blue.opacity(0.3),
+            gradientColors: [Color.blue.opacity(0.7), Color.blue.opacity(0.2)]
+        )
     }
     
     // Pomocná funkce pro vytvoření bubliny
