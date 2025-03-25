@@ -27,7 +27,7 @@ struct MatchCardDesign: View {
                     // Vlastní tvar se skleněným efektem pro banner
                     Group {
                         HStack(spacing: 6) {
-                            Image(systemName: "flag.fill") // Alternativní ikona místo nedostupné whistle.fill
+                            Image(systemName: "sharedwithyou") // Alternativní ikona místo nedostupné whistle.fill
                                 .foregroundColor(.white)
                                 .font(.system(size: 14))
                                 .shadow(color: .white.opacity(0.3), radius: 1)
