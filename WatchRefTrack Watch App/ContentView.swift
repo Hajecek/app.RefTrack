@@ -92,7 +92,12 @@ struct ContentView: View {
                     )
                     .padding(.top, 5)
                     
-                    Spacer()
+                    Spacer(minLength: 10)
+                    
+                    ScrollView {
+                        TestEventsView()
+                            .padding(.bottom, 8)
+                    }
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
             } else {
