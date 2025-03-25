@@ -36,63 +36,68 @@ struct ContentView: View {
     }()
     
     var body: some View {
-        if isLoggedIn, let user = userInfo {
-            VStack(alignment: .leading, spacing: 0) {
-                HStack(alignment: .center, spacing: 8) {
-                    if let profileImage = user.profileImage, 
-                       let imageUrl = URL(string: "http://10.0.0.15/reftrack/auth/images/\(profileImage)"),
-                       imageUrl.scheme != nil {
-                        
-                        AsyncImage(url: imageUrl) { phase in
-                            switch phase {
-                            case .empty:
-                                ProgressView()
-                                    .frame(width: 30, height: 30)
-                            case .success(let image):
-                                image
-                                    .resizable()
-                                    .scaledToFill()
-                                    .frame(width: 30, height: 30)
-                                    .clipShape(Circle())
-                                    .overlay(
-                                        Circle()
-                                            .stroke(Color.white.opacity(0.3), lineWidth: 1)
-                                    )
-                            case .failure:
+        NavigationView {
+            if isLoggedIn, let user = userInfo {
+                VStack(alignment: .leading, spacing: 0) {
+                    NavigationLink(destination: ProfileView(isLoggedIn: $isLoggedIn, userInfo: $userInfo)) {
+                        HStack(alignment: .center, spacing: 8) {
+                            if let profileImage = user.profileImage, 
+                               let imageUrl = URL(string: "http://10.0.0.15/reftrack/auth/images/\(profileImage)"),
+                               imageUrl.scheme != nil {
+                                
+                                AsyncImage(url: imageUrl) { phase in
+                                    switch phase {
+                                    case .empty:
+                                        ProgressView()
+                                            .frame(width: 30, height: 30)
+                                    case .success(let image):
+                                        image
+                                            .resizable()
+                                            .scaledToFill()
+                                            .frame(width: 30, height: 30)
+                                            .clipShape(Circle())
+                                            .overlay(
+                                                Circle()
+                                                    .stroke(Color.white.opacity(0.3), lineWidth: 1)
+                                            )
+                                    case .failure:
+                                        Image(systemName: "person.circle.fill")
+                                            .resizable()
+                                            .frame(width: 30, height: 30)
+                                            .foregroundColor(.gray)
+                                    @unknown default:
+                                        EmptyView()
+                                    }
+                                }
+                            } else {
                                 Image(systemName: "person.circle.fill")
                                     .resizable()
                                     .frame(width: 30, height: 30)
                                     .foregroundColor(.gray)
-                            @unknown default:
-                                EmptyView()
                             }
+                            
+                            Text("\(user.firstName) \(user.lastName)")
+                                .font(.system(size: 16, weight: .medium))
+                                .lineLimit(1)
+                                .foregroundColor(.white)
+                                .minimumScaleFactor(0.5)
                         }
-                    } else {
-                        Image(systemName: "person.circle.fill")
-                            .resizable()
-                            .frame(width: 30, height: 30)
-                            .foregroundColor(.gray)
                     }
+                    .buttonStyle(PlainButtonStyle())
+                    .padding(8)
+                    .frame(maxWidth: .infinity)
+                    .background(
+                        RoundedRectangle(cornerRadius: 10)
+                            .fill(Color.gray.opacity(0.2))
+                    )
+                    .padding(.top, 5)
                     
-                    Text("\(user.firstName) \(user.lastName)")
-                        .font(.system(size: 16, weight: .medium))
-                        .lineLimit(1)
-                        .foregroundColor(.white)
-                        .minimumScaleFactor(0.5)
+                    Spacer()
                 }
-                .padding(8)
-                .frame(maxWidth: .infinity)
-                .background(
-                    RoundedRectangle(cornerRadius: 10)
-                        .fill(Color.gray.opacity(0.2))
-                )
-                .padding(.top, 5)
-                
-                Spacer()
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+            } else {
+                LoginView(isLoggedIn: $isLoggedIn, userInfo: $userInfo)
             }
-            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
-        } else {
-            LoginView(isLoggedIn: $isLoggedIn, userInfo: $userInfo)
         }
     }
 }
