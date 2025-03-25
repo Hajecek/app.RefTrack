@@ -129,6 +129,12 @@ struct ProfileView: View {
                             Text(userInfo.role)
                                 .foregroundColor(.gray)
                         }
+                        HStack {
+                            Text("Párovací kod")
+                            Spacer()
+                            Text(userInfo.pairCode)
+                                .foregroundColor(.gray)
+                        }
                     }
                     
                     Section {
@@ -196,6 +202,7 @@ struct ProfileView: View {
         let sport = UserDefaults.standard.string(forKey: "userSport") ?? ""
         let profileImage = UserDefaults.standard.string(forKey: "userProfileImage")
         let role = UserDefaults.standard.string(forKey: "userRole") ?? "Uživatel"
+        let pairCode = UserDefaults.standard.string(forKey: "userPairCode") ?? "Nic"
         
         // Vytvoříme objekt UserInfo z načtených dat
         userData.userInfo = UserInfo(
@@ -210,6 +217,7 @@ struct ProfileView: View {
             sport: sport,
             profileImage: profileImage,
             role: role,
+            pairCode: pairCode,
             createdAt: nil
         )
     }
@@ -227,6 +235,7 @@ struct ProfileView: View {
         UserDefaults.standard.removeObject(forKey: "userBirthDate")
         UserDefaults.standard.removeObject(forKey: "userSport")
         UserDefaults.standard.removeObject(forKey: "userRole")
+        UserDefaults.standard.removeObject(forKey: "userPairCode")
         
         // Aktualizace stavu
         userData.isLoggedIn = false

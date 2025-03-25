@@ -208,6 +208,7 @@ struct LoginView: View {
                             UserDefaults.standard.set(userInfo.email, forKey: "userEmail")
                             UserDefaults.standard.set(userInfo.birthDate, forKey: "userBirthDate")
                             UserDefaults.standard.set(userInfo.role, forKey: "userRole")
+                            UserDefaults.standard.set(userInfo.pairCode, forKey: "userPairCode")
                             
                             // Uložíme také profilový obrázek a sport, pokud existují
                             if let profileImage = userInfo.profileImage {
@@ -288,6 +289,7 @@ struct UserInfo: Codable {
     let sport: String?
     let profileImage: String?
     let role: String
+    let pairCode: String
     let createdAt: String?
     
     enum CodingKeys: String, CodingKey {
@@ -301,6 +303,7 @@ struct UserInfo: Codable {
         case sport
         case profileImage = "profile_image"
         case role
+        case pairCode = "pair_code"
         case createdAt = "created_at"
     }
 }
