@@ -34,6 +34,9 @@ struct MatchCardDesign: View {
             bubblesRow
                 .padding(.top, 30)
             
+            teamsSection
+                .padding(.top, 25)
+            
             mainContent
                 .padding(.top, 10)
         }
@@ -161,18 +164,32 @@ struct MatchCardDesign: View {
         )
     }
     
+    // Sekce s týmy
+    private var teamsSection: some View {
+        HStack {
+            VStack(alignment: .center, spacing: 10) {
+                Text(match.homeTeam)
+                    .font(.system(size: 24, weight: .bold))
+                    .foregroundColor(.white)
+                    .multilineTextAlignment(.center)
+                
+                Text("vs")
+                    .font(.title3)
+                    .foregroundColor(.white.opacity(0.8))
+                
+                Text(match.awayTeam)
+                    .font(.system(size: 24, weight: .bold))
+                    .foregroundColor(.white)
+                    .multilineTextAlignment(.center)
+            }
+            .frame(maxWidth: .infinity)
+        }
+    }
+    
     // Hlavní obsah
     private var mainContent: some View {
         VStack(spacing: 25) {
             Spacer()
-            
-            // Spacer místo competition textu
-            Spacer().frame(height: 20)
-            
-            teamsSection
-                .padding(.vertical, 15)
-            
-            dateTimeMiddleSection
             
             Spacer()
             
@@ -180,24 +197,7 @@ struct MatchCardDesign: View {
         }
     }
     
-    // Sekce s týmy
-    private var teamsSection: some View {
-        VStack(spacing: 20) {
-            Text(match.homeTeam)
-                .font(.title2)
-                .foregroundColor(.white)
-            
-            Text("vs")
-                .font(.title3)
-                .foregroundColor(.white.opacity(0.8))
-            
-            Text(match.awayTeam)
-                .font(.title2)
-                .foregroundColor(.white)
-        }
-    }
-    
-    // Střední sekce s datem a časem
+    // Střední sekce s datem a časem - ponechávám definici, ale nepoužívám ji
     private var dateTimeMiddleSection: some View {
         HStack {
             Spacer()
