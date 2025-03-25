@@ -114,7 +114,7 @@ struct TopMenuBar: View {
                             .foregroundColor(.white)
                     )
             }
-            .sheet(isPresented: $showStatisticsView) {
+            .fullScreenCover(isPresented: $showStatisticsView) {
                 StatisticsView()
             }
             .padding(.trailing, 2)
