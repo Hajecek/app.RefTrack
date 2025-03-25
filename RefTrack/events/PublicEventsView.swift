@@ -33,16 +33,32 @@ struct ApiResponse: Codable {
 struct PublicEventsView: View {
     @State private var matches: [Match] = []
     @State private var isLoading = false
+    @Binding var hasMatches: Bool
+    
+    init(hasMatches: Binding<Bool> = .constant(false)) {
+        self._hasMatches = hasMatches
+    }
     
     var body: some View {
-        ScrollView(.horizontal, showsIndicators: false) {
-            LazyHStack(spacing: 12) {
-                ForEach(matches) { match in
-                    MatchCard(match: match)
+        Group {
+            if matches.isEmpty {
+                EventView(
+                    iconName: "calendar",
+                    iconColor: .blue,
+                    title: "Žádné veřejné zápasy",
+                    description: "Momentálně nejsou k dispozici žádné veřejné zápasy. Zkuste to prosím později."
+                )
+            } else {
+                ScrollView(.horizontal, showsIndicators: false) {
+                    LazyHStack(spacing: 12) {
+                        ForEach(matches) { match in
+                            MatchCard(match: match)
+                        }
+                    }
+                    .padding(.horizontal, 20)
+                    .padding(.vertical, 10)
                 }
             }
-            .padding(.horizontal, 20)
-            .padding(.vertical, 10)
         }
         .onAppear {
             loadMatches()
@@ -60,9 +76,11 @@ struct PublicEventsView: View {
                     let response = try JSONDecoder().decode(ApiResponse.self, from: data)
                     DispatchQueue.main.async {
                         matches = response.matches
+                        hasMatches = !matches.isEmpty
                     }
                 } catch {
                     print("Chyba dekódování: \(error)")
+                    hasMatches = false
                 }
             }
         }.resume()

@@ -11,6 +11,7 @@ struct ContentView: View {
     @State private var showLoginView = false
     @State private var isLoggedIn = UserDefaults.standard.bool(forKey: "isLoggedIn")
     @State private var currentFilter: String
+    @State private var hasPublicMatches = false
     
     init() {
         // Nastavíme výchozí filtr podle stavu přihlášení
@@ -38,13 +39,15 @@ struct ContentView: View {
             Color.black.opacity(0.15)
                 .ignoresSafeArea()
             
-            // Zaoblený rámeček pro obsah
-            RoundedRectangle(cornerRadius: 30)
-                .fill(Color.black.opacity(0.4))
-                .padding(.horizontal, 16)
-                .padding(.top, 120)
-                .padding(.bottom, 40)
-                .blur(radius: 0.5)
+            // Zaoblený rámeček pro obsah - nyní podmíněně
+            if currentFilter != "Veřejné" || !hasPublicMatches {
+                RoundedRectangle(cornerRadius: 30)
+                    .fill(Color.black.opacity(0.4))
+                    .padding(.horizontal, 16)
+                    .padding(.top, 120)
+                    .padding(.bottom, 40)
+                    .blur(radius: 0.5)
+            }
             
             VStack {
                 // Horní panel - nyní použijeme vlastní komponentu s profilovým obrázkem
@@ -59,7 +62,6 @@ struct ContentView: View {
                     profileImage: UserDefaults.standard.string(forKey: "userProfileImage"),
                     onLoginStatusChanged: {
                         isLoggedIn = UserDefaults.standard.bool(forKey: "isLoggedIn")
-                        // Pokud se uživatel přihlásí, změníme filtr na "Nadcházející"
                         if isLoggedIn {
                             currentFilter = "Nadcházející"
                         } else {
@@ -93,25 +95,29 @@ struct ContentView: View {
                     }
                     .padding(.top, 20)
                 } else {
-                    // Obsah podle vybraného filtru (pro přihlášené uživatele nebo filtr "Veřejné")
+                    // Obsah podle vybraného filtru
                     switch currentFilter {
-                    case "Nadcházející":
-                        UpcomingEventsView()
-                    case "Předchozí":
-                        PastEventsView()
-                    case "Probíhá":
-                        LiveEventsView()
-                    case "Pořádám":
-                        OrganizedEventsView()
                     case "Veřejné":
-                        PublicEventsView()
+                        PublicEventsView(hasMatches: $hasPublicMatches)
                     default:
-                        EventView(
-                            iconName: "checkmark.circle.fill",
-                            iconColor: .green,
-                            title: "Jste přihlášeni",
-                            description: "Nyní můžete přidávat a zobrazovat události."
-                        )
+                        // Pro všechny ostatní případy zachováme původní vzhled
+                        switch currentFilter {
+                        case "Nadcházející":
+                            UpcomingEventsView()
+                        case "Předchozí":
+                            PastEventsView()
+                        case "Probíhá":
+                            LiveEventsView()
+                        case "Pořádám":
+                            OrganizedEventsView()
+                        default:
+                            EventView(
+                                iconName: "checkmark.circle.fill",
+                                iconColor: .green,
+                                title: "Jste přihlášeni",
+                                description: "Nyní můžete přidávat a zobrazovat události."
+                            )
+                        }
                     }
                 }
                 
