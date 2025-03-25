@@ -11,6 +11,7 @@ struct PublicEventsView: View {
     @State private var isLoading = false
     @State private var timer: Timer?
     @Binding var hasMatches: Bool
+    @State private var matchesArePrivate = false
     
     init(hasMatches: Binding<Bool> = .constant(false)) {
         self._hasMatches = hasMatches
@@ -65,7 +66,6 @@ struct PublicEventsView: View {
         isLoading = true
         guard let url = URL(string: "http://10.0.0.15/reftrack/admin/api/events/public_events-api.php") else { return }
         
-        // Přidáme cache policy pro vynucení nového načtení dat
         let config = URLSessionConfiguration.default
         config.requestCachePolicy = .reloadIgnoringLocalCacheData
         config.urlCache = nil
@@ -77,11 +77,9 @@ struct PublicEventsView: View {
                 if let data = data {
                     do {
                         let response = try JSONDecoder().decode(ApiResponse.self, from: data)
-                        // Aktualizujeme matches pouze pokud se data změnila
-                        if self.matches != response.matches {
-                            self.matches = response.matches
-                            self.hasMatches = !response.matches.isEmpty
-                        }
+                        self.matches = response.matches
+                        self.hasMatches = !response.matches.isEmpty
+                        self.matchesArePrivate = response.status == "private"
                     } catch {
                         print("Chyba dekódování: \(error)")
                         self.hasMatches = false

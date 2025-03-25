@@ -12,6 +12,7 @@ struct ContentView: View {
     @State private var isLoggedIn = UserDefaults.standard.bool(forKey: "isLoggedIn")
     @State private var currentFilter: String
     @State private var hasPublicMatches = false
+    @State private var matchesArePrivate = false
     
     init() {
         // Nastavíme výchozí filtr podle stavu přihlášení
@@ -40,7 +41,7 @@ struct ContentView: View {
                 .ignoresSafeArea()
             
             // Zaoblený rámeček pro obsah - nyní podmíněně
-            if (currentFilter == "Veřejné" && !hasPublicMatches) || (currentFilter == "Budoucí" && !hasPublicMatches) {
+            if (currentFilter == "Veřejné" && !hasPublicMatches) || (currentFilter == "Budoucí" && !hasPublicMatches) || (currentFilter == "Veřejné" && matchesArePrivate) {
                 RoundedRectangle(cornerRadius: 30)
                     .fill(Color.black.opacity(0.4))
                     .padding(.horizontal, 16)
