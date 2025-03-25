@@ -24,6 +24,10 @@ struct MatchCardDesign: View {
                     endPoint: .bottomTrailing
                 )
             )
+            .overlay(
+                RoundedRectangle(cornerRadius: 30)
+                    .stroke(getVisibilityBorderColor(), lineWidth: 2.5)
+            )
             .frame(width: UIScreen.main.bounds.width - 40, height: 600)
             .shadow(color: Color.black.opacity(0.2), radius: 15, x: 0, y: 8)
     }
@@ -32,14 +36,12 @@ struct MatchCardDesign: View {
     private var contentView: some View {
         VStack(alignment: .leading, spacing: 0) {
             bubblesRow
-                .padding(.top, 30)
-            
-            Spacer(minLength: 50) // Většeí mezera před týmy
+                .padding(.top, 25)
             
             teamsSection
-                .frame(maxWidth: .infinity) // Centrování horizontálně
+                .padding(.top, 25)
             
-            Spacer(minLength: 50) // Větší mezera po týmech
+            Spacer() // Automatické roztažení prostoru mezi týmy a datem
             
             dateTimeBottomSection
         }
@@ -169,43 +171,22 @@ struct MatchCardDesign: View {
     
     // Sekce s týmy
     private var teamsSection: some View {
-        VStack(spacing: 25) {
-            // Domácí tým
+        VStack(alignment: .leading, spacing: 15) {
+            // Domácí tým - bílá barva
             Text(match.homeTeam)
-                .font(.system(size: 32, weight: .bold))
-                .foregroundColor(.white)
-                .multilineTextAlignment(.center) // Zarovnání na střed
-                .lineLimit(2) // Povoleno až 2 řádky
+                .font(.system(size: 36, weight: .bold))
+                .foregroundColor(.white)  // Čistě bílá barva
+                .lineLimit(2)
                 .minimumScaleFactor(0.8)
-                .frame(maxWidth: .infinity) // Roztáhnutí na celou šířku
             
-            // Dělicí čára s VS uprostřed
-            HStack {
-                Rectangle()
-                    .fill(Color.white.opacity(0.3))
-                    .frame(height: 1)
-                
-                Text("VS")
-                    .font(.system(size: 22, weight: .bold))
-                    .foregroundColor(.white.opacity(0.7))
-                    .padding(.horizontal, 12)
-                
-                Rectangle()
-                    .fill(Color.white.opacity(0.3))
-                    .frame(height: 1)
-            }
-            .padding(.vertical, 5) // Menší vertikální odsazení
-            
-            // Hostující tým
+            // Hostující tým - světle modrá barva
             Text(match.awayTeam)
-                .font(.system(size: 32, weight: .bold))
-                .foregroundColor(.white)
-                .multilineTextAlignment(.center) // Zarovnání na střed
-                .lineLimit(2) // Povoleno až 2 řádky
+                .font(.system(size: 36, weight: .bold))
+                .foregroundColor(Color(red: 0.85, green: 0.9, blue: 1.0)) // Jasněji modrá barva pro lepší kontrast
+                .lineLimit(2)
                 .minimumScaleFactor(0.8)
-                .frame(maxWidth: .infinity) // Roztáhnutí na celou šířku
         }
-        .padding(.horizontal) // Přidání horizontálního paddingu
+        .padding(.horizontal, 0)
     }
     
     // Spodní sekce s datem a časem
@@ -299,5 +280,13 @@ struct MatchCardDesign: View {
         }
         
         return (dateString, "")
+    }
+    
+    // Pomocná funkce pro získání barvy ohraničení podle viditelnosti
+    private func getVisibilityBorderColor() -> Color {
+        let visibility = match.visibility ?? "private" // Výchozí hodnota, když je visibility nil
+        let isPublic = visibility.lowercased() == "public"
+        
+        return isPublic ? Color.green.opacity(0.5) : Color.red.opacity(0.5)
     }
 } 
