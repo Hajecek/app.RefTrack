@@ -33,6 +33,7 @@ struct ApiResponse: Codable {
 struct PublicEventsView: View {
     @State private var matches: [Match] = []
     @State private var isLoading = false
+    @State private var timer: Timer?
     @Binding var hasMatches: Bool
     
     init(hasMatches: Binding<Bool> = .constant(false)) {
@@ -62,25 +63,50 @@ struct PublicEventsView: View {
         }
         .onAppear {
             loadMatches()
+            startTimer()
         }
+        .onDisappear {
+            stopTimer()
+        }
+    }
+    
+    private func startTimer() {
+        // Aktualizace každou sekundu
+        timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { _ in
+            loadMatches()
+        }
+    }
+    
+    private func stopTimer() {
+        timer?.invalidate()
+        timer = nil
     }
     
     private func loadMatches() {
         isLoading = true
         guard let url = URL(string: "http://10.0.0.15/reftrack/admin/api/events/public_events-api.php") else { return }
         
-        URLSession.shared.dataTask(with: url) { data, response, error in
-            isLoading = false
-            if let data = data {
-                do {
-                    let response = try JSONDecoder().decode(ApiResponse.self, from: data)
-                    DispatchQueue.main.async {
-                        matches = response.matches
-                        hasMatches = !matches.isEmpty
+        // Přidáme cache policy pro vynucení nového načtení dat
+        let config = URLSessionConfiguration.default
+        config.requestCachePolicy = .reloadIgnoringLocalCacheData
+        config.urlCache = nil
+        let session = URLSession(configuration: config)
+        
+        session.dataTask(with: url) { data, response, error in
+            DispatchQueue.main.async {
+                isLoading = false
+                if let data = data {
+                    do {
+                        let response = try JSONDecoder().decode(ApiResponse.self, from: data)
+                        // Aktualizujeme matches pouze pokud se data změnila
+                        if self.matches != response.matches {
+                            self.matches = response.matches
+                            self.hasMatches = !response.matches.isEmpty
+                        }
+                    } catch {
+                        print("Chyba dekódování: \(error)")
+                        self.hasMatches = false
                     }
-                } catch {
-                    print("Chyba dekódování: \(error)")
-                    hasMatches = false
                 }
             }
         }.resume()
@@ -175,5 +201,17 @@ extension Color {
             blue:  Double(b) / 255,
             opacity: Double(a) / 255
         )
+    }
+}
+
+extension Match: Equatable {
+    static func == (lhs: Match, rhs: Match) -> Bool {
+        return lhs.id == rhs.id &&
+               lhs.competition == rhs.competition &&
+               lhs.homeTeam == rhs.homeTeam &&
+               lhs.awayTeam == rhs.awayTeam &&
+               lhs.matchDate == rhs.matchDate &&
+               lhs.homeScore == rhs.homeScore &&
+               lhs.awayScore == rhs.awayScore
     }
 } 
