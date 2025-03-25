@@ -114,6 +114,8 @@ struct LoginView: View {
                         userInfo = decodedResponse
                         UserDefaults.standard.set(true, forKey: "isLoggedIn")
                         
+                        print("Uživatel ID: \(decodedResponse.id)")
+                        
                         showSuccessToast(decodedResponse.message)
                         isLoggedIn = true
                     } else {
