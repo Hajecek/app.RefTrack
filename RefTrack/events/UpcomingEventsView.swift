@@ -5,6 +5,7 @@ struct UpcomingEventsView: View {
     @State private var isLoading = false
     @State private var errorMessage: String?
     @State private var isLoggedIn: Bool = UserDefaults.standard.bool(forKey: "isLoggedIn")
+    @State private var timer: Timer?
     @Binding var hasMatches: Bool
     
     init(hasMatches: Binding<Bool> = .constant(false)) {
@@ -44,7 +45,22 @@ struct UpcomingEventsView: View {
         }
         .onAppear {
             fetchMatches()
+            startTimer()
         }
+        .onDisappear {
+            stopTimer()
+        }
+    }
+    
+    private func startTimer() {
+        timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { _ in
+            fetchMatches()
+        }
+    }
+    
+    private func stopTimer() {
+        timer?.invalidate()
+        timer = nil
     }
     
     private func fetchMatches() {
@@ -69,7 +85,12 @@ struct UpcomingEventsView: View {
         request.httpMethod = "GET"
         request.setValue("application/json", forHTTPHeaderField: "Accept")
         
-        let task = URLSession.shared.dataTask(with: request) { data, response, error in
+        let config = URLSessionConfiguration.default
+        config.requestCachePolicy = .reloadIgnoringLocalCacheData
+        config.urlCache = nil
+        let session = URLSession(configuration: config)
+        
+        session.dataTask(with: request) { data, response, error in
             DispatchQueue.main.async {
                 self.isLoading = false
                 
@@ -104,8 +125,7 @@ struct UpcomingEventsView: View {
                     self.hasMatches = false
                 }
             }
-        }
-        task.resume()
+        }.resume()
     }
 }
 
