@@ -17,6 +17,8 @@ struct TopMenuBar: View {
     @Binding var currentFilter: String
     @State private var showProfileView = false
     @State private var showStatisticsView = false
+    @Binding var upcomingMatchesCount: Int
+    @Binding var organizedMatchesCount: Int
     
     init(onAddTap: @escaping () -> Void, 
          onProfileTap: @escaping () -> Void,
@@ -24,7 +26,9 @@ struct TopMenuBar: View {
          isLoggedIn: Bool, 
          profileImage: String?, 
          onLoginStatusChanged: (() -> Void)?, 
-         currentFilter: Binding<String>) {
+         currentFilter: Binding<String>,
+         upcomingMatchesCount: Binding<Int>,
+         organizedMatchesCount: Binding<Int>) {
         self.onAddTap = onAddTap
         self.onProfileTap = onProfileTap
         self.onStatsTap = onStatsTap
@@ -33,6 +37,8 @@ struct TopMenuBar: View {
         self.onLoginStatusChanged = onLoginStatusChanged
         self._currentFilter = currentFilter
         self._selectedFilter = State(initialValue: currentFilter.wrappedValue)
+        self._upcomingMatchesCount = upcomingMatchesCount
+        self._organizedMatchesCount = organizedMatchesCount
     }
     
     var body: some View {
@@ -42,7 +48,7 @@ struct TopMenuBar: View {
                     selectedFilter = "Budoucí"
                     currentFilter = "Budoucí"
                 }) {
-                    Label("Budoucí (2)", systemImage: "calendar")
+                    Label("Budoucí (\(upcomingMatchesCount))", systemImage: "calendar")
                 }
                 
                 Button(action: {
@@ -63,7 +69,7 @@ struct TopMenuBar: View {
                     selectedFilter = "Pořádám"
                     currentFilter = "Pořádám"
                 }) {
-                    Label("Pořádám (2)", systemImage: "crown")
+                    Label("Pořádám (\(organizedMatchesCount))", systemImage: "crown")
                 }
                 
                 Button(action: {
@@ -180,7 +186,9 @@ struct TopMenuBar: View {
             isLoggedIn: false,
             profileImage: nil,
             onLoginStatusChanged: nil,
-            currentFilter: .constant("Budoucí")
+            currentFilter: .constant("Budoucí"),
+            upcomingMatchesCount: .constant(0),
+            organizedMatchesCount: .constant(0)
         )
     }
 } 

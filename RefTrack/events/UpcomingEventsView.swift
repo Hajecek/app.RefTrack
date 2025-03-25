@@ -7,9 +7,12 @@ struct UpcomingEventsView: View {
     @State private var isLoggedIn: Bool = UserDefaults.standard.bool(forKey: "isLoggedIn")
     @State private var timer: Timer?
     @Binding var hasMatches: Bool
+    @Binding var upcomingMatchesCount: Int
     
-    init(hasMatches: Binding<Bool> = .constant(false)) {
+    init(hasMatches: Binding<Bool> = .constant(false), 
+         upcomingMatchesCount: Binding<Int> = .constant(0)) {
         self._hasMatches = hasMatches
+        self._upcomingMatchesCount = upcomingMatchesCount
     }
     
     var body: some View {
@@ -110,6 +113,13 @@ struct UpcomingEventsView: View {
                 // Logování odpovědi
                 if let data = data, let jsonString = String(data: data, encoding: .utf8) {
                     print("API Response: \(jsonString)")
+                    
+                    do {
+                        let apiResponse = try JSONDecoder().decode(ApiResponse.self, from: data)
+                        print("Number of matches: \(apiResponse.matches.count)")
+                    } catch {
+                        print("Error decoding response: \(error)")
+                    }
                 }
                 
                 guard let httpResponse = response as? HTTPURLResponse else {
@@ -129,9 +139,11 @@ struct UpcomingEventsView: View {
                     if apiResponse.status == "error" {
                         self.errorMessage = apiResponse.message
                         self.hasMatches = false
+                        self.upcomingMatchesCount = 0
                     } else {
                         self.matches = apiResponse.matches
                         self.hasMatches = !apiResponse.matches.isEmpty
+                        self.upcomingMatchesCount = apiResponse.matches.count
                     }
                 } catch {
                     self.errorMessage = "Chyba při dekódování dat: \(error.localizedDescription)"
