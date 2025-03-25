@@ -40,7 +40,7 @@ struct ContentView: View {
                 .ignoresSafeArea()
             
             // Zaoblený rámeček pro obsah - nyní podmíněně
-            if currentFilter != "Veřejné" || !hasPublicMatches {
+            if (currentFilter == "Veřejné" && !hasPublicMatches) || (currentFilter == "Budoucí" && !hasPublicMatches) {
                 RoundedRectangle(cornerRadius: 30)
                     .fill(Color.black.opacity(0.4))
                     .padding(.horizontal, 16)
@@ -106,7 +106,7 @@ struct ContentView: View {
                         // Pro všechny ostatní případy zachováme původní vzhled
                         switch currentFilter {
                         case "Budoucí":
-                            UpcomingEventsView()
+                            UpcomingEventsView(hasMatches: $hasPublicMatches)
                         case "Předchozí":
                             PastEventsView()
                         case "Probíhá":

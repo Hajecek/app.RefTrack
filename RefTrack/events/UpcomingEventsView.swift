@@ -1,12 +1,112 @@
 import SwiftUI
 
 struct UpcomingEventsView: View {
-    var body: some View {
-        EventView(
-            iconName: "calendar",
-            iconColor: .blue,
-            title: "Nadcházející události",
-            description: "Zde uvidíte své plánované nadcházející události."
-        )
+    @State private var matches: [Match] = []
+    @State private var isLoading = false
+    @State private var errorMessage: String?
+    @State private var isLoggedIn: Bool = UserDefaults.standard.bool(forKey: "isLoggedIn")
+    @Binding var hasMatches: Bool
+    
+    init(hasMatches: Binding<Bool> = .constant(false)) {
+        self._hasMatches = hasMatches
     }
-} 
+    
+    var body: some View {
+        Group {
+            if !isLoggedIn {
+                EventView(
+                    iconName: "calendar",
+                    iconColor: .blue,
+                    title: "Nepřihlášen",
+                    description: "Pro zobrazení zápasů se prosím přihlaste."
+                )
+            } else if matches.isEmpty {
+                EventView(
+                    iconName: "calendar",
+                    iconColor: .blue,
+                    title: "Žádné nadcházející zápasy",
+                    description: "Momentálně nemáte žádné plánované zápasy."
+                )
+            } else {
+                ScrollView(.horizontal, showsIndicators: false) {
+                    LazyHStack(spacing: 12) {
+                        ForEach(matches) { match in
+                            MatchCard(match: match)
+                                .frame(width: UIScreen.main.bounds.width - 40)
+                        }
+                    }
+                    .padding(.horizontal, 20)
+                    .padding(.vertical, 10)
+                }
+                .scrollTargetLayout()
+                .scrollTargetBehavior(.viewAligned)
+            }
+        }
+        .onAppear {
+            fetchMatches()
+        }
+    }
+    
+    private func fetchMatches() {
+        isLoading = true
+        errorMessage = nil
+        
+        guard isLoggedIn else {
+            errorMessage = "Uživatel není přihlášen"
+            isLoading = false
+            return
+        }
+        
+        let userId = UserDefaults.standard.string(forKey: "user_id") ?? "1"
+        
+        guard let url = URL(string: "http://10.0.0.15/reftrack/admin/api/events/upcoming_events-api.php?user_id=\(userId)") else {
+            errorMessage = "Neplatná URL"
+            isLoading = false
+            return
+        }
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = "GET"
+        request.setValue("application/json", forHTTPHeaderField: "Accept")
+        
+        let task = URLSession.shared.dataTask(with: request) { data, response, error in
+            DispatchQueue.main.async {
+                self.isLoading = false
+                
+                if let error = error {
+                    self.errorMessage = "Chyba sítě: \(error.localizedDescription)"
+                    return
+                }
+                
+                guard let httpResponse = response as? HTTPURLResponse else {
+                    self.errorMessage = "Neplatná odpověď serveru"
+                    return
+                }
+                
+                guard let data = data else {
+                    self.errorMessage = "Žádná data nebyla přijata"
+                    return
+                }
+                
+                do {
+                    let decoder = JSONDecoder()
+                    let apiResponse = try decoder.decode(ApiResponse.self, from: data)
+                    
+                    if apiResponse.status == "error" {
+                        self.errorMessage = apiResponse.message
+                        self.hasMatches = false
+                    } else {
+                        self.matches = apiResponse.matches
+                        self.hasMatches = !apiResponse.matches.isEmpty
+                    }
+                } catch {
+                    self.errorMessage = "Chyba při dekódování dat: \(error.localizedDescription)"
+                    self.hasMatches = false
+                }
+            }
+        }
+        task.resume()
+    }
+}
+
+
