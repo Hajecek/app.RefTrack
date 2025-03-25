@@ -10,8 +10,8 @@ struct MatchCardDesign: View {
                 .fill(
                     LinearGradient(
                         gradient: Gradient(colors: [
-                            Color(red: 0.18, green: 0.23, blue: 0.38),  // Světlejší modrá s vyšším kontrastem
-                            Color(red: 0.12, green: 0.17, blue: 0.27)   // Tmavší modrá s hlubším odstínem
+                            Color(red: 0.0, green: 0.44, blue: 0.8),  // Světlejší modrá podobná screenshotu
+                            Color(red: 0.0, green: 0.22, blue: 0.55)   // Tmavší modrá
                         ]),
                         startPoint: .topLeading,
                         endPoint: .bottomTrailing
@@ -20,16 +20,64 @@ struct MatchCardDesign: View {
                 .frame(width: UIScreen.main.bounds.width - 40, height: 600)
                 .shadow(color: Color.black.opacity(0.2), radius: 15, x: 0, y: 8)
             
-            // Obsah
-            VStack(spacing: 30) {
+            // Obsah karty
+            VStack(alignment: .leading, spacing: 0) {
+                // Horní část s bannerem - skleněný efekt
+                HStack {
+                    // Vlastní tvar se skleněným efektem pro banner
+                    RoundedRectangle(cornerRadius: 20)
+                        .fill(Color.white.opacity(0.15)) // Průhledná bílá základní barva
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 20)
+                                .stroke(
+                                    LinearGradient(
+                                        gradient: Gradient(colors: [
+                                            Color.white.opacity(0.6),   // Světlejší okraj nahoře
+                                            Color.white.opacity(0.1)    // Tmavší okraj dole
+                                        ]),
+                                        startPoint: .topLeading,
+                                        endPoint: .bottomTrailing
+                                    ),
+                                    lineWidth: 1
+                                )
+                        )
+                        .background(
+                            RoundedRectangle(cornerRadius: 20)
+                                .fill(Color.white.opacity(0.05))
+                                .blur(radius: 3)
+                                .offset(x: 0, y: 2)
+                        )
+                        .frame(width: 140, height: 40)
+                        .shadow(color: Color.black.opacity(0.15), radius: 8, x: 0, y: 4)
+                        .overlay(
+                            HStack(spacing: 6) {
+                                Image(systemName: "crown.fill")
+                                    .foregroundColor(.white)
+                                    .font(.system(size: 14))
+                                    .shadow(color: .white.opacity(0.3), radius: 1)
+                                Text("Pořádám")
+                                    .font(.system(size: 15, weight: .semibold))
+                                    .foregroundColor(.white)
+                                    .shadow(color: .black.opacity(0.3), radius: 1)
+                            }
+                            .padding(.horizontal, 8)
+                        )
+                        .padding(.leading, -5)
+                    
+                    Spacer()
+                }
+                .padding(.top, 30)
+                
                 // Hlavní obsah
                 VStack(spacing: 25) {
+                    Spacer()
+                    
                     Text(match.competition)
                         .font(.system(size: 32, weight: .bold))
                         .foregroundColor(.white)
                         .multilineTextAlignment(.center)
                     
-                    VStack(spacing: 15) {
+                    VStack(spacing: 20) {
                         Text(match.homeTeam)
                             .font(.title2)
                             .foregroundColor(.white)
@@ -42,17 +90,31 @@ struct MatchCardDesign: View {
                             .font(.title2)
                             .foregroundColor(.white)
                     }
-                    .padding(.vertical, 20)
+                    .padding(.vertical, 15)
                     
-                    VStack(spacing: 8) {
-                        Text(formatDate(match.matchDate))
-                            .font(.system(size: 20, weight: .medium))
+                    HStack {
+                        Spacer()
+                        VStack(spacing: 8) {
+                            Text(formatDate(match.matchDate))
+                                .font(.system(size: 20, weight: .medium))
+                                .foregroundColor(.white)
+                        }
+                        Spacer()
+                    }
+                    
+                    Spacer()
+                    
+                    // Název role ve velkém fontu dole - zarovnání doleva (místo location)
+                    HStack {
+                        Text(match.role ?? "")
+                            .font(.system(size: 48, weight: .bold))
                             .foregroundColor(.white)
+                            .padding(.bottom, 40)
+                        
+                        Spacer() // Přidá prostor napravo, což posune text doleva
                     }
                 }
-                .padding(.top, 30)
-                
-                Spacer()
+                .padding(.top, 10)
             }
             .padding(30)
         }
