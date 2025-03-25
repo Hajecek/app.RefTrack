@@ -8,6 +8,7 @@ import SwiftUI
 struct TopMenuBar: View {
     var onAddTap: () -> Void
     var onProfileTap: () -> Void
+    var onStatsTap: () -> Void
     var isLoggedIn: Bool
     var profileImage: String?
     var onLoginStatusChanged: (() -> Void)?
@@ -15,15 +16,18 @@ struct TopMenuBar: View {
     @State private var showFilterMenu = false
     @Binding var currentFilter: String
     @State private var showProfileView = false
+    @State private var showStatisticsView = false
     
     init(onAddTap: @escaping () -> Void, 
-         onProfileTap: @escaping () -> Void, 
+         onProfileTap: @escaping () -> Void,
+         onStatsTap: @escaping () -> Void,
          isLoggedIn: Bool, 
          profileImage: String?, 
          onLoginStatusChanged: (() -> Void)?, 
          currentFilter: Binding<String>) {
         self.onAddTap = onAddTap
         self.onProfileTap = onProfileTap
+        self.onStatsTap = onStatsTap
         self.isLoggedIn = isLoggedIn
         self.profileImage = profileImage
         self.onLoginStatusChanged = onLoginStatusChanged
@@ -35,10 +39,10 @@ struct TopMenuBar: View {
         HStack(alignment: .center) {
             Menu {
                 Button(action: {
-                    selectedFilter = "Nadcházející"
-                    currentFilter = "Nadcházející"
+                    selectedFilter = "Budoucí"
+                    currentFilter = "Budoucí"
                 }) {
-                    Label("Nadcházející (2)", systemImage: "calendar")
+                    Label("Budoucí (2)", systemImage: "calendar")
                 }
                 
                 Button(action: {
@@ -95,7 +99,25 @@ struct TopMenuBar: View {
                             .foregroundColor(.white)
                     )
             }
-            .padding(.trailing, 8)
+            .padding(.trailing, 2)
+            
+            Button(action: {
+                showStatisticsView = true
+                onStatsTap()
+            }) {
+                Circle()
+                    .fill(Color.white.opacity(0.3))
+                    .frame(width: 40, height: 40)
+                    .overlay(
+                        Image(systemName: "chart.bar.fill")
+                            .font(.system(size: 20, weight: .bold))
+                            .foregroundColor(.white)
+                    )
+            }
+            .sheet(isPresented: $showStatisticsView) {
+                StatisticsView()
+            }
+            .padding(.trailing, 2)
             
             Button(action: {
                 showProfileView = true
@@ -154,10 +176,11 @@ struct TopMenuBar: View {
         TopMenuBar(
             onAddTap: {},
             onProfileTap: {},
+            onStatsTap: {},
             isLoggedIn: false,
             profileImage: nil,
             onLoginStatusChanged: nil,
-            currentFilter: .constant("Nadcházející")
+            currentFilter: .constant("Budoucí")
         )
     }
 } 

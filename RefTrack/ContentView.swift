@@ -16,7 +16,7 @@ struct ContentView: View {
     init() {
         // Nastavíme výchozí filtr podle stavu přihlášení
         let isLoggedIn = UserDefaults.standard.bool(forKey: "isLoggedIn")
-        _currentFilter = State(initialValue: isLoggedIn ? "Nadcházející" : "Veřejné")
+        _currentFilter = State(initialValue: isLoggedIn ? "Budoucí" : "Veřejné")
     }
     
     var body: some View {
@@ -58,12 +58,15 @@ struct ContentView: View {
                     onProfileTap: {
                         // Akce pro profil
                     },
+                    onStatsTap: {
+                        // Akce pro statistiky
+                    },
                     isLoggedIn: isLoggedIn,
                     profileImage: UserDefaults.standard.string(forKey: "userProfileImage"),
                     onLoginStatusChanged: {
                         isLoggedIn = UserDefaults.standard.bool(forKey: "isLoggedIn")
                         if isLoggedIn {
-                            currentFilter = "Nadcházející"
+                            currentFilter = "Budoucí"
                         } else {
                             currentFilter = "Veřejné"
                         }
@@ -102,7 +105,7 @@ struct ContentView: View {
                     default:
                         // Pro všechny ostatní případy zachováme původní vzhled
                         switch currentFilter {
-                        case "Nadcházející":
+                        case "Budoucí":
                             UpcomingEventsView()
                         case "Předchozí":
                             PastEventsView()
@@ -142,7 +145,7 @@ struct ContentView: View {
             isLoggedIn = UserDefaults.standard.bool(forKey: "isLoggedIn")
             // Při přihlášení změníme filtr na "Nadcházející"
             if isLoggedIn {
-                currentFilter = "Nadcházející"
+                currentFilter = "Budoucí"
             } else {
                 currentFilter = "Veřejné"
             }
