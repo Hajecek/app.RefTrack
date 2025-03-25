@@ -83,6 +83,22 @@ struct TestEventsView: View {
                 } else if let error = errorMessage {
                     Text("Chyba: \(error)")
                         .foregroundColor(.red)
+                } else if matches.isEmpty {
+                    VStack(spacing: 6) {
+                        Image(systemName: "exclamationmark.triangle.fill")
+                            .font(.system(size: 20))
+                            .foregroundColor(.yellow)
+                        
+                        Text("Nemáte žádné naplánované zápasy")
+                            .font(.system(size: 12))
+                            .multilineTextAlignment(.center)
+                            .foregroundColor(.white)
+                    }
+                    .padding(12)
+                    .frame(maxWidth: .infinity)
+                    .background(Color.gray.opacity(0.2))
+                    .cornerRadius(8)
+                    .padding(.horizontal, 8)
                 } else {
                     ForEach(matches) { match in
                         VStack(alignment: .leading, spacing: 4) {
@@ -126,17 +142,14 @@ struct TestEventsView: View {
             return
         }
         
-        // Získání user_id z UserDefaults s výchozí hodnotou pro testování
-        let userId = UserDefaults.standard.string(forKey: "user_id") ?? "1"  // "1" je výchozí hodnota pro testování
+        let userId = UserDefaults.standard.string(forKey: "user_id") ?? "1"
         
-        // Vytvoření URL s dynamickým user_id
         guard let url = URL(string: "http://10.0.0.15/reftrack/admin/api/users_matches-api.php?user_id=\(userId)") else {
             errorMessage = "Neplatná URL"
             isLoading = false
             return
         }
         
-        // Vytvoření requestu
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
         request.setValue("application/json", forHTTPHeaderField: "Accept")
@@ -160,37 +173,16 @@ struct TestEventsView: View {
                     return
                 }
                 
-                // Debug výpis přijatých dat
-                let responseString = String(data: data, encoding: .utf8) ?? "Nelze přečíst data"
-                print("Odpověď serveru (\(httpResponse.statusCode)): \(responseString)")
-                
                 do {
-                    // Dekódování odpovědi
                     let decoder = JSONDecoder()
                     let apiResponse = try decoder.decode(APIResponse.self, from: data)
                     
-                    if apiResponse.status == "error" {
-                        self.errorMessage = apiResponse.message
-                    } else if apiResponse.matches.isEmpty {
-                        self.errorMessage = "Uživatel nemá žádné zápasy"
-                    } else {
-                        self.matches = apiResponse.matches
-                    }
-                } catch let DecodingError.dataCorrupted(context) {
-                    self.errorMessage = "Chyba v datech: \(context.debugDescription)"
-                    print("Debug context: \(context)")
-                } catch let DecodingError.keyNotFound(key, context) {
-                    self.errorMessage = "Chybějící klíč '\(key.stringValue)' v \(context.debugDescription)"
-                    print("Debug context: \(context)")
-                } catch let DecodingError.typeMismatch(type, context) {
-                    self.errorMessage = "Nesprávný typ '\(type)' v \(context.debugDescription)"
-                    print("Debug context: \(context)")
-                } catch let DecodingError.valueNotFound(type, context) {
-                    self.errorMessage = "Chybějící hodnota '\(type)' v \(context.debugDescription)"
-                    print("Debug context: \(context)")
+                    // Upravená část - ignorujeme zprávu z API
+                    self.matches = apiResponse.matches
+                    self.errorMessage = nil  // Vynulujeme chybovou zprávu
+                    
                 } catch {
-                    self.errorMessage = "Neznámá chyba při dekódování: \(error.localizedDescription)"
-                    print("Raw data: \(responseString)")
+                    self.errorMessage = "Chyba při zpracování dat"
                 }
             }
         }
