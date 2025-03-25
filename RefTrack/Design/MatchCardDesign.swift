@@ -25,44 +25,40 @@ struct MatchCardDesign: View {
                 // Horní část s bannerem - skleněný efekt
                 HStack {
                     // Vlastní tvar se skleněným efektem pro banner
-                    RoundedRectangle(cornerRadius: 20)
-                        .fill(Color.white.opacity(0.15)) // Průhledná bílá základní barva
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 20)
-                                .stroke(
-                                    LinearGradient(
-                                        gradient: Gradient(colors: [
-                                            Color.white.opacity(0.6),   // Světlejší okraj nahoře
-                                            Color.white.opacity(0.1)    // Tmavší okraj dole
-                                        ]),
-                                        startPoint: .topLeading,
-                                        endPoint: .bottomTrailing
-                                    ),
-                                    lineWidth: 1
-                                )
-                        )
+                    Group {
+                        HStack(spacing: 6) {
+                            Image(systemName: "flag.fill") // Alternativní ikona místo nedostupné whistle.fill
+                                .foregroundColor(.white)
+                                .font(.system(size: 14))
+                                .shadow(color: .white.opacity(0.3), radius: 1)
+                            Text(match.role ?? "")
+                                .font(.system(size: 15, weight: .semibold))
+                                .foregroundColor(.white)
+                                .shadow(color: .black.opacity(0.3), radius: 1)
+                        }
+                        .padding(.horizontal, 12)
+                        .padding(.vertical, 8)
                         .background(
                             RoundedRectangle(cornerRadius: 20)
-                                .fill(Color.white.opacity(0.05))
-                                .blur(radius: 3)
-                                .offset(x: 0, y: 2)
+                                .fill(Color.white.opacity(0.15))
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 20)
+                                        .stroke(
+                                            LinearGradient(
+                                                gradient: Gradient(colors: [
+                                                    Color.white.opacity(0.6),
+                                                    Color.white.opacity(0.1)
+                                                ]),
+                                                startPoint: .topLeading,
+                                                endPoint: .bottomTrailing
+                                            ),
+                                            lineWidth: 1
+                                        )
+                                )
+                                .shadow(color: Color.black.opacity(0.15), radius: 8, x: 0, y: 4)
                         )
-                        .frame(width: 140, height: 40)
-                        .shadow(color: Color.black.opacity(0.15), radius: 8, x: 0, y: 4)
-                        .overlay(
-                            HStack(spacing: 6) {
-                                Image(systemName: "crown.fill")
-                                    .foregroundColor(.white)
-                                    .font(.system(size: 14))
-                                    .shadow(color: .white.opacity(0.3), radius: 1)
-                                Text("Pořádám")
-                                    .font(.system(size: 15, weight: .semibold))
-                                    .foregroundColor(.white)
-                                    .shadow(color: .black.opacity(0.3), radius: 1)
-                            }
-                            .padding(.horizontal, 8)
-                        )
-                        .padding(.leading, -5)
+                    }
+                    .padding(.leading, -5)
                     
                     Spacer()
                 }
@@ -106,7 +102,7 @@ struct MatchCardDesign: View {
                     
                     // Název role ve velkém fontu dole - zarovnání doleva (místo location)
                     HStack {
-                        Text(match.role ?? "")
+                        Text(match.location)
                             .font(.system(size: 48, weight: .bold))
                             .foregroundColor(.white)
                             .padding(.bottom, 40)
