@@ -10,15 +10,15 @@ struct MatchCardDesign: View {
                 .fill(
                     LinearGradient(
                         gradient: Gradient(colors: [
-                            Color(hex: "0040DD"),  // Velmi tmavá modrá
-                            Color(hex: "0A84FF")   // Středně tmavá Apple modrá
+                            Color(red: 0.18, green: 0.23, blue: 0.38),  // Světlejší modrá s vyšším kontrastem
+                            Color(red: 0.12, green: 0.17, blue: 0.27)   // Tmavší modrá s hlubším odstínem
                         ]),
-                        startPoint: .top,
-                        endPoint: .bottom
+                        startPoint: .topLeading,
+                        endPoint: .bottomTrailing
                     )
                 )
                 .frame(width: UIScreen.main.bounds.width - 40, height: 600)
-                .shadow(color: Color.black.opacity(0.15), radius: 10, x: 0, y: 5)
+                .shadow(color: Color.black.opacity(0.2), radius: 15, x: 0, y: 8)
             
             // Obsah
             VStack(spacing: 30) {
