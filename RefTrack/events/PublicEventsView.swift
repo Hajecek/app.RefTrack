@@ -54,11 +54,14 @@ struct PublicEventsView: View {
                     LazyHStack(spacing: 12) {
                         ForEach(matches) { match in
                             MatchCard(match: match)
+                                .frame(width: UIScreen.main.bounds.width - 40)
                         }
                     }
                     .padding(.horizontal, 20)
                     .padding(.vertical, 10)
                 }
+                .scrollTargetLayout()
+                .scrollTargetBehavior(.viewAligned)
             }
         }
         .onAppear {
