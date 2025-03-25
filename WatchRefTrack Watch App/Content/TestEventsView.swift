@@ -142,7 +142,18 @@ struct TestEventsView: View {
             return
         }
         
-        let userId = UserDefaults.standard.string(forKey: "user_id") ?? "1"
+        // Získání user_id z UserDefaults
+        guard let userId = UserDefaults.standard.string(forKey: "user_id") else {
+            // Debug výpis pro kontrolu všech uložených hodnot
+            print("Všechny uložené hodnoty v UserDefaults:")
+            UserDefaults.standard.dictionaryRepresentation().forEach { print("\($0.key): \($0.value)") }
+            
+            errorMessage = "Nepodařilo se získat ID uživatele"
+            isLoading = false
+            return
+        }
+        
+        print("Načteno user_id: \(userId)")  // Debug výpis
         
         guard let url = URL(string: "http://10.0.0.15/reftrack/admin/api/users_matches-api.php?user_id=\(userId)") else {
             errorMessage = "Neplatná URL"
@@ -176,10 +187,9 @@ struct TestEventsView: View {
                 do {
                     let decoder = JSONDecoder()
                     let apiResponse = try decoder.decode(APIResponse.self, from: data)
-                    
-                    // Upravená část - ignorujeme zprávu z API
+                    print("Full API Response: \(apiResponse)")  // Debug výpis
                     self.matches = apiResponse.matches
-                    self.errorMessage = nil  // Vynulujeme chybovou zprávu
+                    self.errorMessage = nil
                     
                 } catch {
                     self.errorMessage = "Chyba při zpracování dat"

@@ -73,7 +73,15 @@ struct UpcomingEventsView: View {
             return
         }
         
-        let userId = UserDefaults.standard.string(forKey: "user_id") ?? "1"
+        guard let userId = UserDefaults.standard.string(forKey: "user_id") else {
+            errorMessage = "Nepodařilo se načíst ID uživatele"
+            isLoading = false
+            return
+        }
+        
+        print("Fetching matches for user ID: \(userId)")
+        print("Current user ID in UserDefaults: \(UserDefaults.standard.string(forKey: "user_id") ?? "N/A")")
+        print("All UserDefaults keys: \(UserDefaults.standard.dictionaryRepresentation().keys)")
         
         guard let url = URL(string: "http://10.0.0.15/reftrack/admin/api/events/upcoming_events-api.php?user_id=\(userId)") else {
             errorMessage = "Neplatná URL"
@@ -97,6 +105,11 @@ struct UpcomingEventsView: View {
                 if let error = error {
                     self.errorMessage = "Chyba sítě: \(error.localizedDescription)"
                     return
+                }
+                
+                // Logování odpovědi
+                if let data = data, let jsonString = String(data: data, encoding: .utf8) {
+                    print("API Response: \(jsonString)")
                 }
                 
                 guard let httpResponse = response as? HTTPURLResponse else {

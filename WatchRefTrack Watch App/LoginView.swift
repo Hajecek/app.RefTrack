@@ -114,7 +114,14 @@ struct LoginView: View {
                         userInfo = decodedResponse
                         UserDefaults.standard.set(true, forKey: "isLoggedIn")
                         
+                        UserDefaults.standard.set(String(decodedResponse.id), forKey: "user_id")
+                        
                         print("Uživatel ID: \(decodedResponse.id)")
+                        print("Uložené hodnoty v UserDefaults:")
+                        print("isLoggedIn: \(UserDefaults.standard.bool(forKey: "isLoggedIn"))")
+                        print("user_id: \(UserDefaults.standard.string(forKey: "user_id") ?? "N/A")")
+                        
+                        UserDefaults.standard.synchronize()
                         
                         showSuccessToast(decodedResponse.message)
                         isLoggedIn = true

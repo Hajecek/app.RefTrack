@@ -201,7 +201,17 @@ struct LoginView: View {
                             
                             // Uložíme informace o přihlášení do UserDefaults
                             UserDefaults.standard.set(true, forKey: "isLoggedIn")
-                            UserDefaults.standard.set(userInfo.id, forKey: "userId")
+                            UserDefaults.standard.set(String(userInfo.id), forKey: "user_id")
+                            print("Uloženo user_id: \(userInfo.id)")
+                            
+                            // Synchronizace UserDefaults
+                            UserDefaults.standard.synchronize()
+                            
+                            // Debug výpis pro kontrolu uložených hodnot
+                            print("Uložené hodnoty v UserDefaults:")
+                            print("isLoggedIn: \(UserDefaults.standard.bool(forKey: "isLoggedIn"))")
+                            print("user_id: \(UserDefaults.standard.string(forKey: "user_id") ?? "N/A")")
+                            
                             UserDefaults.standard.set(userInfo.firstName, forKey: "userFirstName")
                             UserDefaults.standard.set(userInfo.lastName, forKey: "userLastName")
                             UserDefaults.standard.set(userInfo.username, forKey: "username")
@@ -217,6 +227,8 @@ struct LoginView: View {
                             if let sport = userInfo.sport {
                                 UserDefaults.standard.set(sport, forKey: "userSport")
                             }
+                            
+                            print("UserInfo ID: \(userInfo.id), Type: \(type(of: userInfo.id))")
                             
                             showSuccessToast("Přihlášení proběhlo úspěšně")
                             
