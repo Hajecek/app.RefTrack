@@ -10,6 +10,8 @@ struct Match: Codable, Identifiable {
     let homeScore: String
     let awayScore: String
     let role: String?
+    let visibility: String?
+    let payment: String?
     
     enum CodingKeys: String, CodingKey {
         case id
@@ -21,6 +23,8 @@ struct Match: Codable, Identifiable {
         case homeScore = "home_score"
         case awayScore = "away_score"
         case role
+        case visibility
+        case payment
     }
 }
 
@@ -33,6 +37,8 @@ extension Match: Equatable {
                lhs.matchDate == rhs.matchDate &&
                lhs.homeScore == rhs.homeScore &&
                lhs.awayScore == rhs.awayScore &&
-               lhs.role == rhs.role
+               lhs.role == rhs.role &&
+               lhs.visibility == rhs.visibility &&
+               lhs.payment == rhs.payment
     }
 } 
