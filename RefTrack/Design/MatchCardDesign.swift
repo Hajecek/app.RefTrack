@@ -2,6 +2,7 @@ import SwiftUI
 
 struct MatchCardDesign: View {
     let match: Match
+    var addedBy: String = "Uživatel"
     
     var body: some View {
         ZStack {
@@ -213,11 +214,11 @@ struct MatchCardDesign: View {
         }
     }
     
-    // Nově přidaná testovací bublina
+    // Nově přidaná bublina pro přidaného uživatele
     private var testBubble: some View {
         bubbleView(
-            icon: "info.circle",
-            text: "test",
+            icon: "person.fill",
+            text: match.created_by ?? "Uživatel",
             backgroundColor: Color.blue.opacity(0.3),
             gradientColors: [Color.blue.opacity(0.7), Color.blue.opacity(0.2)]
         )

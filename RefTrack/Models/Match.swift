@@ -12,6 +12,7 @@ struct Match: Codable, Identifiable {
     let role: String?
     let visibility: String?
     let payment: String?
+    let created_by: String?
     
     enum CodingKeys: String, CodingKey {
         case id
@@ -25,6 +26,7 @@ struct Match: Codable, Identifiable {
         case role
         case visibility
         case payment
+        case created_by = "created_by"
     }
 }
 
@@ -39,6 +41,7 @@ extension Match: Equatable {
                lhs.awayScore == rhs.awayScore &&
                lhs.role == rhs.role &&
                lhs.visibility == rhs.visibility &&
-               lhs.payment == rhs.payment
+               lhs.payment == rhs.payment &&
+               lhs.created_by == rhs.created_by
     }
 } 

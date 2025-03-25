@@ -94,7 +94,7 @@ struct MatchCard: View {
     let match: Match
     
     var body: some View {
-        MatchCardDesign(match: match)
+        MatchCardDesign(match: match, addedBy: "Uživatel")
     }
 }
 
