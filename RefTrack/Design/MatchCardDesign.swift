@@ -34,11 +34,14 @@ struct MatchCardDesign: View {
             bubblesRow
                 .padding(.top, 30)
             
-            teamsSection
-                .padding(.top, 25)
+            Spacer(minLength: 50) // Většeí mezera před týmy
             
-            mainContent
-                .padding(.top, 10)
+            teamsSection
+                .frame(maxWidth: .infinity) // Centrování horizontálně
+            
+            Spacer(minLength: 50) // Větší mezera po týmech
+            
+            dateTimeBottomSection
         }
         .padding(30)
     }
@@ -166,48 +169,43 @@ struct MatchCardDesign: View {
     
     // Sekce s týmy
     private var teamsSection: some View {
-        HStack {
-            VStack(alignment: .center, spacing: 10) {
-                Text(match.homeTeam)
-                    .font(.system(size: 24, weight: .bold))
-                    .foregroundColor(.white)
-                    .multilineTextAlignment(.center)
-                
-                Text("vs")
-                    .font(.title3)
-                    .foregroundColor(.white.opacity(0.8))
-                
-                Text(match.awayTeam)
-                    .font(.system(size: 24, weight: .bold))
-                    .foregroundColor(.white)
-                    .multilineTextAlignment(.center)
-            }
-            .frame(maxWidth: .infinity)
-        }
-    }
-    
-    // Hlavní obsah
-    private var mainContent: some View {
         VStack(spacing: 25) {
-            Spacer()
+            // Domácí tým
+            Text(match.homeTeam)
+                .font(.system(size: 32, weight: .bold))
+                .foregroundColor(.white)
+                .multilineTextAlignment(.center) // Zarovnání na střed
+                .lineLimit(2) // Povoleno až 2 řádky
+                .minimumScaleFactor(0.8)
+                .frame(maxWidth: .infinity) // Roztáhnutí na celou šířku
             
-            Spacer()
-            
-            dateTimeBottomSection
-        }
-    }
-    
-    // Střední sekce s datem a časem - ponechávám definici, ale nepoužívám ji
-    private var dateTimeMiddleSection: some View {
-        HStack {
-            Spacer()
-            VStack(spacing: 8) {
-                Text(formatDate(match.matchDate))
-                    .font(.system(size: 20, weight: .medium))
-                    .foregroundColor(.white)
+            // Dělicí čára s VS uprostřed
+            HStack {
+                Rectangle()
+                    .fill(Color.white.opacity(0.3))
+                    .frame(height: 1)
+                
+                Text("VS")
+                    .font(.system(size: 22, weight: .bold))
+                    .foregroundColor(.white.opacity(0.7))
+                    .padding(.horizontal, 12)
+                
+                Rectangle()
+                    .fill(Color.white.opacity(0.3))
+                    .frame(height: 1)
             }
-            Spacer()
+            .padding(.vertical, 5) // Menší vertikální odsazení
+            
+            // Hostující tým
+            Text(match.awayTeam)
+                .font(.system(size: 32, weight: .bold))
+                .foregroundColor(.white)
+                .multilineTextAlignment(.center) // Zarovnání na střed
+                .lineLimit(2) // Povoleno až 2 řádky
+                .minimumScaleFactor(0.8)
+                .frame(maxWidth: .infinity) // Roztáhnutí na celou šířku
         }
+        .padding(.horizontal) // Přidání horizontálního paddingu
     }
     
     // Spodní sekce s datem a časem
