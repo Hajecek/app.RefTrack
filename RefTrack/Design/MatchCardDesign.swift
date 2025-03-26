@@ -64,12 +64,10 @@ struct MatchCardDesign: View {
                 competitionBubble
             }
             
-            // Spodní řádek s visibility a payment vedle sebe
+            // Spodní řádek pouze s payment
             HStack(spacing: 8) {
-                visibilityBubble
-                    .padding(.leading, -5)
-                
                 paymentBubble
+                    .padding(.leading, -5)
             }
         }
     }
@@ -274,14 +272,18 @@ struct MatchCardDesign: View {
         }
     }
     
-    // Nově přidaná bublina pro přidaného uživatele
+    // Přidaná testovací bublina s visibility vedle
     private var testBubble: some View {
-        bubbleView(
-            icon: "person.fill",
-            text: match.created_by ?? "Uživatel",
-            backgroundColor: Color.blue.opacity(0.3),
-            gradientColors: [Color.blue.opacity(0.7), Color.blue.opacity(0.2)]
-        )
+        HStack(spacing: 8) {
+            bubbleView(
+                icon: "person.fill",
+                text: match.created_by ?? "Uživatel",
+                backgroundColor: Color.blue.opacity(0.3),
+                gradientColors: [Color.blue.opacity(0.7), Color.blue.opacity(0.2)]
+            )
+            
+            visibilityBubble
+        }
     }
     
     // Pomocná funkce pro vytvoření bubliny
