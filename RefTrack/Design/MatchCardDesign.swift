@@ -204,47 +204,51 @@ struct MatchCardDesign: View {
     
     // Pomocná funkce pro zobrazení loga nebo ikony týmu
     private func teamLogoOrIcon(teamName: String, color: Color) -> some View {
-        // Pro testovací účely přímo kontrolujeme, zda je tým "Svitavy"
-        if teamName.lowercased() == "svitavy" {
-            // Načtení obrázku z URL pro Svitavy
-            return AsyncImage(url: URL(string: "http://10.0.0.15/reftrack/config/img/teams/svitavy.png")) { phase in
-                switch phase {
-                case .empty:
-                    // Zobrazí se během načítání
-                    ProgressView()
+        // Vytvoření URL pro logo týmu - odstranění diakritiky, mezer a "B" týmu
+        let formattedTeamName = teamName
+            .trimmingCharacters(in: .whitespaces) // Odstranění mezer na začátku a konci
+            .replacingOccurrences(of: "\\s+", with: " ", options: .regularExpression) // Nahrazení více mezer jednou
+            .replacingOccurrences(of: " B$", with: "", options: .regularExpression) // Odstranění "B" na konci
+            .folding(options: .diacriticInsensitive, locale: .current) // Odstranění diakritiky
+            .replacingOccurrences(of: " ", with: "_")
+            .lowercased()
+        
+        let logoURL = URL(string: "http://10.0.0.15/reftrack/config/img/teams/\(formattedTeamName).png")
+        
+        return AsyncImage(url: logoURL) { phase in
+            switch phase {
+            case .empty:
+                ProgressView()
+                    .frame(width: 45, height: 45)
+            case .success(let image):
+                Circle()
+                    .fill(.white)
+                    .frame(width: 45, height: 45)
+                    .overlay(
+                        image
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 32, height: 32)
+                    )
+            case .failure:
+                // Pokud se nepodaří načíst obrázek z URL, zkusíme lokální asset
+                if UIImage(named: formattedTeamName) != nil {
+                    Circle()
+                        .fill(.white)
                         .frame(width: 45, height: 45)
-                case .success(let image):
-                    // Zobrazí se po úspěšném načtení
-                    image
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 45, height: 45)
-                case .failure:
-                    // Zobrazí se při selhání načítání
-                    Image(systemName: "shield.fill")
-                        .font(.system(size: 34))
-                        .foregroundColor(color)
-                @unknown default:
-                    // Fallback pro budoucí případy
+                        .overlay(
+                            Image(formattedTeamName)
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 32, height: 32)
+                        )
+                } else {
+                    // Pokud není k dispozici ani lokální asset, použijeme výchozí ikonu štítu
                     Image(systemName: "shield.fill")
                         .font(.system(size: 34))
                         .foregroundColor(color)
                 }
-            }
-        }
-        
-        // Původní logika pro vyhledávání loga podle názvu týmu
-        let logoName = teamName.replacingOccurrences(of: " ", with: "_").lowercased()
-        
-        return Group {
-            if UIImage(named: logoName) != nil {
-                // Pokud existuje logo týmu, použij ho
-                Image(logoName)
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 45, height: 45)
-            } else {
-                // Jinak použij výchozí ikonu štítu
+            @unknown default:
                 Image(systemName: "shield.fill")
                     .font(.system(size: 34))
                     .foregroundColor(color)
