@@ -23,11 +23,52 @@ struct StatisticsView: View {
                 .padding(.bottom, 8)
             }
             
-            Text("Statistiky")
-                .font(.largeTitle)
-                .fontWeight(.bold)
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .padding(.bottom)
+            HStack {
+                Text("Statistiky")
+                    .font(.largeTitle)
+                    .fontWeight(.bold)
+                
+                Spacer()
+                
+                // Profilový obrázek
+                if let profileImage = UserDefaults.standard.string(forKey: "userProfileImage") {
+                    AsyncImage(url: URL(string: "http://10.0.0.15/reftrack/auth/images/\(profileImage)")) { phase in
+                        switch phase {
+                        case .empty:
+                            Image(systemName: "person.circle.fill")
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 40, height: 40)
+                                .foregroundColor(.blue)
+                        case .success(let image):
+                            image
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 40, height: 40)
+                                .clipShape(Circle())
+                        case .failure:
+                            Image(systemName: "person.circle.fill")
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 40, height: 40)
+                                .foregroundColor(.blue)
+                        @unknown default:
+                            Image(systemName: "person.circle.fill")
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 40, height: 40)
+                                .foregroundColor(.blue)
+                        }
+                    }
+                } else {
+                    Image(systemName: "person.circle.fill")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 40, height: 40)
+                        .foregroundColor(.blue)
+                }
+            }
+            .padding(.bottom)
             
             // Bento grid layout
             Grid(horizontalSpacing: 15, verticalSpacing: 15) {
