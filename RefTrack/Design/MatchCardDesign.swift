@@ -178,20 +178,80 @@ struct MatchCardDesign: View {
     private var teamsSection: some View {
         VStack(alignment: .leading, spacing: 15) {
             // Domácí tým - bílá barva
-            Text(match.homeTeam)
-                .font(.system(size: 36, weight: .bold))
-                .foregroundColor(.white)  // Čistě bílá barva
-                .lineLimit(2)
-                .minimumScaleFactor(0.8)
+            HStack(alignment: .center, spacing: 10) {
+                // Logo nebo ikona pro domácí tým
+                teamLogoOrIcon(teamName: match.homeTeam, color: .white)
+                
+                Text(match.homeTeam)
+                    .font(.system(size: 36, weight: .bold))
+                    .foregroundColor(.white)  // Čistě bílá barva
+                    .lineLimit(2)
+                    .minimumScaleFactor(0.8)
+            }
             
             // Hostující tým - světle modrá barva
-            Text(match.awayTeam)
-                .font(.system(size: 36, weight: .bold))
-                .foregroundColor(Color(red: 0.85, green: 0.9, blue: 1.0)) // Jasněji modrá barva pro lepší kontrast
-                .lineLimit(2)
-                .minimumScaleFactor(0.8)
+            HStack(alignment: .center, spacing: 10) {
+                // Logo nebo ikona pro hostující tým
+                teamLogoOrIcon(teamName: match.awayTeam, color: Color(red: 0.85, green: 0.9, blue: 1.0))
+                
+                Text(match.awayTeam)
+                    .font(.system(size: 36, weight: .bold))
+                    .foregroundColor(Color(red: 0.85, green: 0.9, blue: 1.0)) // Jasněji modrá barva pro lepší kontrast
+                    .lineLimit(2)
+                    .minimumScaleFactor(0.8)
+            }
         }
         .padding(.horizontal, 0)
+    }
+    
+    // Pomocná funkce pro zobrazení loga nebo ikony týmu
+    private func teamLogoOrIcon(teamName: String, color: Color) -> some View {
+        // Pro testovací účely přímo kontrolujeme, zda je tým "Svitavy"
+        if teamName.lowercased() == "svitavy" {
+            // Načtení obrázku z URL pro Svitavy
+            return AsyncImage(url: URL(string: "http://10.0.0.15/reftrack/config/img/teams/svitavy.png")) { phase in
+                switch phase {
+                case .empty:
+                    // Zobrazí se během načítání
+                    ProgressView()
+                        .frame(width: 45, height: 45)
+                case .success(let image):
+                    // Zobrazí se po úspěšném načtení
+                    image
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 45, height: 45)
+                case .failure:
+                    // Zobrazí se při selhání načítání
+                    Image(systemName: "shield.fill")
+                        .font(.system(size: 34))
+                        .foregroundColor(color)
+                @unknown default:
+                    // Fallback pro budoucí případy
+                    Image(systemName: "shield.fill")
+                        .font(.system(size: 34))
+                        .foregroundColor(color)
+                }
+            }
+        }
+        
+        // Původní logika pro vyhledávání loga podle názvu týmu
+        let logoName = teamName.replacingOccurrences(of: " ", with: "_").lowercased()
+        
+        return Group {
+            if UIImage(named: logoName) != nil {
+                // Pokud existuje logo týmu, použij ho
+                Image(logoName)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 45, height: 45)
+            } else {
+                // Jinak použij výchozí ikonu štítu
+                Image(systemName: "shield.fill")
+                    .font(.system(size: 34))
+                    .foregroundColor(color)
+            }
+        }
     }
     
     // Spodní sekce s datem a časem
