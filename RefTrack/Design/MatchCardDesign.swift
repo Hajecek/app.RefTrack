@@ -68,6 +68,8 @@ struct MatchCardDesign: View {
             HStack(spacing: 8) {
                 paymentBubble
                     .padding(.leading, -5)
+                
+                locationBubble
             }
         }
     }
@@ -169,6 +171,18 @@ struct MatchCardDesign: View {
             text: formattedAmount,
             backgroundColor: backgroundColor,
             gradientColors: gradientColors
+        )
+    }
+    
+    // Bublina pro lokaci (přidat před paymentBubble)
+    private var locationBubble: some View {
+        let location = match.location ?? "Neuvedeno"
+        
+        return bubbleView(
+            icon: "mappin.circle.fill",
+            text: location,
+            backgroundColor: Color.purple.opacity(0.3),
+            gradientColors: [Color.purple.opacity(0.7), Color.purple.opacity(0.2)]
         )
     }
     

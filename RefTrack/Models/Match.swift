@@ -42,6 +42,7 @@ extension Match: Equatable {
                lhs.role == rhs.role &&
                lhs.visibility == rhs.visibility &&
                lhs.payment == rhs.payment &&
+               lhs.location == rhs.location &&
                lhs.created_by == rhs.created_by
     }
 } 
