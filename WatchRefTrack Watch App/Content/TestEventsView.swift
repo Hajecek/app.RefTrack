@@ -71,6 +71,7 @@ struct TestEventsView: View {
     @State private var isLoading = false
     @State private var errorMessage: String?
     @State private var isLoggedIn: Bool = UserDefaults.standard.bool(forKey: "isLoggedIn")
+    @State private var timer: Timer?
     
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
@@ -128,32 +129,32 @@ struct TestEventsView: View {
         .frame(maxWidth: .infinity)
         .onAppear {
             fetchMatches()
+            startTimer()
+        }
+        .onDisappear {
+            stopTimer()
         }
     }
     
     private func fetchMatches() {
-        isLoading = true
-        errorMessage = nil
+        guard !isLoading else { return }
         
-        // Kontrola přihlášení
+        let shouldShowLoading = matches.isEmpty
+        if shouldShowLoading {
+            isLoading = true
+        }
+        
         guard isLoggedIn else {
             errorMessage = "Uživatel není přihlášen"
             isLoading = false
             return
         }
         
-        // Získání user_id z UserDefaults
         guard let userId = UserDefaults.standard.string(forKey: "user_id") else {
-            // Debug výpis pro kontrolu všech uložených hodnot
-            print("Všechny uložené hodnoty v UserDefaults:")
-            UserDefaults.standard.dictionaryRepresentation().forEach { print("\($0.key): \($0.value)") }
-            
             errorMessage = "Nepodařilo se získat ID uživatele"
             isLoading = false
             return
         }
-        
-        print("Načteno user_id: \(userId)")  // Debug výpis
         
         guard let url = URL(string: "http://10.0.0.15/reftrack/admin/api/users_matches-api.php?user_id=\(userId)") else {
             errorMessage = "Neplatná URL"
@@ -167,15 +168,12 @@ struct TestEventsView: View {
         
         let task = URLSession.shared.dataTask(with: request) { data, response, error in
             DispatchQueue.main.async {
-                self.isLoading = false
+                if shouldShowLoading {
+                    self.isLoading = false
+                }
                 
                 if let error = error {
                     self.errorMessage = "Chyba sítě: \(error.localizedDescription)"
-                    return
-                }
-                
-                guard let httpResponse = response as? HTTPURLResponse else {
-                    self.errorMessage = "Neplatná odpověď serveru"
                     return
                 }
                 
@@ -187,8 +185,10 @@ struct TestEventsView: View {
                 do {
                     let decoder = JSONDecoder()
                     let apiResponse = try decoder.decode(APIResponse.self, from: data)
-                    print("Full API Response: \(apiResponse)")  // Debug výpis
-                    self.matches = apiResponse.matches
+                    
+                    if self.matches != apiResponse.matches {
+                        self.matches = apiResponse.matches
+                    }
                     self.errorMessage = nil
                     
                 } catch {
@@ -203,12 +203,10 @@ struct TestEventsView: View {
         let words = teamName.components(separatedBy: " ")
         guard !words.isEmpty else { return teamName }
         
-        // Pokud je název jednoslovný, vrátíme první 3 písmena
         if words.count == 1 {
             return String(teamName.prefix(3)).uppercased()
         }
         
-        // Pro víceslovné názvy vrátíme iniciály
         return words.map { String($0.prefix(1)) }.joined().uppercased()
     }
     
@@ -220,5 +218,30 @@ struct TestEventsView: View {
             return dateFormatter.string(from: date)
         }
         return dateString
+    }
+    
+    private func startTimer() {
+        timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { _ in
+            fetchMatches()
+        }
+    }
+    
+    private func stopTimer() {
+        timer?.invalidate()
+        timer = nil
+    }
+}
+
+extension Match: Equatable {
+    static func == (lhs: Match, rhs: Match) -> Bool {
+        return lhs.id == rhs.id &&
+               lhs.competition == rhs.competition &&
+               lhs.homeTeam == rhs.homeTeam &&
+               lhs.awayTeam == rhs.awayTeam &&
+               lhs.matchDate == rhs.matchDate &&
+               lhs.homeScore == rhs.homeScore &&
+               lhs.awayScore == rhs.awayScore &&
+               lhs.role == rhs.role &&
+               lhs.status == rhs.status
     }
 } 
