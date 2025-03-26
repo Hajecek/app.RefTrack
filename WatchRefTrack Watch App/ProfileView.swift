@@ -42,8 +42,7 @@ struct ProfileView: View {
                             .foregroundColor(.red)
                             .padding()
                             .frame(maxWidth: .infinity)
-                            .background(Color.red.opacity(0.1))
-                            .cornerRadius(10)
+                            .cornerRadius(8)
                     }
                     .padding(.top, 20)
                 }
