@@ -216,7 +216,7 @@ struct MatchCardDesign: View {
         .padding(.horizontal, 0)
     }
     
-    // Pomocná funkce pro zobrazení loga nebo ikony týmu
+    /// Pomocná funkce pro zobrazení loga nebo ikony týmu
     private func teamLogoOrIcon(teamName: String, color: Color) -> some View {
         // Vytvoření URL pro logo týmu - odstranění diakritiky, mezer a "B" týmu
         let formattedTeamName = teamName
