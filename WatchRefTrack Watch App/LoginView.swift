@@ -38,39 +38,99 @@ struct LoginView: View {
     @State private var toastIsSuccess: Bool = false
     @State private var isLoading: Bool = false
     
+    // Nová proměnná pro maximální délku kódu
+    private let maxCodeLength = 6
+    
     var body: some View {
-        VStack(spacing: 15) {
-            Text("Zadejte párovací kód")
-                .font(.footnote)
-            
-            TextField("Kód", text: $pairCode)
-                .multilineTextAlignment(.center)
-                .frame(height: 40)
-                .background(Color(.darkGray).opacity(0.3))
-                .cornerRadius(8)
-            
-            Button(action: login) {
-                if isLoading {
-                    ProgressView()
-                } else {
-                    Text("Přihlásit")
+        ScrollView {
+            VStack(spacing: 15) {
+                Text("Zadejte párovací kód")
+                    .font(.headline)
+                    .padding(.top, 10)
+                
+                // Zobrazení zadaného kódu jako tečky
+                HStack(spacing: 8) {
+                    ForEach(0..<maxCodeLength, id: \.self) { index in
+                        Circle()
+                            .fill(index < pairCode.count ? Color.green : Color.gray.opacity(0.3))
+                            .frame(width: 12, height: 12)
+                    }
+                }
+                .padding(.vertical, 10)
+                
+                // Číselník
+                LazyVGrid(columns: [
+                    GridItem(.flexible()), 
+                    GridItem(.flexible()), 
+                    GridItem(.flexible())
+                ], spacing: 10) {
+                    ForEach(1...9, id: \.self) { number in
+                        digitButton(String(number))
+                    }
+                    
+                    // Prázdné místo pro estetiku
+                    Color.clear
+                        .frame(height: 40)
+                    
+                    digitButton("0")
+                    
+                    // Tlačítko smazat
+                    Button(action: {
+                        if !pairCode.isEmpty {
+                            pairCode.removeLast()
+                        }
+                    }) {
+                        Image(systemName: "delete.left")
+                            .font(.system(size: 20))
+                            .foregroundColor(.white)
+                            .frame(width: 40, height: 40)
+                    }
+                }
+                .padding(.vertical, 10)
+                
+                Button(action: login) {
+                    if isLoading {
+                        ProgressView()
+                    } else {
+                        Text("Přihlásit")
+                            .frame(maxWidth: .infinity)
+                            .padding(.vertical, 8)
+                    }
+                }
+                .buttonStyle(.borderedProminent)
+                .disabled(pairCode.isEmpty || isLoading)
+                
+                if showToast {
+                    Text(toastMessage)
+                        .font(.footnote)
+                        .foregroundColor(toastIsSuccess ? Color.green : Color.red)
+                        .padding(8)
+                        .background(
+                            RoundedRectangle(cornerRadius: 8)
+                                .fill(toastIsSuccess ? Color.green.opacity(0.2) : Color.red.opacity(0.2))
+                        )
+                        .multilineTextAlignment(.center)
+                        .transition(.opacity)
                 }
             }
-            
-            if showToast {
-                Text(toastMessage)
-                    .font(.footnote)
-                    .foregroundColor(toastIsSuccess ? Color.green : Color.red)
-                    .padding(8)
-                    .background(
-                        RoundedRectangle(cornerRadius: 8)
-                            .fill(toastIsSuccess ? Color.green.opacity(0.2) : Color.red.opacity(0.2))
-                    )
-                    .multilineTextAlignment(.center)
-                    .transition(.opacity)
-            }
+            .padding(.horizontal)
         }
-        .padding()
+    }
+    
+    // Pomocná funkce pro vytvoření tlačítek číselníku
+    private func digitButton(_ digit: String) -> some View {
+        Button(action: {
+            if pairCode.count < maxCodeLength {
+                pairCode.append(digit)
+            }
+        }) {
+            Text(digit)
+                .font(.system(size: 24, weight: .medium))
+                .foregroundColor(.white)
+                .frame(width: 40, height: 40)
+                .background(Circle().fill(Color.gray.opacity(0.3)))
+        }
+        .disabled(pairCode.count >= maxCodeLength)
     }
     
     private func login() {
