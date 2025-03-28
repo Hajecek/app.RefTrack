@@ -10,6 +10,7 @@ struct ProfileView: View {
     @StateObject private var userData = UserData()
     @State private var notifications = true
     @State private var showLoginView = false
+    @State private var showPairCodeInfo = false
     @Environment(\.presentationMode) var presentationMode
     
     // Nastavit výchozí hodnotu pro isLoggedIn
@@ -134,6 +135,17 @@ struct ProfileView: View {
                             Spacer()
                             Text(userInfo.pairCode)
                                 .foregroundColor(.gray)
+                            Button(action: {
+                                showPairCodeInfo = true
+                            }) {
+                                Image(systemName: "questionmark.circle")
+                                    .foregroundColor(.blue)
+                            }
+                            .alert("Párovací kód", isPresented: $showPairCodeInfo) {
+                                Button("OK", role: .cancel) { }
+                            } message: {
+                                Text("Tento kód slouží k propojení vašeho účtu s Apple Watch. Nikde jej nesdílejte a chraňte jako heslo.")
+                            }
                         }
                     }
                     
