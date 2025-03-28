@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Charts
 
 struct StatisticsView: View {
     @Environment(\.dismiss) private var dismiss
@@ -78,28 +79,50 @@ struct StatisticsView: View {
                             subtitle: "22:35 - 6:10",
                             color: .blue)
                     
-                    StatCard(title: "Kroky", 
+                    StatCard(title: "Celkem vzdálenost", 
                             value: "13,046",
                             subtitle: "Start: 10:45",
-                            color: .red)
-                }
-                
-                GridRow {
-                    StatCard(title: "Nálada",
-                            value: "Příjemná",
                             color: .indigo)
-                        .gridCellColumns(2)
                 }
                 
                 GridRow {
-                    StatCard(title: "Aktivní energie",
+                    VStack(alignment: .leading, spacing: 5) {
+                        Text("Nálada")
+                            .font(.headline)
+                            .foregroundColor(.white)
+                        
+                        MoodChart()
+                            .frame(height: 100)
+                            .padding(.vertical, 5)
+                        
+                        HStack {
+                            Text("Příjemná")
+                                .font(.title2)
+                                .fontWeight(.semibold)
+                                .foregroundColor(.white)
+                            
+                            Spacer()
+                            
+                            Image(systemName: "chevron.right")
+                                .foregroundColor(.white.opacity(0.8))
+                        }
+                    }
+                    .padding()
+                    .frame(maxWidth: .infinity, minHeight: 120, alignment: .leading)
+                    .background(Color.purple)
+                    .clipShape(RoundedRectangle(cornerRadius: 15))
+                    .gridCellColumns(2)
+                }
+                
+                GridRow {
+                    StatCard(title: "Celkem žlutých karet",
                             value: "465 kcal",
                             subtitle: "Start: 11:15",
-                            color: .orange)
+                            color: Color(red: 0.8, green: 0.6, blue: 0.0))
                     
-                    StatCard(title: "Okysličení",
+                    StatCard(title: "Celkem červených karet",
                             value: "99%",
-                            color: .purple)
+                            color: Color(red: 0.8, green: 0.0, blue: 0.0))
                 }
             }
             .padding(.top)
@@ -152,6 +175,89 @@ struct StatCard: View {
         .frame(maxWidth: .infinity, minHeight: 120, alignment: .leading)
         .background(color)
         .clipShape(RoundedRectangle(cornerRadius: 15))
+    }
+}
+
+struct MoodChart: View {
+    let data: [Double] = [3, 4, 5, 4, 3, 4, 5] // Hodnoty nálady (1-5)
+    
+    var body: some View {
+        Chart {
+            ForEach(Array(data.enumerated()), id: \.offset) { index, value in
+                LineMark(
+                    x: .value("Den", index),
+                    y: .value("Nálada", value)
+                )
+                .interpolationMethod(.catmullRom) // Hladší křivka
+                .lineStyle(StrokeStyle(lineWidth: 3, lineCap: .round, lineJoin: .round))
+                .foregroundStyle(.white)
+                
+                PointMark(
+                    x: .value("Den", index),
+                    y: .value("Nálada", value)
+                )
+                .symbolSize(15) // Zvýraznění bodů
+                .foregroundStyle(.white)
+                
+                AreaMark(
+                    x: .value("Den", index),
+                    y: .value("Nálada", value)
+                )
+                .interpolationMethod(.catmullRom)
+                .foregroundStyle(
+                    LinearGradient(
+                        gradient: Gradient(colors: [.white.opacity(0.2), .clear]),
+                        startPoint: .top,
+                        endPoint: .bottom
+                    )
+                )
+            }
+        }
+        .chartYScale(domain: 1...5) // Fixní rozsah pro náladu
+        .chartXAxis(.hidden)
+        .chartYAxis {
+            AxisMarks(values: [1, 2, 3, 4, 5]) { value in
+                AxisGridLine()
+                    .foregroundStyle(.white.opacity(0.2))
+                AxisTick()
+                    .foregroundStyle(.white)
+                AxisValueLabel()
+                    .foregroundStyle(.white)
+            }
+        }
+        .frame(height: 100)
+        .padding(.horizontal, 5)
+    }
+}
+
+struct OxygenChart: View {
+    let data: [Double] = [98, 99, 98, 99, 98, 99, 98]
+    
+    var body: some View {
+        Chart {
+            ForEach(Array(data.enumerated()), id: \.offset) { index, value in
+                LineMark(
+                    x: .value("Den", index),
+                    y: .value("Okysličení", value)
+                )
+                .foregroundStyle(.white)
+                
+                AreaMark(
+                    x: .value("Den", index),
+                    y: .value("Okysličení", value)
+                )
+                .foregroundStyle(
+                    LinearGradient(
+                        gradient: Gradient(colors: [.white.opacity(0.1), .clear]),
+                        startPoint: .top,
+                        endPoint: .bottom
+                    )
+                )
+            }
+        }
+        .chartXAxis(.hidden)
+        .chartYAxis(.hidden)
+        .frame(height: 100)
     }
 }
 
