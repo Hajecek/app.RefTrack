@@ -17,7 +17,7 @@ struct StatisticsView: View {
             }) {
                 HStack(spacing: 5) {
                     Image(systemName: "chevron.left")
-                    Text("Zpět")
+                    Text("Zpět do dashboardu")
                 }
                 .foregroundColor(.blue)
                 .padding(.bottom, 8)
