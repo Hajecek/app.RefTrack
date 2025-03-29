@@ -102,25 +102,36 @@ struct UpcomingEventsView: View {
                     .padding(.horizontal, 8)
                 } else {
                     ForEach(matches) { match in
-                        VStack(alignment: .leading, spacing: 4) {
-                            HStack(alignment: .firstTextBaseline, spacing: 4) {
-                                Text("\(abbreviateTeamName(match.homeTeam)) vs \(abbreviateTeamName(match.awayTeam))")
-                                    .font(.subheadline)
-                                    .foregroundColor(.white)
+                        let destinationView = MatchDetailView(
+                            matchId: match.id,
+                            homeTeam: match.homeTeam,
+                            awayTeam: match.awayTeam,
+                            role: match.role,
+                            matchDate: match.matchDate
+                        )
+                        
+                        NavigationLink(destination: destinationView) {
+                            VStack(alignment: .leading, spacing: 4) {
+                                HStack(alignment: .firstTextBaseline, spacing: 4) {
+                                    Text("\(abbreviateTeamName(match.homeTeam)) vs \(abbreviateTeamName(match.awayTeam))")
+                                        .font(.subheadline)
+                                        .foregroundColor(.white)
+                                    
+                                    Text("(\(match.role))")
+                                        .font(.caption)
+                                        .foregroundColor(.yellow)
+                                }
                                 
-                                Text("(\(match.role))")
+                                Text(formatDate(match.matchDate))
                                     .font(.caption)
-                                    .foregroundColor(.yellow)
+                                    .foregroundColor(.white.opacity(0.7))
                             }
-                            
-                            Text(formatDate(match.matchDate))
-                                .font(.caption)
-                                .foregroundColor(.white.opacity(0.7))
+                            .padding(8)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .background(Color.red.opacity(0.3))
+                            .cornerRadius(8)
                         }
-                        .padding(8)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .background(Color.red.opacity(0.3))
-                        .cornerRadius(8)
+                        .buttonStyle(PlainButtonStyle())
                     }
                 }
             }
