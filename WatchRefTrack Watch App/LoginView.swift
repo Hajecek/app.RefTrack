@@ -38,6 +38,8 @@ struct LoginView: View {
     @State private var toastIsSuccess: Bool = false
     @State private var isLoading: Bool = false
     @State private var showHelpInfo: Bool = false
+    @State private var showErrorAlert: Bool = false
+    @State private var errorAlertMessage: String = ""
     
     // Nová proměnná pro maximální délku kódu
     private let maxCodeLength = 8
@@ -130,7 +132,12 @@ struct LoginView: View {
         .alert("Informace", isPresented: $showHelpInfo) {
             Button("OK", role: .cancel) { }
         } message: {
-            Text("Párovací kód najdete v nastavení iOS aplikace RefTrack v sekci 'Párování zařízení'.")
+            Text("Párovací kód najdete v nastavení iOS aplikace RefTrack v sekci 'Párování kód'.")
+        }
+        .alert("Chyba", isPresented: $showErrorAlert) {
+            Button("OK", role: .cancel) { }
+        } message: {
+            Text(errorAlertMessage)
         }
     }
     
@@ -180,6 +187,21 @@ struct LoginView: View {
                     return
                 }
                 
+                // Nejdříve zkusíme dekódovat jako jednoduchý objekt se statusem a zprávou
+                if let jsonObj = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
+                   let status = jsonObj["status"] as? String {
+                    if status == "error" {
+                        if let message = jsonObj["message"] as? String {
+                            handleError(.invalidPairCode)
+                            print("Chyba přihlášení: \(message)")
+                        } else {
+                            handleError(.invalidPairCode)
+                        }
+                        return
+                    }
+                }
+                
+                // Pokud to není chyba nebo chybová struktura je jiná, zkusíme dekódovat jako UserInfo
                 do {
                     let decodedResponse = try JSONDecoder().decode(UserInfo.self, from: data)
                     
@@ -206,15 +228,18 @@ struct LoginView: View {
                         handleError(.serverError(decodedResponse.message))
                     }
                 } catch {
-                    handleError(.serverError("Neočekávaná chyba. Zkuste to prosím znovu."))
-                    print(error)
+                    // Dekódování jako UserInfo selhalo
+                    handleError(.invalidPairCode)
+                    print("Chyba dekódování: \(error)")
                 }
             }
         }.resume()
     }
     
     private func handleError(_ error: LoginError) {
-        showErrorToast(error.errorDescription ?? "Neznámá chyba")
+        errorAlertMessage = error.errorDescription ?? "Neznámá chyba"
+        pairCode = "" // Reset párovacího kódu při chybě
+        showErrorAlert = true
     }
     
     private func showErrorToast(_ message: String) {

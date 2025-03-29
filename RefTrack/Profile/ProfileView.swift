@@ -131,7 +131,7 @@ struct ProfileView: View {
                                 .foregroundColor(.gray)
                         }
                         HStack {
-                            Text("Párovací kod")
+                            Text("Párovací kód")
                             Spacer()
                             Text(userInfo.pairCode)
                                 .foregroundColor(.gray)
