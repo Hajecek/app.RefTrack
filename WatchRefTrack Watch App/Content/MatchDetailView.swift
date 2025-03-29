@@ -45,13 +45,16 @@ struct MatchDetailView: View {
                     // Akce pro zahájení zápasu
                     print("Zahájení zápasu s ID: \(matchId)")
                 }) {
-                    Text("Přejít k zápasu")
-                        .font(.system(size: 16, weight: .medium))
-                        .foregroundColor(.white)
-                        .frame(maxWidth: .infinity)
-                        .padding(.vertical, 10)
-                        .background(Color.green)
-                        .cornerRadius(16)
+                    NavigationLink(destination: StartingScreenView(matchId: matchId)) {
+                        Text("Přejít k zápasu")
+                            .font(.system(size: 16, weight: .medium))
+                            .foregroundColor(.white)
+                            .frame(maxWidth: .infinity)
+                            .padding(.vertical, 10)
+                            .background(Color.green)
+                            .cornerRadius(16)
+                    }
+                    .buttonStyle(PlainButtonStyle())
                 }
                 .buttonStyle(PlainButtonStyle())
                 .padding(.top, 10)
