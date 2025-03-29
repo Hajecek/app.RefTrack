@@ -45,7 +45,11 @@ struct MatchDetailView: View {
                     // Akce pro zahájení zápasu
                     print("Zahájení zápasu s ID: \(matchId)")
                 }) {
-                    NavigationLink(destination: StartingScreenView(matchId: matchId)) {
+                    NavigationLink(destination: StartingScreenView(
+                        matchId: matchId, 
+                        homeTeam: homeTeam, 
+                        awayTeam: awayTeam
+                    )) {
                         Text("Přejít k zápasu")
                             .font(.system(size: 16, weight: .medium))
                             .foregroundColor(.white)
