@@ -39,7 +39,7 @@ struct LoginView: View {
     @State private var isLoading: Bool = false
     
     // Nová proměnná pro maximální délku kódu
-    private let maxCodeLength = 6
+    private let maxCodeLength = 8
     
     var body: some View {
         ScrollView {
@@ -49,11 +49,11 @@ struct LoginView: View {
                     .padding(.top, 10)
                 
                 // Zobrazení zadaného kódu jako tečky
-                HStack(spacing: 8) {
+                HStack(spacing: 6) {
                     ForEach(0..<maxCodeLength, id: \.self) { index in
                         Circle()
                             .fill(index < pairCode.count ? Color.green : Color.gray.opacity(0.3))
-                            .frame(width: 12, height: 12)
+                            .frame(width: 10, height: 10)
                     }
                 }
                 .padding(.vertical, 10)

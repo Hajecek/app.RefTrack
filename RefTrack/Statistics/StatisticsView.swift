@@ -116,12 +116,12 @@ struct StatisticsView: View {
                 
                 GridRow {
                     StatCard(title: "Celkem žlutých karet",
-                            value: "465 kcal",
+                            value: "465",
                             subtitle: "Start: 11:15",
                             color: Color(red: 0.8, green: 0.6, blue: 0.0))
                     
                     StatCard(title: "Celkem červených karet",
-                            value: "99%",
+                            value: "12",
                             color: Color(red: 0.8, green: 0.0, blue: 0.0))
                 }
             }
