@@ -95,7 +95,7 @@ struct ContentView: View {
                     Spacer(minLength: 10)
                     
                     ScrollView {
-                        TestEventsView()
+                        UpcomingEventsView()
                             .padding(.bottom, 8)
                     }
                 }

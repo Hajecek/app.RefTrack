@@ -66,7 +66,7 @@ struct APIResponse: Codable {
     let matches: [Match]
 }
 
-struct TestEventsView: View {
+struct UpcomingEventsView: View {
     @State private var matches: [Match] = []
     @State private var isLoading = false
     @State private var errorMessage: String?
