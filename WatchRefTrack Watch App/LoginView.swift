@@ -37,6 +37,7 @@ struct LoginView: View {
     @State private var toastMessage: String = ""
     @State private var toastIsSuccess: Bool = false
     @State private var isLoading: Bool = false
+    @State private var showHelpInfo: Bool = false
     
     // Nová proměnná pro maximální délku kódu
     private let maxCodeLength = 8
@@ -44,9 +45,20 @@ struct LoginView: View {
     var body: some View {
         ScrollView {
             VStack(spacing: 15) {
-                Text("Zadejte párovací kód")
-                    .font(.headline)
-                    .padding(.top, 10)
+                HStack {
+                    Text("Zadejte párovací kód")
+                        .font(.headline)
+                    
+                    Button(action: {
+                        showHelpInfo = true
+                    }) {
+                        Image(systemName: "questionmark.circle.fill")
+                            .font(.system(size: 14))
+                            .foregroundColor(.gray)
+                    }
+                    .buttonStyle(PlainButtonStyle())
+                }
+                .padding(.top, 10)
                 
                 // Zobrazení zadaného kódu jako tečky
                 HStack(spacing: 6) {
@@ -114,6 +126,11 @@ struct LoginView: View {
                 }
             }
             .padding(.horizontal)
+        }
+        .alert("Informace", isPresented: $showHelpInfo) {
+            Button("OK", role: .cancel) { }
+        } message: {
+            Text("Párovací kód najdete v nastavení iOS aplikace RefTrack v sekci 'Párování zařízení'.")
         }
     }
     
