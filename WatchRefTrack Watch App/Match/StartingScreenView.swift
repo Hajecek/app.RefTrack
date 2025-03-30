@@ -8,6 +8,7 @@ struct StartingScreenView: View {
     
     @State private var audioEngine = AVAudioEngine()
     @State private var audioSession = AVAudioSession.sharedInstance()
+    @State private var navigateToMatch = false
     
     var body: some View {
         ZStack {
@@ -40,6 +41,13 @@ struct StartingScreenView: View {
         .onDisappear {
             stopAudioDetection()
         }
+        .background(
+            NavigationLink(
+                destination: MatchScreenView(matchId: matchId, homeTeam: homeTeam, awayTeam: awayTeam),
+                isActive: $navigateToMatch,
+                label: { EmptyView() }
+            )
+        )
     }
     
     private func setupAudioDetection() {
@@ -68,6 +76,8 @@ struct StartingScreenView: View {
                         print("Detekováno písknutí!")
                         print("Čas detekce: \(Date())")
                         print("Amplituda zvuku: \(maxAmplitude)")
+                        
+                        self.navigateToMatch = true
                     }
                 }
             }
