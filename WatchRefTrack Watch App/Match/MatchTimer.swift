@@ -50,7 +50,7 @@ struct MatchTimer: View {
             .onTapGesture {
                 showEndHalfAlert = true
             }
-            .alert(isFirstHalf ? "Ukončit 1. poločas?" : "Ukončit 2. poločas?", isPresented: $showEndHalfAlert) {
+            .alert(isFirstHalf ? "Ukončit 1. poločas?" : "Ukončit zápas?", isPresented: $showEndHalfAlert) {
                 Button("OK", role: .destructive) {
                     let totalTime = round(timerManager.elapsedTime + overtimeElapsed)
                     

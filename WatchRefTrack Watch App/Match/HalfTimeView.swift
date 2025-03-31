@@ -1,9 +1,12 @@
 import SwiftUI
+import AVFoundation
 
 struct HalfTimeView: View {
     @EnvironmentObject private var timerManager: MatchTimerManager
     @State private var timeRemaining: TimeInterval = 5 // Změněno z 900 na 5 sekund
     @State private var showEndScreen = false // Nový stav pro zobrazení koncového screenu
+    @State private var audioEngine = AVAudioEngine()
+    @State private var audioSession = AVAudioSession.sharedInstance()
     
     var body: some View {
         ZStack {
@@ -18,6 +21,12 @@ struct HalfTimeView: View {
                         .padding()
                         .minimumScaleFactor(0.8)
                         .lineLimit(2)
+                }
+                .onAppear {
+                    setupAudioDetection()
+                }
+                .onDisappear {
+                    stopAudioDetection()
                 }
             } else {
                 VStack {
@@ -81,6 +90,58 @@ struct HalfTimeView: View {
         let minutes = Int(timeInterval) / 60
         let seconds = Int(timeInterval) % 60
         return String(format: "%02d:%02d", minutes, seconds)
+    }
+    
+    private func setupAudioDetection() {
+        do {
+            try audioSession.setCategory(.playAndRecord, mode: .default)
+            try audioSession.setActive(true)
+            
+            let inputNode = audioEngine.inputNode
+            let recordingFormat = inputNode.outputFormat(forBus: 0)
+            
+            inputNode.installTap(onBus: 0, bufferSize: 1024, format: recordingFormat) { buffer, time in
+                let samples = buffer.floatChannelData![0]
+                let frameCount = UInt(buffer.frameLength)
+                
+                var maxAmplitude: Float = 0.0
+                for i in 0..<frameCount {
+                    let amplitude = abs(samples[Int(i)])
+                    if amplitude > maxAmplitude {
+                        maxAmplitude = amplitude
+                    }
+                }
+                
+                let whistleThreshold: Float = 0.7
+                if maxAmplitude > whistleThreshold {
+                    DispatchQueue.main.async {
+                        print("Detekováno písknutí!")
+                        print("Čas detekce: \(Date())")
+                        print("Amplituda zvuku: \(maxAmplitude)")
+                        
+                        if maxAmplitude >= 1.0 {
+                            timerManager.startTimer()
+                            NotificationCenter.default.post(
+                                name: .closeHalfTimeView, 
+                                object: nil
+                            )
+                        }
+                    }
+                }
+            }
+            
+            try audioEngine.start()
+            print("Audio detekce spuštěna")
+            
+        } catch {
+            print("Chyba při nastavení audio detekce: \(error.localizedDescription)")
+        }
+    }
+    
+    private func stopAudioDetection() {
+        audioEngine.stop()
+        audioEngine.inputNode.removeTap(onBus: 0)
+        print("Audio detekce zastavena")
     }
 }
 

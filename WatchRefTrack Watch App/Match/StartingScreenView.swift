@@ -49,6 +49,11 @@ struct StartingScreenView: View {
                 label: { EmptyView() }
             )
         )
+        .onChange(of: navigateToMatch) { newValue in
+            if newValue {
+                stopAudioDetection()
+            }
+        }
     }
     
     private func setupAudioDetection() {
