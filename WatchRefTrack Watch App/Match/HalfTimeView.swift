@@ -57,16 +57,11 @@ struct HalfTimeView: View {
                 // Prostě spustíme hlavní časovač od aktuálního času
                 timerManager.startTimer()
                 
-                // Skryjeme screen pauzy
-                showEndScreen = false
-                
-                // Zavřeme HalfTimeView
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                    NotificationCenter.default.post(
-                        name: .closeHalfTimeView, 
-                        object: nil
-                    )
-                }
+                // Okamžitě zavřeme HalfTimeView
+                NotificationCenter.default.post(
+                    name: .closeHalfTimeView, 
+                    object: nil
+                )
             }
         }
     }
