@@ -7,6 +7,7 @@ struct HalfTimeView: View {
     @State private var showEndScreen = false // Nový stav pro zobrazení koncového screenu
     @State private var audioEngine = AVAudioEngine()
     @State private var audioSession = AVAudioSession.sharedInstance()
+    @State private var showSkipDialog = false // Nový stav pro dialogové okno
     
     var body: some View {
         ZStack {
@@ -56,6 +57,12 @@ struct HalfTimeView: View {
                 .padding(10)
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .background(Color.yellow.edgesIgnoringSafeArea(.all))
+                .alert("Přeskočit pauzu?", isPresented: $showSkipDialog) {
+                    Button("Ano") {
+                        showEndScreen = true
+                    }
+                    Button("Ne", role: .cancel) {}
+                }
             }
         }
         .onAppear {
@@ -71,6 +78,9 @@ struct HalfTimeView: View {
                     name: .closeHalfTimeView, 
                     object: nil
                 )
+            } else {
+                // Zobrazí dialog pro přeskočení pauzy
+                showSkipDialog = true
             }
         }
     }
