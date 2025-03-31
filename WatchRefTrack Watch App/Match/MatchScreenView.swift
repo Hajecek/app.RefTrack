@@ -4,14 +4,14 @@ struct MatchScreenView: View {
     let matchId: Int
     let homeTeam: String
     let awayTeam: String
+    @StateObject private var timerManager = MatchTimerManager()
     
     var body: some View {
         TabView {
             ZStack {
                 Color.blue.edgesIgnoringSafeArea(.all)
-                Text("Ahoj")
-                    .font(.system(size: 36, weight: .bold))
-                    .foregroundColor(.white)
+                MatchTimer(matchId: matchId)
+                    .environmentObject(timerManager)
             }
             
             DistanceView()
