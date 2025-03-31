@@ -5,17 +5,20 @@ struct MatchScreenView: View {
     let homeTeam: String
     let awayTeam: String
     @StateObject private var timerManager = MatchTimerManager()
+    @StateObject private var sharedData = SharedData()
     @State private var showHalfTimeView = false
     
     var body: some View {
         TabView {
             ZStack {
                 Color.blue.edgesIgnoringSafeArea(.all)
-                MatchTimer(matchId: matchId)
+                MatchTimer(matchId: matchId, homeTeam: homeTeam, awayTeam: awayTeam)
                     .environmentObject(timerManager)
+                    .environmentObject(sharedData)
             }
             
             DistanceView()
+                .environmentObject(sharedData)
             
             NavigationLink(
                 destination: HalfTimeView()

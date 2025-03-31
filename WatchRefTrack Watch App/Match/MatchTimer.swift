@@ -2,9 +2,18 @@ import SwiftUI
 
 struct MatchTimer: View {
     let matchId: Int
+    let homeTeam: String
+    let awayTeam: String
     
-    public init(matchId: Int) {
+    @EnvironmentObject private var sharedData: SharedData
+    // Přidáme proměnné pro ukládání časů poločasů
+    @State private var firstHalfDuration: TimeInterval = 0
+    @State private var secondHalfDuration: TimeInterval = 0
+    
+    public init(matchId: Int, homeTeam: String, awayTeam: String) {
         self.matchId = matchId
+        self.homeTeam = homeTeam
+        self.awayTeam = awayTeam
     }
     
     @StateObject private var timerManager = MatchTimerManager()
@@ -14,6 +23,7 @@ struct MatchTimer: View {
     @State private var showEndHalfAlert = false
     @State private var isFirstHalf = true
     @State private var showHalfTimeView = false
+    @State private var showMatchResult = false
     
     var body: some View {
         ZStack {
@@ -54,20 +64,18 @@ struct MatchTimer: View {
                 Button("OK", role: .destructive) {
                     let totalTime = round(timerManager.elapsedTime + overtimeElapsed)
                     
-                    // Vypíšeme čas aktuálního poločasu
                     if isFirstHalf {
+                        firstHalfDuration = totalTime
                         print("Zápas ID: \(matchId), 1. poločas: \(totalTime) sekund")
+                        showHalfTimeView = true
                     } else {
+                        secondHalfDuration = totalTime
                         print("Zápas ID: \(matchId), 2. poločas: \(totalTime) sekund")
+                        showMatchResult = true
                     }
                     
-                    // Resetujeme a skryjeme časovač nastavení
                     overtimeElapsed = 0
                     showOvertimeTimer = false
-                    
-                    if isFirstHalf {
-                        showHalfTimeView = true
-                    }
                     isFirstHalf = false
                 }
                 Button("Zrušit", role: .cancel) {}
@@ -78,6 +86,19 @@ struct MatchTimer: View {
                 destination: HalfTimeView()
                     .environmentObject(timerManager),
                 isActive: $showHalfTimeView,
+                label: { EmptyView() }
+            ).hidden()
+            
+            NavigationLink(
+                destination: MatchResultView(
+                    matchId: matchId,
+                    homeTeam: homeTeam,
+                    awayTeam: awayTeam,
+                    firstHalfTime: firstHalfDuration,
+                    secondHalfTime: secondHalfDuration,
+                    distance: sharedData.distance
+                ),
+                isActive: $showMatchResult,
                 label: { EmptyView() }
             ).hidden()
         }
@@ -122,6 +143,10 @@ struct MatchTimer: View {
 
 struct MatchTimer_Previews: PreviewProvider {
     static var previews: some View {
-        MatchTimer(matchId: 1)
+        MatchTimer(
+            matchId: 1,
+            homeTeam: "FC Sparta Praha",
+            awayTeam: "SK Slavia Praha"
+        )
     }
 } 

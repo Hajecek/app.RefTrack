@@ -115,6 +115,7 @@ class DistanceTracker: NSObject, ObservableObject, CLLocationManagerDelegate {
 
 struct DistanceView: View {
     @StateObject private var tracker = DistanceTracker()
+    @EnvironmentObject private var sharedData: SharedData
     
     var body: some View {
         ZStack {
@@ -141,6 +142,9 @@ struct DistanceView: View {
         }
         .onDisappear {
             tracker.stopTracking()
+        }
+        .onReceive(tracker.$distance) { distance in
+            sharedData.distance = distance
         }
     }
 } 
