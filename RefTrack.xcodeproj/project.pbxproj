@@ -778,7 +778,7 @@
 				DEVELOPMENT_TEAM = W6R3HZD7R4;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = "WatchRefTrack-Watch-App-Info.plist";
+				INFOPLIST_FILE = "WatchRefTrack Watch App/WatchRefTrack-Watch-App-Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = WatchRefTrack;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = com.hajecek.RefTrackApp;
@@ -809,7 +809,7 @@
 				DEVELOPMENT_TEAM = W6R3HZD7R4;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = "WatchRefTrack-Watch-App-Info.plist";
+				INFOPLIST_FILE = "WatchRefTrack Watch App/WatchRefTrack-Watch-App-Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = WatchRefTrack;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = com.hajecek.RefTrackApp;
