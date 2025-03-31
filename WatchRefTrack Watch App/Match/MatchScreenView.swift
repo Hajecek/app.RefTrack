@@ -6,13 +6,17 @@ struct MatchScreenView: View {
     let awayTeam: String
     
     var body: some View {
-        ZStack {
-            Color.blue.edgesIgnoringSafeArea(.all)
+        TabView {
+            ZStack {
+                Color.blue.edgesIgnoringSafeArea(.all)
+                Text("Ahoj")
+                    .font(.system(size: 36, weight: .bold))
+                    .foregroundColor(.white)
+            }
             
-            Text("Ahoj")
-                .font(.system(size: 36, weight: .bold))
-                .foregroundColor(.white)
+            DistanceView()
         }
+        .tabViewStyle(.page(indexDisplayMode: .never))
     }
 }
 
