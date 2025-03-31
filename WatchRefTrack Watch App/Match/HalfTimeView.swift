@@ -5,13 +5,17 @@ struct HalfTimeView: View {
     @State private var timeRemaining: TimeInterval = 900 // 15 minut = 900 sekund
     
     var body: some View {
-        VStack(spacing: 20) {
+        VStack {
+            Spacer() // Přidáno pro posunutí obsahu dolů
+            
             Text("Pauza")
-                .font(.system(size: 36, weight: .bold))
+                .font(.system(size: 28, weight: .bold))
                 .foregroundColor(.white)
+                .minimumScaleFactor(0.5)
+                .lineLimit(1)
             
             Text(timeString(from: timeRemaining))
-                .font(.system(size: 56, weight: .bold, design: .monospaced))
+                .font(.system(size: 48, weight: .bold, design: .monospaced))
                 .foregroundColor(.white)
                 .padding(20)
                 .frame(maxWidth: .infinity)
@@ -20,6 +24,8 @@ struct HalfTimeView: View {
                         .fill(Color.white.opacity(0.1))
                 )
                 .shadow(color: .black.opacity(0.3), radius: 10, x: 0, y: 5)
+                .minimumScaleFactor(0.5)
+                .lineLimit(1)
         }
         .padding(10)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
