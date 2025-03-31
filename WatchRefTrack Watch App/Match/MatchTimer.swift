@@ -53,7 +53,13 @@ struct MatchTimer: View {
             .alert(isFirstHalf ? "Ukončit 1. poločas?" : "Ukončit 2. poločas?", isPresented: $showEndHalfAlert) {
                 Button("OK", role: .destructive) {
                     let totalTime = round(timerManager.elapsedTime + overtimeElapsed)
-                    print("Zápas ID: \(matchId), Celkový čas: \(totalTime) sekund")
+                    
+                    // Vypíšeme čas aktuálního poločasu
+                    if isFirstHalf {
+                        print("Zápas ID: \(matchId), 1. poločas: \(totalTime) sekund")
+                    } else {
+                        print("Zápas ID: \(matchId), 2. poločas: \(totalTime) sekund")
+                    }
                     
                     // Resetujeme a skryjeme časovač nastavení
                     overtimeElapsed = 0
