@@ -71,14 +71,14 @@ struct StartingScreenView: View {
                     }
                 }
                 
-                let whistleThreshold: Float = 0.5
+                let whistleThreshold: Float = 0.7
                 if maxAmplitude > whistleThreshold {
                     DispatchQueue.main.async {
                         print("Detekováno písknutí!")
                         print("Čas detekce: \(Date())")
                         print("Amplituda zvuku: \(maxAmplitude)")
                         
-                        if maxAmplitude >= 0.8 {
+                        if maxAmplitude >= 1.0 {
                             self.navigateToMatch = true
                         }
                     }
