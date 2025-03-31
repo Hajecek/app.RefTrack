@@ -114,7 +114,7 @@ class DistanceTracker: NSObject, ObservableObject, CLLocationManagerDelegate {
 }
 
 struct DistanceView: View {
-    @StateObject private var tracker = DistanceTracker()
+    @EnvironmentObject private var tracker: DistanceTracker
     @EnvironmentObject private var sharedData: SharedData
     
     var body: some View {
@@ -136,15 +136,6 @@ struct DistanceView: View {
                     .font(.system(size: 36, weight: .bold))
                     .foregroundColor(.white)
             }
-        }
-        .onAppear {
-            tracker.startTracking()
-        }
-        .onDisappear {
-            tracker.stopTracking()
-        }
-        .onReceive(tracker.$distance) { distance in
-            sharedData.distance = distance
         }
     }
 } 

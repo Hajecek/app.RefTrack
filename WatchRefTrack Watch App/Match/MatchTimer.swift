@@ -6,7 +6,7 @@ struct MatchTimer: View {
     let awayTeam: String
     
     @EnvironmentObject private var sharedData: SharedData
-    // Přidáme proměnné pro ukládání časů poločasů
+    @EnvironmentObject private var timerManager: MatchTimerManager
     @State private var firstHalfDuration: TimeInterval = 0
     @State private var secondHalfDuration: TimeInterval = 0
     
@@ -16,10 +16,9 @@ struct MatchTimer: View {
         self.awayTeam = awayTeam
     }
     
-    @StateObject private var timerManager = MatchTimerManager()
     @State private var showOvertimeTimer = false
     @State private var overtimeElapsed: TimeInterval = 0
-    private var overtimeTimer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
+    @State private var overtimeTimer: Timer? = nil
     @State private var showEndHalfAlert = false
     @State private var isFirstHalf = true
     @State private var showHalfTimeView = false
@@ -74,6 +73,9 @@ struct MatchTimer: View {
                         showMatchResult = true
                     }
                     
+                    // Zastavíme časovač nastavení
+                    overtimeTimer?.invalidate()
+                    overtimeTimer = nil
                     overtimeElapsed = 0
                     showOvertimeTimer = false
                     isFirstHalf = false
@@ -112,6 +114,10 @@ struct MatchTimer: View {
         .onDisappear {
             // Uklidíme observer
             NotificationCenter.default.removeObserver(self, name: .closeHalfTimeView, object: nil)
+            
+            // Zastavíme časovač nastavení
+            overtimeTimer?.invalidate()
+            overtimeTimer = nil
         }
         .onReceive(timerManager.$elapsedTime) { time in
             // Pro testování: 10 a 20 sekund místo 2700 (45 minut)
@@ -119,17 +125,23 @@ struct MatchTimer: View {
                 withAnimation {
                     showOvertimeTimer = true
                     timerManager.stopTimer()
+                    
+                    // Vytvoříme a spustíme nový časovač nastavení
+                    overtimeTimer?.invalidate()  // Pro jistotu zastavíme existující timer
+                    overtimeTimer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { _ in
+                        overtimeElapsed += 1
+                        print("Nastavení: \(overtimeElapsed) sekund")
+                    }
                 }
             } else if (time > 10 && time < 20) || time > 20 && showOvertimeTimer {
                 // Skryjeme časovač nastavení mezi 10. a 20. sekundou a po 20. sekundě
                 withAnimation {
                     showOvertimeTimer = false
+                    
+                    // Zastavíme časovač nastavení
+                    overtimeTimer?.invalidate()
+                    overtimeTimer = nil
                 }
-            }
-        }
-        .onReceive(overtimeTimer) { _ in
-            if showOvertimeTimer {
-                overtimeElapsed += 1
             }
         }
     }
