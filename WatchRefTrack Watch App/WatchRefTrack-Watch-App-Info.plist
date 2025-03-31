@@ -35,5 +35,21 @@
     <array>
         <string>UIInterfaceOrientationPortrait</string>
     </array>
+    
+    <!-- Oprávnění pro polohu -->
+    <key>NSLocationWhenInUseUsageDescription</key>
+    <string>Aplikace potřebuje přístup k poloze pro měření vzdálenosti</string>
+    <key>NSLocationAlwaysUsageDescription</key>
+    <string>Aplikace potřebuje přístup k poloze i na pozadí</string>
+    
+    <!-- Oprávnění pro HealthKit -->
+    <key>NSHealthShareUsageDescription</key>
+    <string>Aplikace potřebuje přístup k HealthKit pro přesné měření vzdálenosti</string>
+    <key>NSHealthUpdateUsageDescription</key>
+    <string>Aplikace potřebuje zapisovat data do HealthKit</string>
+    <key>com.apple.developer.healthkit</key>
+    <true/>
+    <key>com.apple.developer.healthkit.background-delivery</key>
+    <true/>
 </dict>
 </plist>
