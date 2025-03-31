@@ -10,7 +10,7 @@ struct ProfileView: View {
             VStack(spacing: 16) {
                 if let user = userInfo {
                     if let profileImage = user.profileImage,
-                       let imageUrl = URL(string: "http://10.0.0.15/reftrack/auth/images/\(profileImage)") {
+                       let imageUrl = URL(string: "https://reftrack.cz/auth/images/\(profileImage)") {
                         AsyncImage(url: imageUrl) { phase in
                             switch phase {
                             case .empty:

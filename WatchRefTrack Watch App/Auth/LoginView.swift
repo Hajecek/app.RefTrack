@@ -160,7 +160,7 @@ struct LoginView: View {
     private func login() {
         isLoading = true
         
-        guard let url = URL(string: "http://10.0.0.15/reftrack/admin/api/login_watch-api.php") else {
+        guard let url = URL(string: "https://reftrack.cz/admin/api/login_watch-api.php") else {
             handleError(.invalidURL)
             return
         }

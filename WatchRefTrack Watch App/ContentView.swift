@@ -42,7 +42,7 @@ struct ContentView: View {
                     NavigationLink(destination: ProfileView(isLoggedIn: $isLoggedIn, userInfo: $userInfo)) {
                         HStack(alignment: .center, spacing: 8) {
                             if let profileImage = user.profileImage, 
-                               let imageUrl = URL(string: "http://10.0.0.15/reftrack/auth/images/\(profileImage)"),
+                               let imageUrl = URL(string: "https://reftrack.cz/auth/images/\(profileImage)"),
                                imageUrl.scheme != nil {
                                 
                                 AsyncImage(url: imageUrl) { phase in

@@ -33,7 +33,7 @@ struct StatisticsView: View {
                 
                 // Profilový obrázek
                 if let profileImage = UserDefaults.standard.string(forKey: "userProfileImage") {
-                    AsyncImage(url: URL(string: "http://10.0.0.15/reftrack/auth/images/\(profileImage)")) { phase in
+                    AsyncImage(url: URL(string: "https://reftrack.cz/auth/images/\(profileImage)")) { phase in
                         switch phase {
                         case .empty:
                             Image(systemName: "person.circle.fill")

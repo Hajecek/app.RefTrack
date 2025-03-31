@@ -34,6 +34,7 @@ struct StartingScreenView: View {
         .onTapGesture {
             print("Zápas ID: \(matchId)")
             print("Zápas: \(homeTeam) vs \(awayTeam)")
+            self.navigateToMatch = true
         }
         .onAppear {
             setupAudioDetection()
@@ -77,7 +78,9 @@ struct StartingScreenView: View {
                         print("Čas detekce: \(Date())")
                         print("Amplituda zvuku: \(maxAmplitude)")
                         
-                        self.navigateToMatch = true
+                        if maxAmplitude >= 4.0 && maxAmplitude <= 5.0 {
+                            self.navigateToMatch = true
+                        }
                     }
                 }
             }

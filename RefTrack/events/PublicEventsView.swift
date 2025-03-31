@@ -64,7 +64,7 @@ struct PublicEventsView: View {
     
     private func loadMatches() {
         isLoading = true
-        guard let url = URL(string: "http://10.0.0.15/reftrack/admin/api/events/public_events-api.php") else { return }
+        guard let url = URL(string: "https://reftrack.cz/admin/api/events/public_events-api.php") else { return }
         
         let config = URLSessionConfiguration.default
         config.requestCachePolicy = .reloadIgnoringLocalCacheData

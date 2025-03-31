@@ -167,7 +167,7 @@ struct UpcomingEventsView: View {
             return
         }
         
-        guard let url = URL(string: "http://10.0.0.15/reftrack/admin/api/users_matches-api.php?user_id=\(userId)") else {
+        guard let url = URL(string: "https://reftrack.cz/admin/api/users_matches-api.php?user_id=\(userId)") else {
             errorMessage = "Neplatná URL"
             isLoading = false
             return

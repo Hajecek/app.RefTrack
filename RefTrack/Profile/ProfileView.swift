@@ -43,7 +43,7 @@ struct ProfileView: View {
                     HStack {
                         // Zobrazení profilového obrázku z URL nebo použití zástupné ikony
                         if isLoggedIn && profileImage != nil {
-                            AsyncImage(url: URL(string: "http://10.0.0.15/reftrack/auth/images/\(profileImage!)")) { phase in
+                            AsyncImage(url: URL(string: "https://reftrack.cz/auth/images/\(profileImage!)")) { phase in
                                 switch phase {
                                 case .empty:
                                     Image(systemName: "person.circle.fill")

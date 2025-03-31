@@ -86,7 +86,7 @@ struct UpcomingEventsView: View {
         print("Current user ID in UserDefaults: \(UserDefaults.standard.string(forKey: "user_id") ?? "N/A")")
         print("All UserDefaults keys: \(UserDefaults.standard.dictionaryRepresentation().keys)")
         
-        guard let url = URL(string: "http://10.0.0.15/reftrack/admin/api/events/upcoming_events-api.php?user_id=\(userId)") else {
+        guard let url = URL(string: "https://reftrack.cz/admin/api/events/upcoming_events-api.php?user_id=\(userId)") else {
             errorMessage = "Neplatná URL"
             isLoading = false
             return

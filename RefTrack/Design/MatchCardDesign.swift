@@ -227,7 +227,7 @@ struct MatchCardDesign: View {
             .replacingOccurrences(of: " ", with: "_")
             .lowercased()
         
-        let logoURL = URL(string: "http://10.0.0.15/reftrack/config/img/teams/\(formattedTeamName).png")
+        let logoURL = URL(string: "https://reftrack.cz/config/img/teams/\(formattedTeamName).png")
         
         return AsyncImage(url: logoURL) { phase in
             switch phase {
