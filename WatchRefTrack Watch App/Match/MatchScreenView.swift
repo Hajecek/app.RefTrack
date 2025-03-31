@@ -5,6 +5,7 @@ struct MatchScreenView: View {
     let homeTeam: String
     let awayTeam: String
     @StateObject private var timerManager = MatchTimerManager()
+    @State private var showHalfTimeView = false
     
     var body: some View {
         TabView {
@@ -15,6 +16,13 @@ struct MatchScreenView: View {
             }
             
             DistanceView()
+            
+            NavigationLink(
+                destination: HalfTimeView()
+                    .environmentObject(timerManager),
+                isActive: $showHalfTimeView,
+                label: { EmptyView() }
+            ).hidden()
         }
         .tabViewStyle(.page(indexDisplayMode: .never))
     }

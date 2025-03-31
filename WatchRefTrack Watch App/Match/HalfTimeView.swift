@@ -1,37 +1,73 @@
 import SwiftUI
 
 struct HalfTimeView: View {
-    @StateObject private var timerManager = MatchTimerManager()
-    @State private var timeRemaining: TimeInterval = 900 // 15 minut = 900 sekund
+    @EnvironmentObject private var timerManager: MatchTimerManager
+    @State private var timeRemaining: TimeInterval = 5 // Změněno z 900 na 5 sekund
+    @State private var showEndScreen = false // Nový stav pro zobrazení koncového screenu
     
     var body: some View {
-        VStack {
-            Spacer() // Přidáno pro posunutí obsahu dolů
-            
-            Text("Pauza")
-                .font(.system(size: 28, weight: .bold))
-                .foregroundColor(.white)
-                .minimumScaleFactor(0.5)
-                .lineLimit(1)
-            
-            Text(timeString(from: timeRemaining))
-                .font(.system(size: 48, weight: .bold, design: .monospaced))
-                .foregroundColor(.white)
-                .padding(20)
-                .frame(maxWidth: .infinity)
-                .background(
-                    RoundedRectangle(cornerRadius: 20)
-                        .fill(Color.white.opacity(0.1))
-                )
-                .shadow(color: .black.opacity(0.3), radius: 10, x: 0, y: 5)
-                .minimumScaleFactor(0.5)
-                .lineLimit(1)
+        ZStack {
+            if showEndScreen {
+                // Červená obrazovka po vypršení času
+                Color.red.edgesIgnoringSafeArea(.all)
+                VStack {
+                    Text("POKRAČOVAT 2. POLOČAS")
+                        .font(.system(size: 24, weight: .bold))
+                        .foregroundColor(.white)
+                        .multilineTextAlignment(.center)
+                        .padding()
+                        .minimumScaleFactor(0.8)
+                        .lineLimit(2)
+                }
+            } else {
+                VStack {
+                    Spacer()
+                    
+                    Text("Pauza")
+                        .font(.system(size: 36, weight: .bold))
+                        .foregroundColor(.black)
+                        .minimumScaleFactor(0.5)
+                        .lineLimit(1)
+                    
+                    Text(timeString(from: timeRemaining))
+                        .font(.system(size: 64, weight: .bold, design: .monospaced))
+                        .foregroundColor(.black)
+                        .padding(20)
+                        .frame(maxWidth: .infinity)
+                        .background(
+                            RoundedRectangle(cornerRadius: 20)
+                                .fill(Color.white.opacity(0.1))
+                        )
+                        .shadow(color: .black.opacity(0.3), radius: 10, x: 0, y: 5)
+                        .minimumScaleFactor(0.5)
+                        .lineLimit(1)
+                    
+                    Spacer()
+                }
+                .padding(10)
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .background(Color.yellow.edgesIgnoringSafeArea(.all))
+            }
         }
-        .padding(10)
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(Color.blue.edgesIgnoringSafeArea(.all))
         .onAppear {
             startTimer()
+        }
+        .onTapGesture {
+            if showEndScreen {
+                // Prostě spustíme hlavní časovač od aktuálního času
+                timerManager.startTimer()
+                
+                // Skryjeme screen pauzy
+                showEndScreen = false
+                
+                // Zavřeme HalfTimeView
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                    NotificationCenter.default.post(
+                        name: .closeHalfTimeView, 
+                        object: nil
+                    )
+                }
+            }
         }
     }
     
@@ -41,6 +77,7 @@ struct HalfTimeView: View {
                 timeRemaining -= 1
             } else {
                 timer.invalidate()
+                showEndScreen = true // Zobrazí červenou obrazovku po vypršení času
             }
         }
     }

@@ -54,6 +54,11 @@ struct MatchTimer: View {
                 Button("OK", role: .destructive) {
                     let totalTime = round(timerManager.elapsedTime + overtimeElapsed)
                     print("Zápas ID: \(matchId), Celkový čas: \(totalTime) sekund")
+                    
+                    // Resetujeme a skryjeme časovač nastavení
+                    overtimeElapsed = 0
+                    showOvertimeTimer = false
+                    
                     if isFirstHalf {
                         showHalfTimeView = true
                     }
@@ -64,20 +69,34 @@ struct MatchTimer: View {
             
             // NavigationLink je nyní v ZStacku, ale není viditelný
             NavigationLink(
-                destination: HalfTimeView(),
+                destination: HalfTimeView()
+                    .environmentObject(timerManager),
                 isActive: $showHalfTimeView,
                 label: { EmptyView() }
             ).hidden()
         }
         .onAppear {
             timerManager.startTimer()
+            // Přidáno pro zavření HalfTimeView
+            NotificationCenter.default.addObserver(forName: .closeHalfTimeView, object: nil, queue: .main) { _ in
+                showHalfTimeView = false
+            }
+        }
+        .onDisappear {
+            // Uklidíme observer
+            NotificationCenter.default.removeObserver(self, name: .closeHalfTimeView, object: nil)
         }
         .onReceive(timerManager.$elapsedTime) { time in
-            // Pro testování: 10 sekund místo 2700 (45 minut)
-            if time >= 10 && !showOvertimeTimer {
+            // Pro testování: 10 a 20 sekund místo 2700 (45 minut)
+            if (time == 10 || time == 20) && !showOvertimeTimer {
                 withAnimation {
                     showOvertimeTimer = true
                     timerManager.stopTimer()
+                }
+            } else if (time > 10 && time < 20) || time > 20 && showOvertimeTimer {
+                // Skryjeme časovač nastavení mezi 10. a 20. sekundou a po 20. sekundě
+                withAnimation {
+                    showOvertimeTimer = false
                 }
             }
         }

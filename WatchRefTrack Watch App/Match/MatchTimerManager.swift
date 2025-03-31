@@ -27,4 +27,8 @@ class MatchTimerManager: ObservableObject {
         let seconds = Int(elapsedTime) % 60
         return String(format: "%02d:%02d", minutes, seconds)
     }
+    
+    func setElapsedTime(_ time: TimeInterval) {
+        elapsedTime = time
+    }
 } 
