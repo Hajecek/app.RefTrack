@@ -78,7 +78,7 @@ struct StartingScreenView: View {
                         print("Čas detekce: \(Date())")
                         print("Amplituda zvuku: \(maxAmplitude)")
                         
-                        if maxAmplitude >= 4.0 && maxAmplitude <= 5.0 {
+                        if maxAmplitude >= 0.8 {
                             self.navigateToMatch = true
                         }
                     }
