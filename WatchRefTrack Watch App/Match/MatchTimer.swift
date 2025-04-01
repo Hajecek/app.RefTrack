@@ -35,16 +35,16 @@ struct MatchTimer: View {
                     .frame(maxWidth: .infinity)
                     .background(
                         RoundedRectangle(cornerRadius: 20)
-                            .fill(showOvertimeTimer ? Color.green.opacity(0.2) : Color.white.opacity(0.1))
-                            .animation(.easeInOut(duration: 0.5), value: showOvertimeTimer)
+                            .fill(timerManager.isOvertimeRunning ? Color.green.opacity(0.2) : Color.white.opacity(0.1))
+                            .animation(.easeInOut(duration: 0.5), value: timerManager.isOvertimeRunning)
                     )
                     .shadow(color: .black.opacity(0.3), radius: 10, x: 0, y: 5)
                     .minimumScaleFactor(0.5)
                     .lineLimit(1)
                 
                 // Dodatečný časovač nastavení
-                if showOvertimeTimer {
-                    Text("+ \(timeString(from: overtimeElapsed))")
+                if timerManager.isOvertimeRunning {
+                    Text("+ \(timerManager.overtimeTimeString())")
                         .font(.system(size: 20, weight: .medium))
                         .foregroundColor(.white)
                         .padding(10)
@@ -61,7 +61,7 @@ struct MatchTimer: View {
             }
             .alert(isFirstHalf ? "Ukončit 1. poločas?" : "Ukončit zápas?", isPresented: $showEndHalfAlert) {
                 Button("OK", role: .destructive) {
-                    let totalTime = round(timerManager.elapsedTime + overtimeElapsed)
+                    let totalTime = round(timerManager.elapsedTime + timerManager.overtimeElapsed)
                     
                     if isFirstHalf {
                         firstHalfDuration = totalTime
@@ -74,10 +74,7 @@ struct MatchTimer: View {
                     }
                     
                     // Zastavíme časovač nastavení
-                    overtimeTimer?.invalidate()
-                    overtimeTimer = nil
-                    overtimeElapsed = 0
-                    showOvertimeTimer = false
+                    timerManager.stopOvertimeTimer()
                     isFirstHalf = false
                 }
                 Button("Zrušit", role: .cancel) {}
@@ -105,7 +102,10 @@ struct MatchTimer: View {
             ).hidden()
         }
         .onAppear {
-            timerManager.startTimer()
+            if !timerManager.isMainTimerStopped && !timerManager.isOvertimeRunning {
+                timerManager.startTimer()
+            }
+            
             // Přidáno pro zavření HalfTimeView
             NotificationCenter.default.addObserver(forName: .closeHalfTimeView, object: nil, queue: .main) { _ in
                 showHalfTimeView = false
@@ -114,33 +114,22 @@ struct MatchTimer: View {
         .onDisappear {
             // Uklidíme observer
             NotificationCenter.default.removeObserver(self, name: .closeHalfTimeView, object: nil)
-            
-            // Zastavíme časovač nastavení
-            overtimeTimer?.invalidate()
-            overtimeTimer = nil
         }
         .onReceive(timerManager.$elapsedTime) { time in
             // Pro testování: 10 a 20 sekund místo 2700 (45 minut)
-            if (time == 10 || time == 20) && !showOvertimeTimer {
+            if (time == 10 || time == 20) && !timerManager.isOvertimeRunning {
                 withAnimation {
-                    showOvertimeTimer = true
-                    timerManager.stopTimer()
-                    
-                    // Vytvoříme a spustíme nový časovač nastavení
-                    overtimeTimer?.invalidate()  // Pro jistotu zastavíme existující timer
-                    overtimeTimer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { _ in
-                        overtimeElapsed += 1
-                        print("Nastavení: \(overtimeElapsed) sekund")
-                    }
+                    timerManager.startOvertimeTimer()
                 }
-            } else if (time > 10 && time < 20) || time > 20 && showOvertimeTimer {
+            } else if (time > 10 && time < 20) || time > 20 && timerManager.isOvertimeRunning {
                 // Skryjeme časovač nastavení mezi 10. a 20. sekundou a po 20. sekundě
                 withAnimation {
-                    showOvertimeTimer = false
-                    
-                    // Zastavíme časovač nastavení
-                    overtimeTimer?.invalidate()
-                    overtimeTimer = nil
+                    timerManager.stopOvertimeTimer()
+                    // Pokud jsme mezi 10. a 20. sekundou, pokračujeme s hlavním časovačem
+                    if time > 10 && time < 20 {
+                        timerManager.startTimer()
+                        timerManager.isMainTimerStopped = false
+                    }
                 }
             }
         }
