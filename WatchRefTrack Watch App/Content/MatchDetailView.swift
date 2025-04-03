@@ -37,10 +37,6 @@ struct MatchDetailView: View {
                 }
                 .padding(.horizontal, 4)
                 
-                Text("Role: \(role)")
-                    .font(.caption)
-                    .foregroundColor(.yellow)
-                
                 Button(action: {
                     // Akce pro zahájení zápasu
                     print("Zahájení zápasu s ID: \(matchId)")
