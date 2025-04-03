@@ -26,6 +26,13 @@ struct MatchTimer: View {
     
     var body: some View {
         ZStack {
+            // Průhledné pozadí přes celou obrazovku pro gesto kliknutí
+            Color.clear
+                .contentShape(Rectangle()) // Důležité pro zachycení kliknutí i na prázdných místech
+                .onTapGesture {
+                    showEndHalfAlert = true
+                }
+            
             // Hlavní VStack přes celou obrazovku
             VStack(spacing: 0) {
                 // Spacer tlačí obsah dolů - zabírá všechen dostupný prostor
@@ -63,9 +70,6 @@ struct MatchTimer: View {
                     .padding(.bottom, 10) // Malý padding od spodního okraje
             }
             .edgesIgnoringSafeArea(.bottom) // Ignorujeme bezpečnou zónu dole
-            .onTapGesture {
-                showEndHalfAlert = true
-            }
             .alert(isFirstHalf ? "Ukončit 1. poločas?" : "Ukončit zápas?", isPresented: $showEndHalfAlert) {
                 Button("OK", role: .destructive) {
                     let totalTime = round(timerManager.elapsedTime + timerManager.overtimeElapsed)
