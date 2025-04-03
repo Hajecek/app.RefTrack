@@ -12,15 +12,12 @@ struct MatchCardDesign: View {
         }
     }
     
-    // Pozadí s gradientem
+    // Pozadí s obrázkem
     private var backgroundGradient: some View {
         RoundedRectangle(cornerRadius: 30)
-            .fill(
-                LinearGradient(
-                    gradient: Gradient(colors: getRoleColors()),
-                    startPoint: .topLeading,
-                    endPoint: .bottomTrailing
-                )
+            .fill(Color.clear) // Průhledné pozadí
+            .overlay(
+                getBackgroundImage()
             )
             .overlay(
                 RoundedRectangle(cornerRadius: 30)
@@ -28,6 +25,23 @@ struct MatchCardDesign: View {
             )
             .frame(width: UIScreen.main.bounds.width - 40, height: 600)
             .shadow(color: Color.black.opacity(0.2), radius: 15, x: 0, y: 8)
+            .clipShape(RoundedRectangle(cornerRadius: 30))
+    }
+    
+    // Opravená pomocná funkce pro získání obrázku pozadí podle role
+    private func getBackgroundImage() -> some View {
+        let role = match.role?.uppercased() ?? ""
+        
+        switch role {
+        case "AR1", "AR2":
+            return Image("purple")
+                .resizable()
+                .aspectRatio(contentMode: .fill)
+        default: // Pro "HR" a ostatní případy
+            return Image("blue")
+                .resizable()
+                .aspectRatio(contentMode: .fill)
+        }
     }
     
     // Hlavní obsah
