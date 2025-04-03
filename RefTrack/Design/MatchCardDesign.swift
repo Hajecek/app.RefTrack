@@ -395,22 +395,4 @@ struct MatchCardDesign: View {
         
         return isPublic ? Color.green.opacity(0.5) : Color.red.opacity(0.5)
     }
-    
-    // Přidejte novou pomocnou funkci pro získání barev podle role
-    private func getRoleColors() -> [Color] {
-        let role = match.role?.uppercased() ?? ""
-        
-        switch role {
-        case "AR1", "AR2":
-            return [
-                Color(red: 0.6, green: 0.2, blue: 0.8),  // Světlejší fialová
-                Color(red: 0.4, green: 0.1, blue: 0.6)   // Tmavší fialová
-            ]
-        default: // Pro "HR" a ostatní případy
-            return [
-                Color(red: 0.0, green: 0.44, blue: 0.8),  // Světlejší modrá
-                Color(red: 0.0, green: 0.22, blue: 0.55)  // Tmavší modrá
-            ]
-        }
-    }
 } 
