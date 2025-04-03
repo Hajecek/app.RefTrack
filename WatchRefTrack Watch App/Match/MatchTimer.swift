@@ -26,8 +26,26 @@ struct MatchTimer: View {
     
     var body: some View {
         ZStack {
-            VStack(spacing: 20) {
-                // Hlavní časovač s měnícím se pozadím
+            // Hlavní VStack přes celou obrazovku
+            VStack(spacing: 0) {
+                // Spacer tlačí obsah dolů - zabírá všechen dostupný prostor
+                Spacer()
+                
+                // Časovač nastavení
+                if timerManager.isOvertimeRunning {
+                    Text("+ \(timerManager.overtimeTimeString())")
+                        .font(.system(size: 20, weight: .medium))
+                        .foregroundColor(.white)
+                        .padding(10)
+                        .background(
+                            RoundedRectangle(cornerRadius: 10)
+                                .fill(Color.white.opacity(0.2))
+                        )
+                        .transition(.opacity.combined(with: .scale))
+                        .padding(.bottom, 5)
+                }
+                
+                // Hlavní časovač úplně dole
                 Text(timerManager.timeString())
                     .font(.system(size: 56, weight: .bold, design: .monospaced))
                     .foregroundColor(.white)
@@ -41,21 +59,10 @@ struct MatchTimer: View {
                     .shadow(color: .black.opacity(0.3), radius: 10, x: 0, y: 5)
                     .minimumScaleFactor(0.5)
                     .lineLimit(1)
-                
-                // Dodatečný časovač nastavení
-                if timerManager.isOvertimeRunning {
-                    Text("+ \(timerManager.overtimeTimeString())")
-                        .font(.system(size: 20, weight: .medium))
-                        .foregroundColor(.white)
-                        .padding(10)
-                        .background(
-                            RoundedRectangle(cornerRadius: 10)
-                                .fill(Color.white.opacity(0.2))
-                        )
-                        .transition(.opacity.combined(with: .scale))
-                }
+                    .padding(.horizontal, 10)
+                    .padding(.bottom, 10) // Malý padding od spodního okraje
             }
-            .padding(10)
+            .edgesIgnoringSafeArea(.bottom) // Ignorujeme bezpečnou zónu dole
             .onTapGesture {
                 showEndHalfAlert = true
             }
