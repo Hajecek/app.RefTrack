@@ -13,5 +13,11 @@
         <key>NSAllowsArbitraryLoads</key>
         <true/>
     </dict>
+    
+    <!-- Oprávnění pro HealthKit -->
+    <key>NSHealthShareUsageDescription</key>
+    <string>Aplikace potřebuje přístup k HealthKit pro přesné měření vzdálenosti</string>
+    <key>NSHealthUpdateUsageDescription</key>
+    <string>Aplikace potřebuje zapisovat data do HealthKit</string>
 </dict>
 </plist>
