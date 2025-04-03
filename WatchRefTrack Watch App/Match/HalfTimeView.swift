@@ -30,15 +30,23 @@ struct HalfTimeView: View {
                     stopAudioDetection()
                 }
             } else {
+                // Základní obrazovka s žlutým pozadím a časovačem
+                Color.yellow.edgesIgnoringSafeArea(.all)
+                
+                // Hlavní obsah - posun časovače dolů
                 VStack {
-                    Spacer()
-                    
+                    // Titulek "Pauza" zůstává nahoře
                     Text("Pauza")
                         .font(.system(size: 36, weight: .bold))
                         .foregroundColor(.black)
                         .minimumScaleFactor(0.5)
                         .lineLimit(1)
+                        .padding(.top, 20)
                     
+                    // Spacer tlačí časovač dolů
+                    Spacer()
+                    
+                    // Časovač umístěný dole
                     Text(timeString(from: timeRemaining))
                         .font(.system(size: 64, weight: .bold, design: .monospaced))
                         .foregroundColor(.black)
@@ -51,14 +59,13 @@ struct HalfTimeView: View {
                         .shadow(color: .black.opacity(0.3), radius: 10, x: 0, y: 5)
                         .minimumScaleFactor(0.5)
                         .lineLimit(1)
-                    
-                    Spacer()
+                        .padding(.horizontal, 10)
+                        .padding(.bottom, 10) // Malý padding od spodního okraje
                 }
-                .padding(10)
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .background(Color.yellow.edgesIgnoringSafeArea(.all))
+                .edgesIgnoringSafeArea(.bottom)
+                .contentShape(Rectangle()) // Pro kliknutí na celou plochu
                 .alert("Přeskočit pauzu?", isPresented: $showSkipDialog) {
-                    Button("Ano") {
+                    Button("Ano", role: .destructive) { // Role destructive dává tlačítku červenou barvu
                         showEndScreen = true
                     }
                     Button("Ne", role: .cancel) {}
