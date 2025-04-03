@@ -87,27 +87,40 @@ class DistanceTracker: NSObject, ObservableObject, CLLocationManagerDelegate {
     }
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        guard let newLocation = locations.last, newLocation.horizontalAccuracy >= 0 else { return }
+        guard let newLocation = locations.last, newLocation.horizontalAccuracy <= 20 else { return }
         
         if let lastLocation = lastLocation {
-            let delta = lastLocation.distance(from: newLocation)
-            distance += delta
-            
-            // Vytvoření HKQuantitySample pro HealthKit
-            let distanceType = HKQuantityType.quantityType(forIdentifier: .distanceWalkingRunning)!
-            let distanceQuantity = HKQuantity(unit: .meter(), doubleValue: delta)
-            let distanceSample = HKQuantitySample(
-                type: distanceType,
-                quantity: distanceQuantity,
-                start: lastLocation.timestamp,
-                end: newLocation.timestamp
-            )
-            
-            workoutBuilder?.add([distanceSample], completion: { success, error in
-                if let error = error {
-                    print("Chyba při ukládání dat do HealthKit: \(error)")
+            // Kontrola kvality signálu a rychlosti
+            if newLocation.horizontalAccuracy <= 20 && 
+               newLocation.timestamp.timeIntervalSince(lastLocation.timestamp) > 0 {
+                
+                let delta = lastLocation.distance(from: newLocation)
+                
+                // Filtrování nereálných hodnot
+                let timeInterval = newLocation.timestamp.timeIntervalSince(lastLocation.timestamp)
+                let speed = delta / timeInterval
+                
+                // Filtrujeme nereálné hodnoty (např. nad 10 m/s což je ~36 km/h)
+                if speed < 10.0 && delta > 0.2 {
+                    distance += delta
+                    
+                    // Vytvoření HKQuantitySample pro HealthKit
+                    let distanceType = HKQuantityType.quantityType(forIdentifier: .distanceWalkingRunning)!
+                    let distanceQuantity = HKQuantity(unit: .meter(), doubleValue: delta)
+                    let distanceSample = HKQuantitySample(
+                        type: distanceType,
+                        quantity: distanceQuantity,
+                        start: lastLocation.timestamp,
+                        end: newLocation.timestamp
+                    )
+                    
+                    workoutBuilder?.add([distanceSample], completion: { success, error in
+                        if let error = error {
+                            print("Chyba při ukládání dat do HealthKit: \(error)")
+                        }
+                    })
                 }
-            })
+            }
         }
         lastLocation = newLocation
     }
@@ -132,9 +145,15 @@ struct DistanceView: View {
                     .foregroundColor(.white)
                     .padding(.bottom, 10)
                 
-                Text("\(String(format: "%.2f", tracker.distance / 1000)) km")
-                    .font(.system(size: 36, weight: .bold))
-                    .foregroundColor(.white)
+                if tracker.distance < 1000 {
+                    Text("\(Int(tracker.distance)) m")
+                        .font(.system(size: 36, weight: .bold))
+                        .foregroundColor(.white)
+                } else {
+                    Text("\(String(format: "%.2f", tracker.distance / 1000)) km")
+                        .font(.system(size: 36, weight: .bold))
+                        .foregroundColor(.white)
+                }
             }
         }
     }
