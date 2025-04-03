@@ -25,51 +25,56 @@ struct MatchTimer: View {
     @State private var showMatchResult = false
     
     var body: some View {
-        ZStack {
-            // Průhledné pozadí přes celou obrazovku pro gesto kliknutí
-            Color.clear
-                .contentShape(Rectangle()) // Důležité pro zachycení kliknutí i na prázdných místech
-                .onTapGesture {
-                    showEndHalfAlert = true
-                }
-            
-            // Hlavní VStack přes celou obrazovku
-            VStack(spacing: 0) {
-                // Spacer tlačí obsah dolů - zabírá všechen dostupný prostor
-                Spacer()
-                
-                // Časovač nastavení
-                if timerManager.isOvertimeRunning {
-                    Text("+ \(timerManager.overtimeTimeString())")
-                        .font(.system(size: 20, weight: .medium))
+        GeometryReader { geometry in
+            ZStack {
+                // Hlavní VStack přes celou obrazovku
+                VStack(spacing: 0) {
+                    // Spacer tlačí obsah dolů - zabírá všechen dostupný prostor
+                    Spacer()
+                    
+                    // Časovač nastavení
+                    if timerManager.isOvertimeRunning {
+                        Text("+ \(timerManager.overtimeTimeString())")
+                            .font(.system(size: 20, weight: .medium))
+                            .foregroundColor(.white)
+                            .padding(10)
+                            .background(
+                                RoundedRectangle(cornerRadius: 10)
+                                    .fill(Color.white.opacity(0.2))
+                            )
+                            .transition(.opacity.combined(with: .scale))
+                            .padding(.bottom, 5)
+                            .allowsHitTesting(false) // Zakázání zachytávání gest
+                    }
+                    
+                    // Hlavní časovač úplně dole
+                    Text(timerManager.timeString())
+                        .font(.system(size: 56, weight: .bold, design: .monospaced))
                         .foregroundColor(.white)
-                        .padding(10)
+                        .padding(20)
+                        .frame(maxWidth: .infinity)
                         .background(
-                            RoundedRectangle(cornerRadius: 10)
-                                .fill(Color.white.opacity(0.2))
+                            RoundedRectangle(cornerRadius: 20)
+                                .fill(timerManager.isOvertimeRunning ? Color.green.opacity(0.2) : Color.white.opacity(0.1))
+                                .animation(.easeInOut(duration: 0.5), value: timerManager.isOvertimeRunning)
                         )
-                        .transition(.opacity.combined(with: .scale))
-                        .padding(.bottom, 5)
+                        .shadow(color: .black.opacity(0.3), radius: 10, x: 0, y: 5)
+                        .minimumScaleFactor(0.5)
+                        .lineLimit(1)
+                        .padding(.horizontal, 10)
+                        .padding(.bottom, 10) // Malý padding od spodního okraje
+                        .allowsHitTesting(false) // Zakázání zachytávání gest
                 }
+                .edgesIgnoringSafeArea(.bottom) // Ignorujeme bezpečnou zónu dole
                 
-                // Hlavní časovač úplně dole
-                Text(timerManager.timeString())
-                    .font(.system(size: 56, weight: .bold, design: .monospaced))
-                    .foregroundColor(.white)
-                    .padding(20)
-                    .frame(maxWidth: .infinity)
-                    .background(
-                        RoundedRectangle(cornerRadius: 20)
-                            .fill(timerManager.isOvertimeRunning ? Color.green.opacity(0.2) : Color.white.opacity(0.1))
-                            .animation(.easeInOut(duration: 0.5), value: timerManager.isOvertimeRunning)
-                    )
-                    .shadow(color: .black.opacity(0.3), radius: 10, x: 0, y: 5)
-                    .minimumScaleFactor(0.5)
-                    .lineLimit(1)
-                    .padding(.horizontal, 10)
-                    .padding(.bottom, 10) // Malý padding od spodního okraje
+                // Neviditelný obdélník přes celou obrazovku pro zachycení gesta kliknutí
+                Color.clear
+                    .frame(width: geometry.size.width, height: geometry.size.height)
+                    .contentShape(Rectangle())
+                    .onTapGesture {
+                        showEndHalfAlert = true
+                    }
             }
-            .edgesIgnoringSafeArea(.bottom) // Ignorujeme bezpečnou zónu dole
             .alert(isFirstHalf ? "Ukončit 1. poločas?" : "Ukončit zápas?", isPresented: $showEndHalfAlert) {
                 Button("OK", role: .destructive) {
                     let totalTime = round(timerManager.elapsedTime + timerManager.overtimeElapsed)
