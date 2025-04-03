@@ -67,14 +67,18 @@ struct MatchTimer: View {
                         firstHalfDuration = totalTime
                         print("Zápas ID: \(matchId), 1. poločas: \(totalTime) sekund")
                         showHalfTimeView = true
+                        
+                        // Zastavíme časovač nastavení
+                        timerManager.stopOvertimeTimer()
                     } else {
                         secondHalfDuration = totalTime
                         print("Zápas ID: \(matchId), 2. poločas: \(totalTime) sekund")
                         showMatchResult = true
+                        
+                        // Zastavíme časovač nastavení
+                        timerManager.stopOvertimeTimer()
                     }
                     
-                    // Zastavíme časovač nastavení
-                    timerManager.stopOvertimeTimer()
                     isFirstHalf = false
                 }
                 Button("Zrušit", role: .cancel) {}
@@ -109,6 +113,12 @@ struct MatchTimer: View {
             // Přidáno pro zavření HalfTimeView
             NotificationCenter.default.addObserver(forName: .closeHalfTimeView, object: nil, queue: .main) { _ in
                 showHalfTimeView = false
+                
+                // Pokud se vracíme z přestávky, znovu spustíme časovač pro druhý poločas
+                if !isFirstHalf {
+                    // Začneme druhý poločas
+                    timerManager.startTimer()
+                }
             }
         }
         .onDisappear {
@@ -116,19 +126,23 @@ struct MatchTimer: View {
             NotificationCenter.default.removeObserver(self, name: .closeHalfTimeView, object: nil)
         }
         .onReceive(timerManager.$elapsedTime) { time in
-            // Pro testování: 10 a 20 sekund místo 2700 (45 minut)
-            if (time == 10 || time == 20) && !timerManager.isOvertimeRunning {
-                withAnimation {
-                    timerManager.startOvertimeTimer()
+            // Kontrola pro zobrazení nastavení časovače v závislosti na poločasu
+            if isFirstHalf {
+                // První poločas
+                let firstHalfTimeInSeconds = MatchTimerSettings.shared.firstHalfTimeInSeconds
+                
+                if time >= firstHalfTimeInSeconds && !timerManager.isOvertimeRunning {
+                    withAnimation {
+                        timerManager.startOvertimeTimer()
+                    }
                 }
-            } else if (time > 10 && time < 20) || time > 20 && timerManager.isOvertimeRunning {
-                // Skryjeme časovač nastavení mezi 10. a 20. sekundou a po 20. sekundě
-                withAnimation {
-                    timerManager.stopOvertimeTimer()
-                    // Pokud jsme mezi 10. a 20. sekundou, pokračujeme s hlavním časovačem
-                    if time > 10 && time < 20 {
-                        timerManager.startTimer()
-                        timerManager.isMainTimerStopped = false
+            } else {
+                // Druhý poločas
+                let secondHalfTimeInSeconds = MatchTimerSettings.shared.secondHalfTimeInSeconds
+                
+                if time >= secondHalfTimeInSeconds && !timerManager.isOvertimeRunning {
+                    withAnimation {
+                        timerManager.startOvertimeTimer()
                     }
                 }
             }

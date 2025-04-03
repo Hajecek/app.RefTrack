@@ -3,7 +3,7 @@ import AVFoundation
 
 struct HalfTimeView: View {
     @EnvironmentObject private var timerManager: MatchTimerManager
-    @State private var timeRemaining: TimeInterval = 5 // Změněno z 900 na 5 sekund
+    @State private var timeRemaining: TimeInterval = 0 // Inicializováno na 0, bude nastaveno v onAppear
     @State private var showEndScreen = false // Nový stav pro zobrazení koncového screenu
     @State private var audioEngine = AVAudioEngine()
     @State private var audioSession = AVAudioSession.sharedInstance()
@@ -66,6 +66,8 @@ struct HalfTimeView: View {
             }
         }
         .onAppear {
+            // Nastavení času pauzy z MatchTimerSettings
+            timeRemaining = MatchTimerSettings.shared.halfTimePauseInSeconds
             startTimer()
         }
         .onTapGesture {
