@@ -106,6 +106,31 @@ struct MatchResultView: View {
                             }
                         }
                     }
+
+                    // Tlačítko pro odeslání
+                    Button(action: {
+                        print("""
+                        Odesílání dat zápasu:
+                        ID: \(matchId)
+                        Týmy: \(homeTeam) vs \(awayTeam)
+                        Časy: \(timeString(from: firstHalfTime)) / \(timeString(from: secondHalfTime))
+                        Vzdálenost: \(String(format: "%.1f", distance / 1000)) km
+                        Skóre: \(sharedData.homeGoals):\(sharedData.awayGoals)
+                        Karty: 🟡 \(sharedData.homeYellowCards)-\(sharedData.awayYellowCards) 🔴 \(sharedData.homeRedCards)-\(sharedData.awayRedCards)
+                        """)
+                    }) {
+                        Text("ODESLAT DATA")
+                            .font(.system(size: 14, weight: .bold))
+                            .frame(maxWidth: .infinity)
+                            .padding(.vertical, 8)
+                            .background(
+                                Capsule()
+                                    .fill(Color.blue)
+                            )
+                            .foregroundColor(.white)
+                    }
+                    .buttonStyle(PlainButtonStyle())
+                    .padding(.top, 8)
                 }
                 .padding(.horizontal, 8)
             }
