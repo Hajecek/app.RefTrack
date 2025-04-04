@@ -30,7 +30,7 @@ struct MatchCardDesign: View {
     
     // Opravená pomocná funkce pro získání obrázku pozadí podle role
     private func getBackgroundImage() -> some View {
-        let role = match.role?.uppercased() ?? ""
+        let role = match.role.uppercased()
         
         switch role {
         case "AR1", "AR2":
@@ -155,22 +155,18 @@ struct MatchCardDesign: View {
     
     // Bublina pro platbu
     private var paymentBubble: some View {
-        let paymentAmount = match.payment ?? "0"
+        let paymentAmount = match.paymentDouble
         
         // Převod na číslo a zpět bez desetinných míst
         let formattedAmount: String
-        if let doubleValue = Double(paymentAmount) {
-            if doubleValue == 0 {
-                formattedAmount = "Nezaplaceno"
-            } else {
-                // Převedení na celé číslo (odstranění desetinných míst)
-                formattedAmount = "\(Int(doubleValue)) Kč"
-            }
+        if paymentAmount == 0 {
+            formattedAmount = "Nezaplaceno"
         } else {
-            formattedAmount = "\(paymentAmount) Kč"
+            // Převedení na celé číslo (odstranění desetinných míst)
+            formattedAmount = "\(Int(paymentAmount)) Kč"
         }
         
-        let isZero = (paymentAmount == "0") || (paymentAmount == "0.0") || (paymentAmount == "0.00")
+        let isZero = paymentAmount == 0
         let icon = isZero ? "creditcard.fill" : "banknote.fill"
         let backgroundColor = isZero ? Color.orange.opacity(0.3) : Color.yellow.opacity(0.3)
         let gradientColors = isZero 
@@ -306,7 +302,7 @@ struct MatchCardDesign: View {
         HStack(spacing: 8) {
             bubbleView(
                 icon: "person.fill",
-                text: match.created_by ?? "Uživatel",
+                text: match.createdBy,
                 backgroundColor: Color.blue.opacity(0.3),
                 gradientColors: [Color.blue.opacity(0.7), Color.blue.opacity(0.2)]
             )
