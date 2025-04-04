@@ -84,7 +84,6 @@ struct UpcomingEventsView: View {
         
         print("Fetching matches for user ID: \(userId)")
         print("Current user ID in UserDefaults: \(UserDefaults.standard.string(forKey: "user_id") ?? "N/A")")
-        print("All UserDefaults keys: \(UserDefaults.standard.dictionaryRepresentation().keys)")
         
         guard let url = URL(string: "https://reftrack.cz/admin/api/events/upcoming_events-api.php?user_id=\(userId)") else {
             errorMessage = "Neplatná URL"
@@ -112,11 +111,9 @@ struct UpcomingEventsView: View {
                 
                 // Logování odpovědi
                 if let data = data, let jsonString = String(data: data, encoding: .utf8) {
-                    print("API Response: \(jsonString)")
                     
                     do {
                         let apiResponse = try JSONDecoder().decode(ApiResponse.self, from: data)
-                        print("Number of matches: \(apiResponse.matches.count)")
                     } catch {
                         print("Error decoding response: \(error)")
                     }
