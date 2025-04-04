@@ -7,12 +7,12 @@ struct PastEventsView: View {
     @State private var isLoggedIn: Bool = UserDefaults.standard.bool(forKey: "isLoggedIn")
     @State private var timer: Timer?
     @Binding var hasMatches: Bool
-    @Binding var upcomingMatchesCount: Int
+    @Binding var pastMatchesCount: Int
     
     init(hasMatches: Binding<Bool> = .constant(false), 
-         upcomingMatchesCount: Binding<Int> = .constant(0)) {
+         pastMatchesCount: Binding<Int> = .constant(0)) {
         self._hasMatches = hasMatches
-        self._upcomingMatchesCount = upcomingMatchesCount
+        self._pastMatchesCount = pastMatchesCount
     }
     
     var body: some View {
@@ -123,12 +123,12 @@ struct PastEventsView: View {
                     if apiResponse.status == "error" {
                         self.errorMessage = apiResponse.message
                         self.hasMatches = false
-                        self.upcomingMatchesCount = 0
+                        self.pastMatchesCount = 0
                     } else {
                         withAnimation {
                             self.matches = apiResponse.matches
                             self.hasMatches = !apiResponse.matches.isEmpty
-                            self.upcomingMatchesCount = apiResponse.matches.count
+                            self.pastMatchesCount = apiResponse.matches.count
                         }
                     }
                 } catch {

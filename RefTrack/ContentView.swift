@@ -15,6 +15,7 @@ struct ContentView: View {
     @State private var matchesArePrivate = false
     @State private var upcomingMatchesCount = 0
     @State private var organizedMatchesCount = 0
+    @State private var pastMatchesCount = 0
     
     init() {
         // Nastavíme výchozí filtr podle stavu přihlášení
@@ -76,7 +77,8 @@ struct ContentView: View {
                     },
                     currentFilter: $currentFilter,
                     upcomingMatchesCount: $upcomingMatchesCount,
-                    organizedMatchesCount: $organizedMatchesCount
+                    organizedMatchesCount: $organizedMatchesCount,
+                    pastMatchesCount: $pastMatchesCount
                 )
                 
                 Spacer()
@@ -118,7 +120,7 @@ struct ContentView: View {
                         case "Předchozí":
                             PastEventsView(
                                 hasMatches: $hasPublicMatches,
-                                upcomingMatchesCount: $upcomingMatchesCount
+                                pastMatchesCount: $pastMatchesCount
                             )
                         case "Probíhá":
                             LiveEventsView()

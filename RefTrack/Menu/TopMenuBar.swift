@@ -19,6 +19,7 @@ struct TopMenuBar: View {
     @State private var showStatisticsView = false
     @Binding var upcomingMatchesCount: Int
     @Binding var organizedMatchesCount: Int
+    @Binding var pastMatchesCount: Int
     
     init(onAddTap: @escaping () -> Void, 
          onProfileTap: @escaping () -> Void,
@@ -28,7 +29,8 @@ struct TopMenuBar: View {
          onLoginStatusChanged: (() -> Void)?, 
          currentFilter: Binding<String>,
          upcomingMatchesCount: Binding<Int>,
-         organizedMatchesCount: Binding<Int>) {
+         organizedMatchesCount: Binding<Int>,
+         pastMatchesCount: Binding<Int>) {
         self.onAddTap = onAddTap
         self.onProfileTap = onProfileTap
         self.onStatsTap = onStatsTap
@@ -39,6 +41,7 @@ struct TopMenuBar: View {
         self._selectedFilter = State(initialValue: currentFilter.wrappedValue)
         self._upcomingMatchesCount = upcomingMatchesCount
         self._organizedMatchesCount = organizedMatchesCount
+        self._pastMatchesCount = pastMatchesCount
     }
     
     var body: some View {
@@ -55,7 +58,7 @@ struct TopMenuBar: View {
                     selectedFilter = "Předchozí"
                     currentFilter = "Předchozí"
                 }) {
-                    Label("Předchozí", systemImage: "arrow.clockwise")
+                    Label("Předchozí (\(pastMatchesCount))", systemImage: "arrow.clockwise")
                 }
                 
                 Button(action: {
@@ -188,7 +191,8 @@ struct TopMenuBar: View {
             onLoginStatusChanged: nil,
             currentFilter: .constant("Budoucí"),
             upcomingMatchesCount: .constant(0),
-            organizedMatchesCount: .constant(0)
+            organizedMatchesCount: .constant(0),
+            pastMatchesCount: .constant(0)
         )
     }
 } 
