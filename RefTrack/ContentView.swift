@@ -116,7 +116,10 @@ struct ContentView: View {
                                 upcomingMatchesCount: $upcomingMatchesCount
                             )
                         case "Předchozí":
-                            PastEventsView()
+                            PastEventsView(
+                                hasMatches: $hasPublicMatches,
+                                upcomingMatchesCount: $upcomingMatchesCount
+                            )
                         case "Probíhá":
                             LiveEventsView()
                         case "Pořádám":

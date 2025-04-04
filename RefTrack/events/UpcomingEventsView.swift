@@ -141,9 +141,11 @@ struct UpcomingEventsView: View {
                         self.hasMatches = false
                         self.upcomingMatchesCount = 0
                     } else {
-                        self.matches = apiResponse.matches
-                        self.hasMatches = !apiResponse.matches.isEmpty
-                        self.upcomingMatchesCount = apiResponse.matches.count
+                        withAnimation {
+                            self.matches = apiResponse.matches
+                            self.hasMatches = !apiResponse.matches.isEmpty
+                            self.upcomingMatchesCount = apiResponse.matches.count
+                        }
                     }
                 } catch {
                     self.errorMessage = "Chyba při dekódování dat: \(error.localizedDescription)"
