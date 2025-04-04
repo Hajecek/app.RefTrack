@@ -166,7 +166,8 @@ struct MatchTimer: View {
                     firstHalfTime: firstHalfDuration,
                     secondHalfTime: secondHalfDuration,
                     distance: sharedData.distance
-                ),
+                )
+                .environmentObject(sharedData),
                 isActive: $showMatchResult,
                 label: { EmptyView() }
             ).hidden()
