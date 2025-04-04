@@ -9,7 +9,6 @@ struct Match: Codable, Identifiable {
     let location: String?
     let firstHalfDuration: String
     let secondHalfDuration: String
-    let totalMatchTime: String
     let homeScore: String
     let awayScore: String
     let role: String
@@ -29,6 +28,19 @@ struct Match: Codable, Identifiable {
     let createdAt: String
     let createdBy: String
     
+    var totalMatchTime: Int {
+        let firstHalf = parseDuration(duration: firstHalfDuration)
+        let secondHalf = parseDuration(duration: secondHalfDuration)
+        return firstHalf + secondHalf
+    }
+    
+    private func parseDuration(duration: String) -> Int {
+        let components = duration.components(separatedBy: "+")
+        let mainTime = Int(components[0]) ?? 0
+        let addedTime = components.count > 1 ? (Int(components[1]) ?? 0) : 0
+        return mainTime + addedTime
+    }
+    
     enum CodingKeys: String, CodingKey {
         case id
         case competition
@@ -38,7 +50,6 @@ struct Match: Codable, Identifiable {
         case location
         case firstHalfDuration = "first_half_duration"
         case secondHalfDuration = "second_half_duration"
-        case totalMatchTime = "total_match_time"
         case homeScore = "home_score"
         case awayScore = "away_score"
         case role
@@ -61,13 +72,6 @@ struct Match: Codable, Identifiable {
     
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        
-        // Zpracování totalMatchTime jako Int nebo String
-        if let intValue = try? container.decode(Int.self, forKey: .totalMatchTime) {
-            totalMatchTime = String(intValue)
-        } else {
-            totalMatchTime = try container.decode(String.self, forKey: .totalMatchTime)
-        }
         
         // Inicializace ostatních vlastností
         id = try container.decode(String.self, forKey: .id)
@@ -109,7 +113,6 @@ extension Match: Equatable {
                lhs.location == rhs.location &&
                lhs.firstHalfDuration == rhs.firstHalfDuration &&
                lhs.secondHalfDuration == rhs.secondHalfDuration &&
-               lhs.totalMatchTime == rhs.totalMatchTime &&
                lhs.homeScore == rhs.homeScore &&
                lhs.awayScore == rhs.awayScore &&
                lhs.role == rhs.role &&
@@ -133,7 +136,7 @@ extension Match: Equatable {
 
 extension Match {
     var totalMatchTimeInt: Int {
-        return Int(totalMatchTime) ?? 0
+        return totalMatchTime
     }
 
     var paymentDouble: Double {
