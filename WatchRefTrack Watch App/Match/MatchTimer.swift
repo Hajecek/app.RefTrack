@@ -1,5 +1,7 @@
 import SwiftUI
 
+// hlavni screen kde bezi casovač
+
 struct MatchTimer: View {
     let matchId: Int
     let homeTeam: String
