@@ -9,7 +9,7 @@ struct MatchStatsView: View {
     var body: some View {
         ScrollView {
             VStack(spacing: 0) {
-                // Skóre s pozadím
+                // Skóre jako dominanta
                 GeometryReader { geometry in
                     ZStack {
                         // Pozadí přes celou šířku
@@ -21,27 +21,47 @@ struct MatchStatsView: View {
                                 .frame(width: geometry.size.width / 2)
                         }
                         
-                        // Skóre
-                        HStack(spacing: 8) {
-                            TeamScoreView(teamName: homeTeam, 
-                                        value: $stats.homeGoals,
-                                        color: .blue)
+                        // Skóre uprostřed
+                        VStack(spacing: 4) {
+                            // Názvy týmů nad skóre
+                            HStack(spacing: 12) {
+                                Text(homeTeam)
+                                    .font(.system(size: 14, weight: .medium))
+                                    .lineLimit(1)
+                                    .minimumScaleFactor(0.7)
+                                    .foregroundColor(.primary)
+                                
+                                Spacer()
+                                
+                                Text(awayTeam)
+                                    .font(.system(size: 14, weight: .medium))
+                                    .lineLimit(1)
+                                    .minimumScaleFactor(0.7)
+                                    .foregroundColor(.primary)
+                            }
+                            .frame(width: geometry.size.width * 0.8)
+                            .padding(.horizontal, 16)
                             
-                            Text(":")
-                                .font(.system(size: 24, weight: .bold))
-                                .foregroundColor(.primary)
-                            
-                            TeamScoreView(teamName: awayTeam, 
-                                        value: $stats.awayGoals,
-                                        color: .red)
+                            // Skóre
+                            HStack(spacing: 12) {
+                                TeamScoreView(value: $stats.homeGoals,
+                                            color: .blue)
+                                
+                                Text(":")
+                                    .font(.system(size: 48, weight: .bold))
+                                    .foregroundColor(.primary)
+                                
+                                TeamScoreView(value: $stats.awayGoals,
+                                            color: .red)
+                            }
                         }
-                        .padding(.horizontal, 8)
+                        .frame(width: geometry.size.width)
                     }
                 }
-                .frame(height: 100) // Optimální výška pro watchOS
+                .frame(height: 160) // Dominantní výška pro skóre
                 
-                // Karty
-                VStack(spacing: 12) {
+                // Zbytek obsahu (karty)
+                VStack(spacing: 16) {
                     TeamCardsView(teamName: homeTeam,
                                 yellowCards: $stats.homeYellowCards,
                                 redCards: $stats.homeRedCards)
@@ -50,38 +70,29 @@ struct MatchStatsView: View {
                                 yellowCards: $stats.awayYellowCards,
                                 redCards: $stats.awayRedCards)
                 }
-                .padding(8)
+                .padding(16)
             }
         }
     }
 }
 
 struct TeamScoreView: View {
-    let teamName: String
     @Binding var value: Int
     let color: Color
     
     var body: some View {
-        VStack(spacing: 2) {
-            Text(teamName)
-                .font(.system(size: 14, weight: .medium))
-                .lineLimit(1)
-                .minimumScaleFactor(0.7)
-                .foregroundColor(.primary)
-            
-            Text("\(value)")
-                .font(.system(size: 28, weight: .bold))
-                .frame(width: 50, height: 50)
-                .background(color.opacity(0.1))
-                .cornerRadius(10)
-                .contentShape(Rectangle())
-                .onTapGesture(count: 2) {
-                    if value > 0 { value -= 1 }
-                }
-                .onTapGesture(count: 1) {
-                    value += 1
-                }
-        }
+        Text("\(value)")
+            .font(.system(size: 56, weight: .bold))
+            .frame(width: 80, height: 80)
+            .background(color.opacity(0.1))
+            .cornerRadius(16)
+            .contentShape(Rectangle())
+            .onTapGesture(count: 2) {
+                if value > 0 { value -= 1 }
+            }
+            .onTapGesture(count: 1) {
+                value += 1
+            }
     }
 }
 
@@ -98,7 +109,7 @@ struct TeamCardsView: View {
                 .minimumScaleFactor(0.7)
                 .foregroundColor(.primary)
             
-            HStack(spacing: 12) {
+            HStack(spacing: 16) {
                 CardControl(type: "🟡", value: $yellowCards)
                 CardControl(type: "🔴", value: $redCards)
             }
@@ -113,13 +124,13 @@ struct CardControl: View {
     var body: some View {
         VStack(spacing: 4) {
             Text(type)
-                .font(.system(size: 20))
+                .font(.system(size: 24))
             
             Text("\(value)")
-                .font(.system(size: 20, weight: .medium))
-                .frame(width: 40, height: 40)
+                .font(.system(size: 24, weight: .medium))
+                .frame(width: 50, height: 50)
                 .background(Color.gray.opacity(0.1))
-                .cornerRadius(10)
+                .cornerRadius(12)
                 .contentShape(Rectangle())
                 .onTapGesture(count: 2) {
                     if value > 0 { value -= 1 }
