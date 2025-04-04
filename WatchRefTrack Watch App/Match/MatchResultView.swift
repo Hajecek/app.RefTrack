@@ -11,106 +11,103 @@ struct MatchResultView: View {
     
     var body: some View {
         ZStack {
-            Color.purple.edgesIgnoringSafeArea(.all)
+            // WatchOS styl pozadí
+            Color.black.edgesIgnoringSafeArea(.all)
             
             ScrollView {
-                VStack(spacing: 12) {
-                    // Nadpis
-                    Text("Konečné statistiky")
-                        .font(.system(size: 18, weight: .bold))
-                        .foregroundColor(.white)
-                        .padding(.bottom, 4)
-                    
-                    // Týmy - kompaktnější zobrazení
-                    HStack(alignment: .center, spacing: 8) {
-                        Text(homeTeam)
-                            .font(.system(size: 16, weight: .semibold))
-                            .lineLimit(1)
-                            .minimumScaleFactor(0.8)
-                        
-                        Text("vs")
-                            .font(.system(size: 14))
-                        
-                        Text(awayTeam)
-                            .font(.system(size: 16, weight: .semibold))
-                            .lineLimit(1)
-                            .minimumScaleFactor(0.8)
-                    }
-                    .foregroundColor(.white)
-                    .padding(.horizontal, 8)
-                    .padding(.bottom, 8)
-                    
-                    // Časy poločasů - v řádku
-                    HStack(spacing: 16) {
-                        VStack(spacing: 2) {
-                            Text("1. poločas")
-                                .font(.system(size: 12))
-                            Text(timeString(from: firstHalfTime))
-                                .font(.system(size: 16, weight: .medium))
-                        }
-                        
-                        VStack(spacing: 2) {
-                            Text("2. poločas")
-                                .font(.system(size: 12))
-                            Text(timeString(from: secondHalfTime))
-                                .font(.system(size: 16, weight: .medium))
+                VStack(spacing: 8) {
+                    // Základní informace
+                    InfoBox {
+                        VStack(spacing: 4) {
+                            Text("ZÁPAS")
+                                .font(.system(size: 14, weight: .bold))
+                            
+                            HStack(alignment: .center, spacing: 4) {
+                                Text(homeTeam.prefix(10))
+                                    .font(.system(size: 14, weight: .semibold))
+                                    .lineLimit(1)
+                                
+                                Text("vs")
+                                    .font(.system(size: 12))
+                                
+                                Text(awayTeam.prefix(10))
+                                    .font(.system(size: 14, weight: .semibold))
+                                    .lineLimit(1)
+                            }
                         }
                     }
-                    .foregroundColor(.white)
-                    .padding(.bottom, 8)
+                    
+                    // Časy
+                    InfoBox {
+                        HStack(spacing: 12) {
+                            VStack(spacing: 2) {
+                                Text("1. POLOČAS")
+                                    .font(.system(size: 10))
+                                Text(timeString(from: firstHalfTime))
+                                    .font(.system(size: 14, weight: .medium))
+                            }
+                            
+                            VStack(spacing: 2) {
+                                Text("2. POLOČAS")
+                                    .font(.system(size: 10))
+                                Text(timeString(from: secondHalfTime))
+                                    .font(.system(size: 14, weight: .medium))
+                            }
+                        }
+                    }
                     
                     // Vzdálenost
-                    VStack(spacing: 2) {
-                        Text("Uběhnuto")
-                            .font(.system(size: 12))
-                        Text("\(String(format: "%.2f", distance / 1000)) km")
-                            .font(.system(size: 16, weight: .medium))
+                    InfoBox {
+                        VStack(spacing: 2) {
+                            Text("UBĚHNUTO")
+                                .font(.system(size: 10))
+                            Text("\(String(format: "%.1f", distance / 1000)) km")
+                                .font(.system(size: 14, weight: .medium))
+                        }
                     }
-                    .foregroundColor(.white)
                     
                     // Skóre
-                    HStack(spacing: 16) {
-                        VStack(spacing: 2) {
-                            Text(homeTeam)
-                                .font(.system(size: 12))
-                            Text("\(sharedData.homeGoals)")
-                                .font(.system(size: 20, weight: .bold))
-                        }
-                        
-                        Text(":")
-                            .font(.system(size: 20, weight: .bold))
-                        
-                        VStack(spacing: 2) {
-                            Text(awayTeam)
-                                .font(.system(size: 12))
-                            Text("\(sharedData.awayGoals)")
-                                .font(.system(size: 20, weight: .bold))
+                    InfoBox {
+                        HStack(spacing: 12) {
+                            VStack(spacing: 2) {
+                                Text(homeTeam.prefix(6))
+                                    .font(.system(size: 10))
+                                Text("\(sharedData.homeGoals)")
+                                    .font(.system(size: 18, weight: .bold))
+                            }
+                            
+                            Text(":")
+                                .font(.system(size: 18, weight: .bold))
+                            
+                            VStack(spacing: 2) {
+                                Text(awayTeam.prefix(6))
+                                    .font(.system(size: 10))
+                                Text("\(sharedData.awayGoals)")
+                                    .font(.system(size: 18, weight: .bold))
+                            }
                         }
                     }
-                    .foregroundColor(.white)
-                    .padding(.bottom, 8)
                     
                     // Karty
-                    HStack(spacing: 16) {
-                        VStack(spacing: 4) {
-                            Text("🟡")
-                                .font(.system(size: 20))
-                            Text("\(sharedData.homeYellowCards)-\(sharedData.awayYellowCards)")
-                                .font(.system(size: 16, weight: .medium))
-                        }
-                        
-                        VStack(spacing: 4) {
-                            Text("🔴")
-                                .font(.system(size: 20))
-                            Text("\(sharedData.homeRedCards)-\(sharedData.awayRedCards)")
-                                .font(.system(size: 16, weight: .medium))
+                    InfoBox {
+                        HStack(spacing: 12) {
+                            VStack(spacing: 2) {
+                                Text("🟡")
+                                    .font(.system(size: 16))
+                                Text("\(sharedData.homeYellowCards)-\(sharedData.awayYellowCards)")
+                                    .font(.system(size: 14, weight: .medium))
+                            }
+                            
+                            VStack(spacing: 2) {
+                                Text("🔴")
+                                    .font(.system(size: 16))
+                                Text("\(sharedData.homeRedCards)-\(sharedData.awayRedCards)")
+                                    .font(.system(size: 14, weight: .medium))
+                            }
                         }
                     }
-                    .foregroundColor(.white)
-                    .padding(.bottom, 8)
                 }
-                .padding(12)
-                .frame(maxWidth: .infinity)
+                .padding(.horizontal, 8)
             }
         }
         .onAppear {
@@ -133,5 +130,42 @@ struct MatchResultView: View {
         let minutes = Int(timeInterval) / 60
         let seconds = Int(timeInterval) % 60
         return String(format: "%02d:%02d", minutes, seconds)
+    }
+}
+
+// Pomocná view pro boxy
+struct InfoBox<Content: View>: View {
+    let content: Content
+    
+    init(@ViewBuilder content: () -> Content) {
+        self.content = content()
+    }
+    
+    var body: some View {
+        VStack {
+            content
+                .padding(12)
+        }
+        .frame(maxWidth: .infinity)
+        .background(
+            RoundedRectangle(cornerRadius: 12)
+                .fill(Color.gray.opacity(0.2))
+        )
+        .padding(.vertical, 4)
+    }
+}
+
+// Preview
+struct MatchResultView_Previews: PreviewProvider {
+    static var previews: some View {
+        MatchResultView(
+            matchId: 123,
+            homeTeam: "AC Sparta Praha",
+            awayTeam: "SK Slavia Praha",
+            firstHalfTime: 2700,
+            secondHalfTime: 2700,
+            distance: 8500
+        )
+        .environmentObject(SharedData())
     }
 } 
