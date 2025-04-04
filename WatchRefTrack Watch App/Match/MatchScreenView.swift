@@ -10,24 +10,26 @@ struct MatchScreenView: View {
     @StateObject private var tracker = DistanceTracker()
     
     var body: some View {
-        TabView {
+        TabView(selection: .constant(1)) {
+            // Statistiky (swipe doleva)
+            MatchStatsView(matchId: matchId, homeTeam: homeTeam, awayTeam: awayTeam)
+                .environmentObject(sharedData)
+                .tag(0)
+            
+            // Hlavní obrazovka (střed)
             ZStack {
                 Color.blue.edgesIgnoringSafeArea(.all)
                 MatchTimer(matchId: matchId, homeTeam: homeTeam, awayTeam: awayTeam)
                     .environmentObject(sharedData)
                     .environmentObject(timerManager)
             }
+            .tag(1)
             
+            // Vzdálenost (swipe doprava)
             DistanceView()
                 .environmentObject(sharedData)
                 .environmentObject(tracker)
-            
-            NavigationLink(
-                destination: HalfTimeView()
-                    .environmentObject(timerManager),
-                isActive: $showHalfTimeView,
-                label: { EmptyView() }
-            ).hidden()
+                .tag(2)
         }
         .tabViewStyle(.page(indexDisplayMode: .never))
         .onAppear {
