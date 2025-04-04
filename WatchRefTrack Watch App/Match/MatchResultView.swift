@@ -113,6 +113,20 @@ struct MatchResultView: View {
                 .frame(maxWidth: .infinity)
             }
         }
+        .onAppear {
+            print("""
+            Zobrazení výsledků zápasu:
+            ID zápasu: \(matchId)
+            Domácí tým: \(homeTeam)
+            Hostující tým: \(awayTeam)
+            1. poločas: \(timeString(from: firstHalfTime))
+            2. poločas: \(timeString(from: secondHalfTime))
+            Uběhnutá vzdálenost: \(String(format: "%.2f", distance / 1000)) km
+            Skóre: \(sharedData.homeGoals) - \(sharedData.awayGoals)
+            Žluté karty: \(sharedData.homeYellowCards) - \(sharedData.awayYellowCards)
+            Červené karty: \(sharedData.homeRedCards) - \(sharedData.awayRedCards)
+            """)
+        }
     }
     
     private func timeString(from timeInterval: TimeInterval) -> String {
