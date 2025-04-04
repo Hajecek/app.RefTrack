@@ -6,13 +6,13 @@ class MatchTimerSettings {
     static let shared = MatchTimerSettings()
     
     // Délka prvního poločasu v minutách
-    var firstHalfMinutes: Double = 45
+    var firstHalfMinutes: Double = 0
     
     // Délka přestávky v minutách
-    var halfTimePauseMinutes: Double = 15
+    var halfTimePauseMinutes: Double = 0
     
     // Délka druhého poločasu v minutách
-    var secondHalfMinutes: Double = 90
+    var secondHalfMinutes: Double = 0
     
     // Privátní inicializátor zabraňuje přímé tvorbě instancí
     private init() {}

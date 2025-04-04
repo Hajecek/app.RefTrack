@@ -4,7 +4,7 @@ struct MatchStatsView: View {
     let matchId: Int
     let homeTeam: String
     let awayTeam: String
-    @StateObject private var stats = MatchStats()
+    @EnvironmentObject private var sharedData: SharedData
     
     var body: some View {
         ScrollView {
@@ -44,14 +44,14 @@ struct MatchStatsView: View {
                             
                             // Skóre
                             HStack(spacing: 12) {
-                                TeamScoreView(value: $stats.homeGoals,
+                                TeamScoreView(value: $sharedData.homeGoals,
                                             color: .blue)
                                 
                                 Text(":")
                                     .font(.system(size: 48, weight: .bold))
                                     .foregroundColor(.primary)
                                 
-                                TeamScoreView(value: $stats.awayGoals,
+                                TeamScoreView(value: $sharedData.awayGoals,
                                             color: .red)
                             }
                         }
@@ -63,12 +63,12 @@ struct MatchStatsView: View {
                 // Zbytek obsahu (karty)
                 VStack(spacing: 16) {
                     TeamCardsView(teamName: homeTeam,
-                                yellowCards: $stats.homeYellowCards,
-                                redCards: $stats.homeRedCards)
+                                yellowCards: $sharedData.homeYellowCards,
+                                redCards: $sharedData.homeRedCards)
                     
                     TeamCardsView(teamName: awayTeam,
-                                yellowCards: $stats.awayYellowCards,
-                                redCards: $stats.awayRedCards)
+                                yellowCards: $sharedData.awayYellowCards,
+                                redCards: $sharedData.awayRedCards)
                 }
                 .padding(16)
             }
@@ -158,5 +158,6 @@ struct MatchStatsView_Previews: PreviewProvider {
             homeTeam: "Sparta",
             awayTeam: "Slavia"
         )
+        .environmentObject(SharedData())
     }
 } 

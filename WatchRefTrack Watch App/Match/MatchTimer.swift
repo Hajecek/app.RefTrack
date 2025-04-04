@@ -31,7 +31,55 @@ struct MatchTimer: View {
             ZStack {
                 // Hlavní VStack přes celou obrazovku
                 VStack(spacing: 0) {
-                    // Spacer tlačí obsah dolů - zabírá všechen dostupný prostor
+                    // Skóre a karty - minimalistické zobrazení
+                    HStack(spacing: 8) {
+                        // Skóre
+                        HStack(spacing: 4) {
+                            Text("\(sharedData.homeGoals)")
+                                .font(.system(size: 20, weight: .bold))
+                                .foregroundColor(.white)
+                            
+                            Text(":")
+                                .font(.system(size: 20, weight: .bold))
+                                .foregroundColor(.white)
+                            
+                            Text("\(sharedData.awayGoals)")
+                                .font(.system(size: 20, weight: .bold))
+                                .foregroundColor(.white)
+                        }
+                        
+                        // Oddělovač
+                        Rectangle()
+                            .frame(width: 1, height: 20)
+                            .foregroundColor(.white.opacity(0.2))
+                        
+                        // Karty - kompaktnější verze
+                        HStack(spacing: 6) {
+                            HStack(spacing: 2) {
+                                Text("🟡")
+                                    .font(.system(size: 12))
+                                Text("\(sharedData.homeYellowCards)-\(sharedData.awayYellowCards)")
+                                    .font(.system(size: 12, weight: .medium))
+                                    .foregroundColor(.white)
+                            }
+                            
+                            HStack(spacing: 2) {
+                                Text("🔴")
+                                    .font(.system(size: 12))
+                                Text("\(sharedData.homeRedCards)-\(sharedData.awayRedCards)")
+                                    .font(.system(size: 12, weight: .medium))
+                                    .foregroundColor(.white)
+                            }
+                        }
+                    }
+                    .padding(.vertical, 6)
+                    .padding(.horizontal, 10)
+                    .background(
+                        RoundedRectangle(cornerRadius: 6)
+                            .fill(Color.white.opacity(0.05))
+                    )
+                    .padding(.top, 8)
+                    
                     Spacer()
                     
                     // Časovač nastavení
