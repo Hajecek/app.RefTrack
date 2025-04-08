@@ -26,6 +26,11 @@ struct StartingScreenView: View {
                     .multilineTextAlignment(.center)
                     .lineLimit(2)
                     .padding(.horizontal, 8)
+                
+                Text("Stačí písknout pro spuštění časovače")
+                    .font(.system(size: 12))
+                    .foregroundColor(.white.opacity(0.7))
+                    .padding(.bottom, 20)
             }
         }
         .navigationTitle("Zápas")

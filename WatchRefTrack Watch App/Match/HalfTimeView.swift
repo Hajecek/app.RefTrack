@@ -22,6 +22,11 @@ struct HalfTimeView: View {
                         .padding()
                         .minimumScaleFactor(0.8)
                         .lineLimit(2)
+                    
+                    Text("Stačí písknout pro spuštění časovače")
+                        .font(.system(size: 12))
+                        .foregroundColor(.white.opacity(0.7))
+                        .padding(.bottom, 20)
                 }
                 .onAppear {
                     setupAudioDetection()
