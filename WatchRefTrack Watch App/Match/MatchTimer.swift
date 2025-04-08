@@ -118,7 +118,7 @@ struct MatchTimer: View {
                             .padding(20)
                             .frame(maxWidth: .infinity)
                             .background(
-                                RoundedRectangle(cornerRadius: 20)
+                                RoundedRectangle(cornerRadius: 30)
                                     .fill(Color.white.opacity(0.1))
                             )
                             .shadow(color: .black.opacity(0.3), radius: 10, x: 0, y: 5)
