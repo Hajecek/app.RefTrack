@@ -82,42 +82,48 @@ struct MatchTimer: View {
                     
                     Spacer()
                     
-                    // Časovač nastavení
                     if timerManager.isOvertimeRunning {
-                        Text("+ \(timerManager.overtimeTimeString())")
-                            .font(.system(size: 20, weight: .medium))
-                            .foregroundColor(.white)
-                            .padding(10)
-                            .background(
-                                RoundedRectangle(cornerRadius: 10)
-                                    .fill(Color.white.opacity(0.2))
-                            )
-                            .transition(.opacity.combined(with: .scale))
-                            .padding(.bottom, 5)
-                            .allowsHitTesting(false) // Zakázání zachytávání gest
-                    }
-                    
-                    // Hlavní časovač úplně dole
-                    Text(timerManager.timeString())
-                        .font(.system(size: 56, weight: .bold, design: .monospaced))
-                        .foregroundColor(.white)
+                        VStack(spacing: 4) {
+                            Text("NASTAVENÍ")
+                                .font(.system(size: 16, weight: .bold))
+                                .foregroundColor(.white.opacity(0.8))
+                            
+                            Text("+ \(timerManager.overtimeTimeString())")
+                                .font(.system(size: 40, weight: .bold, design: .monospaced))
+                                .foregroundColor(.white)
+                        }
                         .padding(20)
                         .frame(maxWidth: .infinity)
                         .background(
                             RoundedRectangle(cornerRadius: 20)
-                                .fill(timerManager.isOvertimeRunning ? Color.green.opacity(0.2) : Color.white.opacity(0.1))
-                                .animation(.easeInOut(duration: 0.5), value: timerManager.isOvertimeRunning)
+                                .fill(Color.green.opacity(0.2))
                         )
                         .shadow(color: .black.opacity(0.3), radius: 10, x: 0, y: 5)
                         .minimumScaleFactor(0.5)
                         .lineLimit(1)
                         .padding(.horizontal, 10)
-                        .padding(.bottom, 10) // Malý padding od spodního okraje
-                        .allowsHitTesting(false) // Zakázání zachytávání gest
+                        .padding(.bottom, 10)
+                        .transition(.opacity.combined(with: .scale))
+                    } else {
+                        Text(timerManager.timeString())
+                            .font(.system(size: 56, weight: .bold, design: .monospaced))
+                            .foregroundColor(.white)
+                            .padding(20)
+                            .frame(maxWidth: .infinity)
+                            .background(
+                                RoundedRectangle(cornerRadius: 20)
+                                    .fill(Color.white.opacity(0.1))
+                            )
+                            .shadow(color: .black.opacity(0.3), radius: 10, x: 0, y: 5)
+                            .minimumScaleFactor(0.5)
+                            .lineLimit(1)
+                            .padding(.horizontal, 10)
+                            .padding(.bottom, 10)
+                    }
                 }
-                .edgesIgnoringSafeArea(.bottom) // Ignorujeme bezpečnou zónu dole
+                .edgesIgnoringSafeArea(.bottom)
                 
-                // Neviditelný obdélník přes celou obrazovku pro zachycení gesta kliknutí
+                // Neviditelný obdélník pro zachycení gesta kliknutí
                 Color.clear
                     .frame(width: geometry.size.width, height: geometry.size.height)
                     .contentShape(Rectangle())
