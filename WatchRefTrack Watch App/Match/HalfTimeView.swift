@@ -76,6 +76,10 @@ struct HalfTimeView: View {
             // Nastavení času pauzy z MatchTimerSettings
             timeRemaining = MatchTimerSettings.shared.halfTimePauseInSeconds
             startTimer()
+            
+            // Zastavíme všechny časovače v manageru
+            timerManager.stopTimer()
+            timerManager.stopOvertimeTimer()
         }
         .onTapGesture {
             if showEndScreen {

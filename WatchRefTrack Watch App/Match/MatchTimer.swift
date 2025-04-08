@@ -143,13 +143,16 @@ struct MatchTimer: View {
                     let totalTime = round(timerManager.elapsedTime + timerManager.overtimeElapsed)
                     
                     if isFirstHalf {
+                        print("Ukončuji 1. poločas a otevírám HalfTimeView")
                         firstHalfDuration = totalTime
                         print("Zápas ID: \(matchId), 1. poločas: \(totalTime) sekund")
-                        showHalfTimeView = true
                         
-                        // Zastavíme časovač a resetujeme stav
+                        // Zastavíme všechny časovače
                         timerManager.stopTimer()
                         timerManager.stopOvertimeTimer()
+                        
+                        // Explicitně nastavíme showHalfTimeView na true
+                        showHalfTimeView = true
                     } else {
                         secondHalfDuration = totalTime
                         print("Zápas ID: \(matchId), 2. poločas: \(totalTime) sekund")
@@ -187,7 +190,9 @@ struct MatchTimer: View {
             ).hidden()
         }
         .onAppear {
-            if !timerManager.isMainTimerStopped && !timerManager.isOvertimeRunning {
+            print("MatchTimer se zobrazuje, showHalfTimeView: \(showHalfTimeView)")
+            // Spustíme časovač pouze pokud není zobrazen HalfTimeView
+            if !timerManager.isMainTimerStopped && !timerManager.isOvertimeRunning && !showHalfTimeView {
                 timerManager.startTimer()
             }
             
