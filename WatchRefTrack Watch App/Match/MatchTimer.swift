@@ -80,13 +80,20 @@ struct MatchTimer: View {
                     )
                     .padding(.top, 8)
                     
+                    // Indikátor poločasu
+                    Text(isFirstHalf ? "1. POLOČAS" : "2. POLOČAS")
+                        .font(.system(size: 20, weight: .bold))
+                        .foregroundColor(.white.opacity(0.8))
+                        .padding(.top, 8)
+                    
                     Spacer()
                     
                     if timerManager.isOvertimeRunning {
                         VStack(spacing: 4) {
                             Text("NASTAVENÍ")
-                                .font(.system(size: 16, weight: .bold))
-                                .foregroundColor(.white.opacity(0.8))
+                                .font(.system(size: 20, weight: .bold))
+                                .foregroundColor(.white.opacity(0.9))
+                                .padding(.bottom, 2)
                             
                             Text("+ \(timerManager.overtimeTimeString())")
                                 .font(.system(size: 40, weight: .bold, design: .monospaced))
