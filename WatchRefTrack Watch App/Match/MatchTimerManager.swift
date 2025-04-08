@@ -14,7 +14,9 @@ class MatchTimerManager: ObservableObject {
         guard timer == nil else { return }
         
         timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { _ in
-            if self.elapsedTime < 2700 { // 45 minut = 2700 sekund
+            if self.elapsedTime < 10 { // První poločas 10 sekund
+                self.elapsedTime += 1
+            } else if self.elapsedTime < 20 { // Druhý poločas 10-20 sekund
                 self.elapsedTime += 1
             } else {
                 self.stopTimer()

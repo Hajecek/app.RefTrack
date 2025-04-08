@@ -79,16 +79,16 @@ struct HalfTimeView: View {
         }
         .onTapGesture {
             if showEndScreen {
-                // Prostě spustíme hlavní časovač od aktuálního času
+                // Spustíme druhý poločas od 10. sekundy
+                timerManager.setElapsedTime(10)
                 timerManager.startTimer()
                 
-                // Okamžitě zavřeme HalfTimeView
+                // Explicitně zavřeme HalfTimeView
                 NotificationCenter.default.post(
                     name: .closeHalfTimeView, 
                     object: nil
                 )
             } else {
-                // Zobrazí dialog pro přeskočení pauzy
                 showSkipDialog = true
             }
         }
