@@ -13,10 +13,13 @@ class MatchTimerManager: ObservableObject {
     func startTimer() {
         guard timer == nil else { return }
         
+        // Pokud je první poločas ukončen, nastavíme čas na začátek druhého poločasu
+        if elapsedTime >= MatchTimerSettings.shared.firstHalfTimeInSeconds {
+            elapsedTime = MatchTimerSettings.shared.firstHalfTimeInSeconds
+        }
+        
         timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { _ in
-            if self.elapsedTime < 10 { // První poločas 10 sekund
-                self.elapsedTime += 1
-            } else if self.elapsedTime < 20 { // Druhý poločas 10-20 sekund
+            if self.elapsedTime < MatchTimerSettings.shared.firstHalfTimeInSeconds + MatchTimerSettings.shared.secondHalfTimeInSeconds {
                 self.elapsedTime += 1
             } else {
                 self.stopTimer()

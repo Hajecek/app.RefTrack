@@ -202,6 +202,8 @@ struct MatchTimer: View {
                 
                 // Pokud se vracíme z přestávky, znovu spustíme časovač pro druhý poločas
                 if !isFirstHalf {
+                    // Nastavíme čas na začátek druhého poločasu
+                    timerManager.setElapsedTime(MatchTimerSettings.shared.firstHalfTimeInSeconds)
                     // Začneme druhý poločas
                     timerManager.startTimer()
                 }
@@ -214,14 +216,14 @@ struct MatchTimer: View {
         .onReceive(timerManager.$elapsedTime) { time in
             if isFirstHalf {
                 // První poločas
-                if time >= 10 && !timerManager.isOvertimeRunning {
+                if time >= MatchTimerSettings.shared.firstHalfTimeInSeconds && !timerManager.isOvertimeRunning {
                     withAnimation {
                         timerManager.startOvertimeTimer()
                     }
                 }
             } else {
                 // Druhý poločas
-                if time >= 20 && !timerManager.isOvertimeRunning {
+                if time >= MatchTimerSettings.shared.firstHalfTimeInSeconds + MatchTimerSettings.shared.secondHalfTimeInSeconds && !timerManager.isOvertimeRunning {
                     withAnimation {
                         timerManager.startOvertimeTimer()
                     }
