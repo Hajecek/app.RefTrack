@@ -26,6 +26,7 @@ struct MatchResultView: View {
                                 Text(homeTeam.prefix(10))
                                     .font(.system(size: 14, weight: .semibold))
                                     .lineLimit(1)
+                                    .minimumScaleFactor(0.7)
                                 
                                 Text("vs")
                                     .font(.system(size: 12))
@@ -33,6 +34,7 @@ struct MatchResultView: View {
                                 Text(awayTeam.prefix(10))
                                     .font(.system(size: 14, weight: .semibold))
                                     .lineLimit(1)
+                                    .minimumScaleFactor(0.7)
                             }
                         }
                     }
@@ -134,9 +136,6 @@ struct MatchResultView: View {
                 }
                 .padding(.horizontal, 8)
             }
-        }
-        .onAppear {
-            // Odstraněn původní print statement
         }
     }
     
