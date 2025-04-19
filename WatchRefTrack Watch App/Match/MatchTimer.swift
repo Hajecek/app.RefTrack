@@ -25,146 +25,157 @@ struct MatchTimer: View {
     @State private var isFirstHalf = true
     @State private var showHalfTimeView = false
     @State private var showMatchResult = false
+    @State private var isHalfTimePauseActive = false
+    @State private var halfTimePauseRemaining: TimeInterval = MatchTimerSettings.shared.halfTimePauseInSeconds
+    @State private var showSkipPauseDialog = false
     
     var body: some View {
         GeometryReader { geometry in
             ZStack {
-                // Hlavní VStack přes celou obrazovku
-                VStack(spacing: 0) {
-                    // Skóre a karty - minimalistické zobrazení
-                    HStack(spacing: 8) {
-                        // Skóre
-                        HStack(spacing: 4) {
-                            Text("\(sharedData.homeGoals)")
-                                .font(.system(size: 20, weight: .bold))
-                                .foregroundColor(.white)
-                            
-                            Text(":")
-                                .font(.system(size: 20, weight: .bold))
-                                .foregroundColor(.white)
-                            
-                            Text("\(sharedData.awayGoals)")
-                                .font(.system(size: 20, weight: .bold))
-                                .foregroundColor(.white)
+                if isHalfTimePauseActive {
+                    // Polčasová pauza
+                    Color.yellow
+                        .edgesIgnoringSafeArea(.all)
+                        .contentShape(Rectangle())
+                        .onTapGesture {
+                            showSkipPauseDialog = true
                         }
+                    
+                    VStack {
+                        Text("Pauza")
+                            .font(.system(size: 28, weight: .bold))
+                            .foregroundColor(.black)
+                            .padding(.top, 10)
                         
-                        // Oddělovač
-                        Rectangle()
-                            .frame(width: 1, height: 20)
-                            .foregroundColor(.white.opacity(0.2))
-                        
-                        // Karty - kompaktnější verze
-                        HStack(spacing: 6) {
-                            HStack(spacing: 2) {
-                                Text("🟡")
-                                    .font(.system(size: 12))
-                                Text("\(sharedData.homeYellowCards)-\(sharedData.awayYellowCards)")
-                                    .font(.system(size: 12, weight: .medium))
-                                    .foregroundColor(.white)
-                            }
-                            
-                            HStack(spacing: 2) {
-                                Text("🔴")
-                                    .font(.system(size: 12))
-                                Text("\(sharedData.homeRedCards)-\(sharedData.awayRedCards)")
-                                    .font(.system(size: 12, weight: .medium))
-                                    .foregroundColor(.white)
-                            }
-                        }
+                        Text(timeString(from: halfTimePauseRemaining))
+                            .font(.system(size: 48, weight: .bold, design: .monospaced))
+                            .foregroundColor(.black)
+                            .padding(10)
                     }
-                    .padding(.vertical, 6)
-                    .padding(.horizontal, 10)
-                    .background(
-                        RoundedRectangle(cornerRadius: 6)
-                            .fill(Color.white.opacity(0.05))
-                    )
-                    .padding(.top, 8)
-                    
-                    // Indikátor poločasu
-                    Text(isFirstHalf ? "1. POLOČAS" : "2. POLOČAS")
-                        .font(.system(size: 20, weight: .bold))
-                        .foregroundColor(.white.opacity(0.8))
-                        .padding(.top, 8)
-                    
-                    Spacer()
-                    
-                    if timerManager.isOvertimeRunning {
-                        VStack(spacing: 4) {
-                            Text("NASTAVENÍ")
-                                .font(.system(size: 20, weight: .bold))
-                                .foregroundColor(.white.opacity(0.9))
-                                .padding(.bottom, 2)
+                } else {
+                    // Hlavní VStack přes celou obrazovku
+                    VStack(spacing: 0) {
+                        // Skóre a karty - minimalistické zobrazení
+                        HStack(spacing: 8) {
+                            // Skóre
+                            HStack(spacing: 4) {
+                                Text("\(sharedData.homeGoals)")
+                                    .font(.system(size: 20, weight: .bold))
+                                    .foregroundColor(.white)
+                                
+                                Text(":")
+                                    .font(.system(size: 20, weight: .bold))
+                                    .foregroundColor(.white)
+                                
+                                Text("\(sharedData.awayGoals)")
+                                    .font(.system(size: 20, weight: .bold))
+                                    .foregroundColor(.white)
+                            }
                             
-                            Text("+ \(timerManager.overtimeTimeString())")
-                                .font(.system(size: 40, weight: .bold, design: .monospaced))
-                                .foregroundColor(.white)
+                            // Oddělovač
+                            Rectangle()
+                                .frame(width: 1, height: 20)
+                                .foregroundColor(.white.opacity(0.2))
+                            
+                            // Karty - kompaktnější verze
+                            HStack(spacing: 6) {
+                                HStack(spacing: 2) {
+                                    Text("🟡")
+                                        .font(.system(size: 12))
+                                    Text("\(sharedData.homeYellowCards)-\(sharedData.awayYellowCards)")
+                                        .font(.system(size: 12, weight: .medium))
+                                        .foregroundColor(.white)
+                                }
+                                
+                                HStack(spacing: 2) {
+                                    Text("🔴")
+                                        .font(.system(size: 12))
+                                    Text("\(sharedData.homeRedCards)-\(sharedData.awayRedCards)")
+                                        .font(.system(size: 12, weight: .medium))
+                                        .foregroundColor(.white)
+                                }
+                            }
                         }
-                        .padding(20)
-                        .frame(maxWidth: .infinity)
-                        .background(
-                            RoundedRectangle(cornerRadius: 20)
-                                .fill(Color.green.opacity(0.2))
-                        )
-                        .shadow(color: .black.opacity(0.3), radius: 10, x: 0, y: 5)
-                        .minimumScaleFactor(0.5)
-                        .lineLimit(1)
+                        .padding(.vertical, 6)
                         .padding(.horizontal, 10)
-                        .padding(.bottom, 10)
-                        .transition(.opacity.combined(with: .scale))
-                    } else {
-                        Text(timerManager.timeString())
-                            .font(.system(size: 56, weight: .bold, design: .monospaced))
-                            .foregroundColor(.white)
+                        .background(
+                            RoundedRectangle(cornerRadius: 6)
+                                .fill(Color.white.opacity(0.05))
+                        )
+                        .padding(.top, 8)
+                        
+                        // Indikátor poločasu
+                        Text(isFirstHalf ? "1. POLOČAS" : "2. POLOČAS")
+                            .font(.system(size: 20, weight: .bold))
+                            .foregroundColor(.white.opacity(0.8))
+                            .padding(.top, 8)
+                        
+                        Spacer()
+                        
+                        if timerManager.isOvertimeRunning {
+                            VStack(spacing: 4) {
+                                Text("NASTAVENÍ")
+                                    .font(.system(size: 20, weight: .bold))
+                                    .foregroundColor(.white.opacity(0.9))
+                                    .padding(.bottom, 2)
+                                
+                                Text("+ \(timerManager.overtimeTimeString())")
+                                    .font(.system(size: 40, weight: .bold, design: .monospaced))
+                                    .foregroundColor(.white)
+                            }
                             .padding(20)
                             .frame(maxWidth: .infinity)
                             .background(
-                                RoundedRectangle(cornerRadius: 30)
-                                    .fill(Color.white.opacity(0.1))
+                                RoundedRectangle(cornerRadius: 20)
+                                    .fill(Color.green.opacity(0.2))
                             )
                             .shadow(color: .black.opacity(0.3), radius: 10, x: 0, y: 5)
                             .minimumScaleFactor(0.5)
                             .lineLimit(1)
                             .padding(.horizontal, 10)
                             .padding(.bottom, 10)
+                            .transition(.opacity.combined(with: .scale))
+                        } else {
+                            Text(timerManager.timeString())
+                                .font(.system(size: 56, weight: .bold, design: .monospaced))
+                                .foregroundColor(.white)
+                                .padding(20)
+                                .frame(maxWidth: .infinity)
+                                .background(
+                                    RoundedRectangle(cornerRadius: 30)
+                                        .fill(Color.white.opacity(0.1))
+                                )
+                                .shadow(color: .black.opacity(0.3), radius: 10, x: 0, y: 5)
+                                .minimumScaleFactor(0.5)
+                                .lineLimit(1)
+                                .padding(.horizontal, 10)
+                                .padding(.bottom, 10)
+                        }
                     }
+                    .edgesIgnoringSafeArea(.bottom)
                 }
-                .edgesIgnoringSafeArea(.bottom)
                 
-                // Neviditelný obdélník pro zachycení gesta kliknutí
-                Color.clear
-                    .frame(width: geometry.size.width, height: geometry.size.height)
-                    .contentShape(Rectangle())
-                    .onTapGesture {
-                        showEndHalfAlert = true
-                    }
+                // Neviditelný obdélník pro zachycení gesta kliknutí pouze když není pauza
+                if !isHalfTimePauseActive {
+                    Color.clear
+                        .frame(width: geometry.size.width, height: geometry.size.height)
+                        .contentShape(Rectangle())
+                        .onTapGesture {
+                            showEndHalfAlert = true
+                        }
+                }
             }
             .alert(isFirstHalf ? "Ukončit 1. poločas?" : "Ukončit zápas?", isPresented: $showEndHalfAlert) {
                 Button("OK", role: .destructive) {
-                    let totalTime = round(timerManager.elapsedTime + timerManager.overtimeElapsed)
-                    
-                    if isFirstHalf {
-                        print("Ukončuji 1. poločas a otevírám HalfTimeView")
-                        firstHalfDuration = totalTime
-                        print("Zápas ID: \(matchId), 1. poločas: \(totalTime) sekund")
-                        
-                        // Zastavíme všechny časovače
-                        timerManager.stopTimer()
-                        timerManager.stopOvertimeTimer()
-                        
-                        // Explicitně nastavíme showHalfTimeView na true
-                        showHalfTimeView = true
-                    } else {
-                        secondHalfDuration = totalTime
-                        print("Zápas ID: \(matchId), 2. poločas: \(totalTime) sekund")
-                        showMatchResult = true
-                        
-                        // Zastavíme časovač nastavení
-                        timerManager.stopOvertimeTimer()
-                    }
-                    
-                    isFirstHalf = false
+                    handleHalfTimeEnd()
                 }
                 Button("Zrušit", role: .cancel) {}
+            }
+            .alert("Přeskočit polčasovou pauzu?", isPresented: $showSkipPauseDialog) {
+                Button("Ano", role: .destructive) {
+                    endHalfTimePause()
+                }
+                Button("Ne", role: .cancel) {}
             }
             
             // NavigationLink je nyní v ZStacku, ale není viditelný
@@ -190,44 +201,55 @@ struct MatchTimer: View {
             ).hidden()
         }
         .onAppear {
-            print("MatchTimer se zobrazuje, showHalfTimeView: \(showHalfTimeView)")
-            // Spustíme časovač pouze pokud není zobrazen HalfTimeView
-            if !timerManager.isMainTimerStopped && !timerManager.isOvertimeRunning && !showHalfTimeView {
+            if !timerManager.isMainTimerStopped && !timerManager.isOvertimeRunning {
                 timerManager.startTimer()
             }
-            
-            // Přidáno pro zavření HalfTimeView
-            NotificationCenter.default.addObserver(forName: .closeHalfTimeView, object: nil, queue: .main) { _ in
-                showHalfTimeView = false
-                
-                // Pokud se vracíme z přestávky, znovu spustíme časovač pro druhý poločas
-                if !isFirstHalf {
-                    // Nastavíme čas na začátek druhého poločasu
-                    timerManager.setElapsedTime(MatchTimerSettings.shared.firstHalfTimeInSeconds)
-                    // Začneme druhý poločas
-                    timerManager.startTimer()
-                }
-            }
-        }
-        .onDisappear {
-            // Uklidíme observer
-            NotificationCenter.default.removeObserver(self, name: .closeHalfTimeView, object: nil)
         }
         .onReceive(timerManager.$elapsedTime) { time in
-            if isFirstHalf {
-                // První poločas
-                if time >= MatchTimerSettings.shared.firstHalfTimeInSeconds && !timerManager.isOvertimeRunning {
-                    withAnimation {
-                        timerManager.startOvertimeTimer()
-                    }
-                }
+            checkForHalfTimeTransition(time: time)
+        }
+    }
+    
+    private func handleHalfTimeEnd() {
+        timerManager.stopTimer()
+        timerManager.stopOvertimeTimer()
+        
+        if isFirstHalf {
+            startHalfTimePause()
+        } else {
+            showMatchResult = true
+        }
+    }
+    
+    private func startHalfTimePause() {
+        isHalfTimePauseActive = true
+        halfTimePauseRemaining = MatchTimerSettings.shared.halfTimePauseInSeconds
+        
+        Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { timer in
+            if halfTimePauseRemaining > 0 {
+                halfTimePauseRemaining -= 1
             } else {
-                // Druhý poločas
-                if time >= MatchTimerSettings.shared.firstHalfTimeInSeconds + MatchTimerSettings.shared.secondHalfTimeInSeconds && !timerManager.isOvertimeRunning {
-                    withAnimation {
-                        timerManager.startOvertimeTimer()
-                    }
-                }
+                timer.invalidate()
+                endHalfTimePause()
+            }
+        }
+    }
+    
+    private func endHalfTimePause() {
+        isHalfTimePauseActive = false
+        isFirstHalf = false
+        timerManager.setElapsedTime(MatchTimerSettings.shared.firstHalfTimeInSeconds)
+        timerManager.startTimer()
+    }
+    
+    private func checkForHalfTimeTransition(time: TimeInterval) {
+        if isFirstHalf {
+            if time >= MatchTimerSettings.shared.firstHalfTimeInSeconds && !timerManager.isOvertimeRunning {
+                timerManager.startOvertimeTimer()
+            }
+        } else {
+            if time >= MatchTimerSettings.shared.firstHalfTimeInSeconds + MatchTimerSettings.shared.secondHalfTimeInSeconds && !timerManager.isOvertimeRunning {
+                timerManager.startOvertimeTimer()
             }
         }
     }
