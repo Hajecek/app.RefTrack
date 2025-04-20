@@ -9,7 +9,7 @@ class MatchTimerSettings {
     var firstHalfMinutes: Double = 45
     
     // Délka přestávky v minutách
-    var halfTimePauseMinutes: Double = 15
+    var halfTimePauseMinutes: Double = 0.13
     
     // Délka druhého poločasu v minutách
     var secondHalfMinutes: Double = 45

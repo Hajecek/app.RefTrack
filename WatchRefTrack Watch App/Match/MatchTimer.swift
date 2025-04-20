@@ -391,7 +391,8 @@ struct MatchTimer: View {
                 halfTimePauseRemaining -= 1
             } else {
                 timer.invalidate()
-                endHalfTimePause()
+                // Zobrazíme červenou obrazovku místo přímého pokračování
+                showContinueSecondHalfScreen = true
             }
         }
     }
