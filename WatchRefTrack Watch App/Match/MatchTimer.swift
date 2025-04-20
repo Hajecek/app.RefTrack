@@ -398,7 +398,16 @@ struct MatchTimer: View {
     }
     
     private func endHalfTimePause() {
+        // Zastavíme audio detekci
+        stopAudioDetection()
+        
+        // Skryjeme červenou obrazovku
+        showContinueSecondHalfScreen = false
+        
+        // Ukončíme pauzu
         isHalfTimePauseActive = false
+        
+        // Nastavíme druhý poločas
         isFirstHalf = false
         timerManager.setElapsedTime(MatchTimerSettings.shared.firstHalfTimeInSeconds)
         timerManager.startTimer()
