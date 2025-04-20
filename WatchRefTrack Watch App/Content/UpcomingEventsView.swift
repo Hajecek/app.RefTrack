@@ -68,10 +68,12 @@ struct APIResponse: Codable {
 
 struct UpcomingEventsView: View {
     @State private var matches: [Match] = []
+    @State private var cachedMatches: [Match] = []
     @State private var isLoading = false
     @State private var errorMessage: String?
     @State private var isLoggedIn: Bool = UserDefaults.standard.bool(forKey: "isLoggedIn")
     @State private var timer: Timer?
+    @State private var isOnline = true
     
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
@@ -79,12 +81,12 @@ struct UpcomingEventsView: View {
                 Text("Pro zobrazení zápasů se prosím přihlaste")
                     .foregroundColor(.white)
             } else {
-                if isLoading {
+                if isLoading && isOnline {
                     ProgressView()
-                } else if let error = errorMessage {
+                } else if let error = errorMessage, isOnline {
                     Text("Chyba: \(error)")
                         .foregroundColor(.red)
-                } else if matches.isEmpty {
+                } else if matches.isEmpty && cachedMatches.isEmpty {
                     VStack(spacing: 6) {
                         Image(systemName: "exclamationmark.triangle.fill")
                             .font(.system(size: 20))
@@ -101,7 +103,7 @@ struct UpcomingEventsView: View {
                     .cornerRadius(8)
                     .padding(.horizontal, 8)
                 } else {
-                    ForEach(matches) { match in
+                    ForEach(isOnline ? matches : cachedMatches) { match in
                         let destinationView = MatchDetailView(
                             matchId: match.id,
                             homeTeam: match.homeTeam,
@@ -129,6 +131,10 @@ struct UpcomingEventsView: View {
                             .padding(8)
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .background(Color.red.opacity(0.3))
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 8)
+                                    .stroke(!isOnline ? Color.yellow : Color.clear, lineWidth: 2)
+                            )
                             .cornerRadius(8)
                         }
                         .buttonStyle(PlainButtonStyle())
@@ -139,11 +145,41 @@ struct UpcomingEventsView: View {
         .padding(.horizontal, 8)
         .frame(maxWidth: .infinity)
         .onAppear {
+            loadCachedMatches()
+            checkConnection()
             fetchMatches()
             startTimer()
         }
         .onDisappear {
             stopTimer()
+        }
+    }
+    
+    private func loadCachedMatches() {
+        if let data = UserDefaults.standard.data(forKey: "cachedMatches") {
+            let decoder = JSONDecoder()
+            if let decoded = try? decoder.decode([Match].self, from: data) {
+                cachedMatches = decoded
+            }
+        }
+    }
+    
+    private func saveMatchesToCache() {
+        let encoder = JSONEncoder()
+        if let encoded = try? encoder.encode(matches) {
+            UserDefaults.standard.set(encoded, forKey: "cachedMatches")
+        }
+    }
+    
+    private func checkConnection() {
+        // Jednoduchá kontrola připojení
+        if let url = URL(string: "https://reftrack.cz") {
+            let task = URLSession.shared.dataTask(with: url) { _, _, error in
+                DispatchQueue.main.async {
+                    self.isOnline = error == nil
+                }
+            }
+            task.resume()
         }
     }
     
@@ -185,11 +221,13 @@ struct UpcomingEventsView: View {
                 
                 if let error = error {
                     self.errorMessage = "Chyba sítě: \(error.localizedDescription)"
+                    self.isOnline = false
                     return
                 }
                 
                 guard let data = data else {
                     self.errorMessage = "Žádná data nebyla přijata"
+                    self.isOnline = false
                     return
                 }
                 
@@ -199,11 +237,14 @@ struct UpcomingEventsView: View {
                     
                     if self.matches != apiResponse.matches {
                         self.matches = apiResponse.matches
+                        self.saveMatchesToCache()
                     }
                     self.errorMessage = nil
+                    self.isOnline = true
                     
                 } catch {
                     self.errorMessage = "Chyba při zpracování dat"
+                    self.isOnline = false
                 }
             }
         }
