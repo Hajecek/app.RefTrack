@@ -109,7 +109,9 @@ struct UpcomingEventsView: View {
                             homeTeam: match.homeTeam,
                             awayTeam: match.awayTeam,
                             role: match.role,
-                            matchDate: match.matchDate
+                            matchDate: match.matchDate,
+                            location: match.location,
+                            competition: match.competition
                         )
                         
                         NavigationLink(destination: destinationView) {
