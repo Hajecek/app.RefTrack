@@ -137,15 +137,15 @@ struct MatchTimer: View {
 
                             // Tlačítko pro odeslání
                             Button(action: {
-                                print("""
-                                Odesílání dat zápasu:
-                                ID: \(matchId)
-                                Týmy: \(homeTeam) vs \(awayTeam)
-                                Časy: \(timeString(from: firstHalfDuration)) / \(timeString(from: secondHalfDuration))
-                                Vzdálenost: \(String(format: "%.1f", sharedData.distance / 1000)) km
-                                Skóre: \(sharedData.homeGoals):\(sharedData.awayGoals)
-                                Karty: 🟡 \(sharedData.homeYellowCards)-\(sharedData.awayYellowCards) 🔴 \(sharedData.homeRedCards)-\(sharedData.awayRedCards)
-                                """)
+                                print("Domácí skóre: \(sharedData.homeGoals)")
+                                print("Hosté skóre: \(sharedData.awayGoals)")
+                                print("Žluté karty domácí: \(sharedData.homeYellowCards)")
+                                print("Žluté karty hosté: \(sharedData.awayYellowCards)")
+                                print("Červené karty domácí: \(sharedData.homeRedCards)")
+                                print("Červené karty hosté: \(sharedData.awayRedCards)")
+                                print("Vzdálenost: \(String(format: "%.1f", sharedData.distance / 1000)) km")
+                                print("Čas prvního poločasu: \(timeString(from: firstHalfDuration))")
+                                print("Čas druhého poločasu: \(timeString(from: secondHalfDuration))")
                             }) {
                                 Text("ODESLAT DATA")
                                     .font(.system(size: 14, weight: .bold))
