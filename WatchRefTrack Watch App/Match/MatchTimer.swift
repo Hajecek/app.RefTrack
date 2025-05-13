@@ -71,14 +71,14 @@ struct MatchTimer: View {
                                     VStack(spacing: 2) {
                                         Text("1. POLOČAS")
                                             .font(.system(size: 10))
-                                        Text(timeString(from: firstHalfDuration))
+                                        Text(timeString(from: MatchTimerSettings.shared.firstHalfTimeInSeconds))
                                             .font(.system(size: 14, weight: .medium))
                                     }
                                     
                                     VStack(spacing: 2) {
                                         Text("2. POLOČAS")
                                             .font(.system(size: 10))
-                                        Text(timeString(from: secondHalfDuration))
+                                        Text(timeString(from: MatchTimerSettings.shared.secondHalfTimeInSeconds))
                                             .font(.system(size: 14, weight: .medium))
                                     }
                                 }
@@ -471,8 +471,8 @@ struct MatchTimer: View {
         // Příprava dat
         let matchData: [String: Any] = [
             "match_id": matchId,
-            "first_half_duration": timeString(from: firstHalfDuration),
-            "second_half_duration": timeString(from: secondHalfDuration),
+            "first_half_duration": timeString(from: MatchTimerSettings.shared.firstHalfTimeInSeconds),
+            "second_half_duration": timeString(from: MatchTimerSettings.shared.secondHalfTimeInSeconds),
             "home_score": sharedData.homeGoals,
             "away_score": sharedData.awayGoals,
             "distance_run": sharedData.distance / 1000,
