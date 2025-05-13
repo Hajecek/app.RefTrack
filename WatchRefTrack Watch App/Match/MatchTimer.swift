@@ -137,15 +137,7 @@ struct MatchTimer: View {
 
                             // Tlačítko pro odeslání
                             Button(action: {
-                                print("Domácí skóre: \(sharedData.homeGoals)")
-                                print("Hosté skóre: \(sharedData.awayGoals)")
-                                print("Žluté karty domácí: \(sharedData.homeYellowCards)")
-                                print("Žluté karty hosté: \(sharedData.awayYellowCards)")
-                                print("Červené karty domácí: \(sharedData.homeRedCards)")
-                                print("Červené karty hosté: \(sharedData.awayRedCards)")
-                                print("Vzdálenost: \(String(format: "%.1f", sharedData.distance / 1000)) km")
-                                print("Čas prvního poločasu: \(timeString(from: firstHalfDuration))")
-                                print("Čas druhého poločasu: \(timeString(from: secondHalfDuration))")
+                                sendMatchData()
                             }) {
                                 Text("ODESLAT DATA")
                                     .font(.system(size: 14, weight: .bold))
@@ -473,6 +465,57 @@ struct MatchTimer: View {
         audioEngine.stop()
         audioEngine.inputNode.removeTap(onBus: 0)
         print("Audio detekce zastavena")
+    }
+    
+    private func sendMatchData() {
+        // Příprava dat
+        let matchData: [String: Any] = [
+            "match_id": matchId,
+            "first_half_duration": timeString(from: firstHalfDuration),
+            "second_half_duration": timeString(from: secondHalfDuration),
+            "home_score": sharedData.homeGoals,
+            "away_score": sharedData.awayGoals,
+            "distance_run": sharedData.distance / 1000,
+            "yellow_cards": sharedData.homeYellowCards + sharedData.awayYellowCards,
+            "red_cards": sharedData.homeRedCards + sharedData.awayRedCards
+        ]
+        
+        // Převod na JSON
+        guard let jsonData = try? JSONSerialization.data(withJSONObject: matchData) else {
+            print("Chyba při převodu dat na JSON")
+            return
+        }
+        
+        // Vytvoření URLRequest
+        guard let url = URL(string: "https://reftrack.cz/admin/api/actions/update_match") else {
+            print("Neplatná URL")
+            return
+        }
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.httpBody = jsonData
+        
+        // Odeslání požadavku
+        let task = URLSession.shared.dataTask(with: request) { data, response, error in
+            if let error = error {
+                print("Chyba při odesílání dat: \(error.localizedDescription)")
+                return
+            }
+            
+            guard let data = data else {
+                print("Žádná data v odpovědi")
+                return
+            }
+            
+            // Zpracování odpovědi
+            if let jsonResponse = try? JSONSerialization.jsonObject(with: data) as? [String: Any] {
+                print("Odpověď od API: \(jsonResponse)")
+            }
+        }
+        
+        task.resume()
     }
 }
 
