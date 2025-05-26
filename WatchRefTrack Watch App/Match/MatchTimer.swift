@@ -165,22 +165,16 @@ struct MatchTimer: View {
                                 endHalfTimePause()
                             }
                         VStack {
-                            Text("POKRAČOVAT 2. POLOČAS")
+                            Text("SPUSTIT 2. POLOČAS")
                                 .font(.system(size: 24, weight: .bold))
                                 .foregroundColor(.white)
                                 .multilineTextAlignment(.center)
                                 .padding()
                             
-                            Text("Stačí písknout pro spuštění časovače")
+                            Text("Klepnutím spusťte časovač")
                                 .font(.system(size: 12))
                                 .foregroundColor(.white.opacity(0.7))
                                 .padding(.bottom, 20)
-                        }
-                        .onAppear {
-                            setupAudioDetection()
-                        }
-                        .onDisappear {
-                            stopAudioDetection()
                         }
                     } else {
                         // Žlutá obrazovka pauzy

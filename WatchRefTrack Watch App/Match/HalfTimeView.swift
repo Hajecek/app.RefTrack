@@ -15,7 +15,7 @@ struct HalfTimeView: View {
                 // Červená obrazovka po vypršení času
                 Color.red.edgesIgnoringSafeArea(.all)
                 VStack {
-                    Text("POKRAČOVAT 2. POLOČAS")
+                    Text("SPUSTIT 2. POLOČAS")
                         .font(.system(size: 24, weight: .bold))
                         .foregroundColor(.white)
                         .multilineTextAlignment(.center)
@@ -23,16 +23,10 @@ struct HalfTimeView: View {
                         .minimumScaleFactor(0.8)
                         .lineLimit(2)
                     
-                    Text("Stačí písknout pro spuštění časovače")
+                    Text("Klepnutím spusťte časovač")
                         .font(.system(size: 12))
                         .foregroundColor(.white.opacity(0.7))
                         .padding(.bottom, 20)
-                }
-                .onAppear {
-                    setupAudioDetection()
-                }
-                .onDisappear {
-                    stopAudioDetection()
                 }
             } else {
                 // Základní obrazovka s žlutým pozadím a časovačem
