@@ -19,7 +19,7 @@ enum MatchPhase: String, Codable, CaseIterable, Sendable {
     case finished
 }
 
-struct MatchConfiguration: Codable, Equatable, Sendable {
+struct MatchConfiguration: Codable, Equatable, Hashable, Sendable {
     var halfLengthSeconds: Int
     var halftimeSeconds: Int
 
@@ -29,7 +29,7 @@ struct MatchConfiguration: Codable, Equatable, Sendable {
     )
 }
 
-struct MatchEngineState: Codable, Equatable, Sendable {
+struct MatchEngineState: Codable, Equatable, Hashable, Sendable {
     var phase: MatchPhase
     var config: MatchConfiguration
 

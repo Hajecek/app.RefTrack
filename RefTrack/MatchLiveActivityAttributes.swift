@@ -11,23 +11,20 @@ import Foundation
 struct RefTrackMatchAttributes: ActivityAttributes {
     public struct ContentState: Codable, Hashable, Sendable {
         public var headline: String
-        public var primaryTime: String
-        public var secondaryLine: String?
-        public var halftimeCountdownStart: Date?
-        public var halftimeCountdownEnd: Date?
+        public var engineState: MatchEngineState
+        public var distanceMeters: Double
+        public var energyKilocalories: Double
 
         public init(
             headline: String,
-            primaryTime: String,
-            secondaryLine: String?,
-            halftimeCountdownStart: Date?,
-            halftimeCountdownEnd: Date?
+            engineState: MatchEngineState,
+            distanceMeters: Double,
+            energyKilocalories: Double
         ) {
             self.headline = headline
-            self.primaryTime = primaryTime
-            self.secondaryLine = secondaryLine
-            self.halftimeCountdownStart = halftimeCountdownStart
-            self.halftimeCountdownEnd = halftimeCountdownEnd
+            self.engineState = engineState
+            self.distanceMeters = distanceMeters
+            self.energyKilocalories = energyKilocalories
         }
     }
 }

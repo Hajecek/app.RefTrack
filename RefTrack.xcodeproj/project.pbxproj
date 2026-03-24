@@ -7,8 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		07C10A112D8C613900A8FA05 /* RefTrackLiveActivity.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 07C10A122D8C613900A8FA05 /* RefTrackLiveActivity.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		07A077022D8C69D400A8FA05 /* RefTrack Watch App.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 07A076DF2D8C69D300A8FA05 /* RefTrack Watch App.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		07C10A112D8C613900A8FA05 /* RefTrackLiveActivity.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 07C10A122D8C613900A8FA05 /* RefTrackLiveActivity.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -109,7 +109,7 @@
 		07C10A132D8C613900A8FA05 /* Exceptions for "RefTrackLiveActivity" folder in "RefTrackLiveActivity" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
-				RefTrackLiveActivity-Info.plist,
+				"RefTrackLiveActivity-Info.plist",
 			);
 			target = 07C10A182D8C613900A8FA05 /* RefTrackLiveActivity */;
 		};
@@ -1024,7 +1024,7 @@
 				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = W6R3HZD7R4;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = RefTrackLiveActivity/RefTrackLiveActivity-Info.plist;
+				INFOPLIST_FILE = "RefTrackLiveActivity/RefTrackLiveActivity-Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = RefTrack;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				IPHONEOS_DEPLOYMENT_TARGET = 18.2;
@@ -1051,7 +1051,7 @@
 				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = W6R3HZD7R4;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = RefTrackLiveActivity/RefTrackLiveActivity-Info.plist;
+				INFOPLIST_FILE = "RefTrackLiveActivity/RefTrackLiveActivity-Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = RefTrack;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				IPHONEOS_DEPLOYMENT_TARGET = 18.2;

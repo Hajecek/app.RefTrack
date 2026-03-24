@@ -7,7 +7,7 @@ import ActivityKit
 import Combine
 import Foundation
 
-/// Live Activity na Lock Screen / Dynamic Island — synchronizace se stavem z hodinek + sekundový tik pro plynulý text.
+/// Live Activity — aktualizace jen při změně stavu z hodinek. Čas na zamykáčce tiká v extension přes `TimelineView`.
 @MainActor
 final class MatchLiveActivityController {
     static let shared = MatchLiveActivityController()
@@ -26,21 +26,14 @@ final class MatchLiveActivityController {
         phone.$lastMatchEnvelope
             .receive(on: DispatchQueue.main)
             .sink { [weak self] _ in
-                self?.sync(phone: phone, now: Date())
+                self?.sync(phone: phone)
             }
             .store(in: &cancellables)
 
-        Timer.publish(every: 1, tolerance: 0.2, on: .main, in: .common)
-            .autoconnect()
-            .sink { [weak self] _ in
-                self?.sync(phone: phone, now: Date())
-            }
-            .store(in: &cancellables)
-
-        sync(phone: phone, now: Date())
+        sync(phone: phone)
     }
 
-    func sync(phone: PhoneWCSession, now: Date) {
+    func sync(phone: PhoneWCSession) {
         guard ActivityAuthorizationInfo().areActivitiesEnabled else {
             Task { await endActivity() }
             return
@@ -57,7 +50,7 @@ final class MatchLiveActivityController {
             return
         }
 
-        let state = Self.makeContentState(envelope: envelope, now: now)
+        let state = Self.makeContentState(envelope: envelope)
 
         Task {
             if let existing = activity {
@@ -83,39 +76,13 @@ final class MatchLiveActivityController {
         self.activity = nil
     }
 
-    private static func makeContentState(envelope: MatchWireEnvelope, now: Date) -> RefTrackMatchAttributes.ContentState {
-        let snap = MatchMirrorDisplayFormatter.snapshot(
-            state: envelope.state,
-            at: now,
-            distanceMeters: envelope.distanceMeters,
-            energyKilocalories: envelope.energyKilocalories
-        )
-
-        let headline = phaseHeadline(snap.phase)
-        let primary = MatchMirrorTimeFormat.mmss(
-            snap.phase == .halftimeBreak ? snap.halftimeRemainingSeconds : snap.mainClockSeconds
-        )
-
-        var secondary: String?
-        if snap.isStoppageActive {
-            secondary = "Nastavení \(MatchMirrorTimeFormat.mmss(snap.stoppageSeconds))"
-        } else if snap.distanceMeters >= 1 {
-            secondary = MatchMirrorTimeFormat.formatDistanceMeters(snap.distanceMeters)
-        }
-
-        var htStart: Date?
-        var htEnd: Date?
-        if snap.phase == .halftimeBreak, let hs = envelope.state.halftimeStartedAt {
-            htStart = hs
-            htEnd = hs.addingTimeInterval(TimeInterval(envelope.state.config.halftimeSeconds))
-        }
-
+    private static func makeContentState(envelope: MatchWireEnvelope) -> RefTrackMatchAttributes.ContentState {
+        let headline = phaseHeadline(envelope.state.phase)
         return RefTrackMatchAttributes.ContentState(
             headline: headline,
-            primaryTime: primary,
-            secondaryLine: secondary,
-            halftimeCountdownStart: htStart,
-            halftimeCountdownEnd: htEnd
+            engineState: envelope.state,
+            distanceMeters: envelope.distanceMeters,
+            energyKilocalories: envelope.energyKilocalories
         )
     }
 
