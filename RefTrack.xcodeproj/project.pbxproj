@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		07C10A112D8C613900A8FA05 /* RefTrackLiveActivity.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 07C10A122D8C613900A8FA05 /* RefTrackLiveActivity.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		07A077022D8C69D400A8FA05 /* RefTrack Watch App.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 07A076DF2D8C69D300A8FA05 /* RefTrack Watch App.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
@@ -46,6 +47,13 @@
 			remoteGlobalIDString = 07A076DE2D8C69D300A8FA05;
 			remoteInfo = "RefTrack Watch App";
 		};
+		07C10A232D8C613900A8FA05 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 07A076532D8C613900A8FA05 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 07C10A182D8C613900A8FA05;
+			remoteInfo = RefTrackLiveActivity;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -60,6 +68,17 @@
 			name = "Embed Watch Content";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		07C10A152D8C613900A8FA05 /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				07C10A112D8C613900A8FA05 /* RefTrackLiveActivity.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
@@ -69,6 +88,7 @@
 		07A076DF2D8C69D300A8FA05 /* RefTrack Watch App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "RefTrack Watch App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		07A076EE2D8C69D400A8FA05 /* RefTrack Watch AppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "RefTrack Watch AppTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		07A076F82D8C69D400A8FA05 /* RefTrack Watch AppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "RefTrack Watch AppUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		07C10A122D8C613900A8FA05 /* RefTrackLiveActivity.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = RefTrackLiveActivity.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -85,6 +105,13 @@
 				"RefTrack-Watch-App-Info.plist",
 			);
 			target = 07A076DE2D8C69D300A8FA05 /* RefTrack Watch App */;
+		};
+		07C10A132D8C613900A8FA05 /* Exceptions for "RefTrackLiveActivity" folder in "RefTrackLiveActivity" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				RefTrackLiveActivity-Info.plist,
+			);
+			target = 07C10A182D8C613900A8FA05 /* RefTrackLiveActivity */;
 		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
@@ -123,6 +150,14 @@
 		07A076FB2D8C69D400A8FA05 /* RefTrack Watch AppUITests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = "RefTrack Watch AppUITests";
+			sourceTree = "<group>";
+		};
+		07C10A142D8C613900A8FA05 /* RefTrackLiveActivity */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				07C10A132D8C613900A8FA05 /* Exceptions for "RefTrackLiveActivity" folder in "RefTrackLiveActivity" target */,
+			);
+			path = RefTrackLiveActivity;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -170,6 +205,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		07C10A1A2D8C613900A8FA05 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -182,6 +224,7 @@
 				07A076E02D8C69D300A8FA05 /* RefTrack Watch App */,
 				07A076F12D8C69D400A8FA05 /* RefTrack Watch AppTests */,
 				07A076FB2D8C69D400A8FA05 /* RefTrack Watch AppUITests */,
+				07C10A142D8C613900A8FA05 /* RefTrackLiveActivity */,
 				07A0765C2D8C613900A8FA05 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -195,6 +238,7 @@
 				07A076DF2D8C69D300A8FA05 /* RefTrack Watch App.app */,
 				07A076EE2D8C69D400A8FA05 /* RefTrack Watch AppTests.xctest */,
 				07A076F82D8C69D400A8FA05 /* RefTrack Watch AppUITests.xctest */,
+				07C10A122D8C613900A8FA05 /* RefTrackLiveActivity.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -209,11 +253,13 @@
 				07A076572D8C613900A8FA05 /* Sources */,
 				07A076582D8C613900A8FA05 /* Frameworks */,
 				07A076592D8C613900A8FA05 /* Resources */,
+				07C10A152D8C613900A8FA05 /* Embed Foundation Extensions */,
 				07A077062D8C69D400A8FA05 /* Embed Watch Content */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				07C10A242D8C613900A8FA05 /* PBXTargetDependency */,
 				07A077012D8C69D400A8FA05 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
@@ -340,6 +386,28 @@
 			productReference = 07A076F82D8C69D400A8FA05 /* RefTrack Watch AppUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
+		07C10A182D8C613900A8FA05 /* RefTrackLiveActivity */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 07C10A202D8C613900A8FA05 /* Build configuration list for PBXNativeTarget "RefTrackLiveActivity" */;
+			buildPhases = (
+				07C10A192D8C613900A8FA05 /* Sources */,
+				07C10A1A2D8C613900A8FA05 /* Frameworks */,
+				07C10A1F2D8C613900A8FA05 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				07C10A142D8C613900A8FA05 /* RefTrackLiveActivity */,
+			);
+			name = RefTrackLiveActivity;
+			packageProductDependencies = (
+			);
+			productName = RefTrackLiveActivity;
+			productReference = 07C10A122D8C613900A8FA05 /* RefTrackLiveActivity.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -372,6 +440,9 @@
 						CreatedOnToolsVersion = 16.2;
 						TestTargetID = 07A076DE2D8C69D300A8FA05;
 					};
+					07C10A182D8C613900A8FA05 = {
+						CreatedOnToolsVersion = 16.2;
+					};
 				};
 			};
 			buildConfigurationList = 07A076562D8C613900A8FA05 /* Build configuration list for PBXProject "RefTrack" */;
@@ -395,6 +466,7 @@
 				07A076DE2D8C69D300A8FA05 /* RefTrack Watch App */,
 				07A076ED2D8C69D400A8FA05 /* RefTrack Watch AppTests */,
 				07A076F72D8C69D400A8FA05 /* RefTrack Watch AppUITests */,
+				07C10A182D8C613900A8FA05 /* RefTrackLiveActivity */,
 			);
 		};
 /* End PBXProject section */
@@ -436,6 +508,13 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		07A076F62D8C69D400A8FA05 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		07C10A1F2D8C613900A8FA05 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -487,6 +566,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		07C10A192D8C613900A8FA05 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -514,6 +600,11 @@
 			isa = PBXTargetDependency;
 			target = 07A076DE2D8C69D300A8FA05 /* RefTrack Watch App */;
 			targetProxy = 07A077002D8C69D400A8FA05 /* PBXContainerItemProxy */;
+		};
+		07C10A242D8C613900A8FA05 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 07C10A182D8C613900A8FA05 /* RefTrackLiveActivity */;
+			targetProxy = 07C10A232D8C613900A8FA05 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -653,6 +744,8 @@
 				INFOPLIST_FILE = RefTrack/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = RefTrack;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.sports";
+				INFOPLIST_KEY_NSSupportsLiveActivities = YES;
+				INFOPLIST_KEY_NSSupportsLiveActivitiesFrequentUpdates = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -688,6 +781,8 @@
 				INFOPLIST_FILE = RefTrack/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = RefTrack;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.sports";
+				INFOPLIST_KEY_NSSupportsLiveActivities = YES;
+				INFOPLIST_KEY_NSSupportsLiveActivitiesFrequentUpdates = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -921,6 +1016,60 @@
 			};
 			name = Release;
 		};
+		07C10A212D8C613900A8FA05 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 2;
+				DEVELOPMENT_TEAM = W6R3HZD7R4;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = RefTrackLiveActivity/RefTrackLiveActivity-Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = RefTrack;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.2;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0.5;
+				PRODUCT_BUNDLE_IDENTIFIER = com.hajecek.RefTrackApp.LiveActivity;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		07C10A222D8C613900A8FA05 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 2;
+				DEVELOPMENT_TEAM = W6R3HZD7R4;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = RefTrackLiveActivity/RefTrackLiveActivity-Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = RefTrack;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.2;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0.5;
+				PRODUCT_BUNDLE_IDENTIFIER = com.hajecek.RefTrackApp.LiveActivity;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -983,6 +1132,15 @@
 			buildConfigurations = (
 				07A0770B2D8C69D400A8FA05 /* Debug */,
 				07A0770C2D8C69D400A8FA05 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		07C10A202D8C613900A8FA05 /* Build configuration list for PBXNativeTarget "RefTrackLiveActivity" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				07C10A212D8C613900A8FA05 /* Debug */,
+				07C10A222D8C613900A8FA05 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
