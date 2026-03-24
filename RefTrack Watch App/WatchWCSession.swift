@@ -7,6 +7,10 @@ import Combine
 import Foundation
 import WatchConnectivity
 
+private enum WCKeys {
+    static let matchEnvelope = "matchEnvelope"
+}
+
 /// Aktivuje spojení s companion iOS aplikací přes WatchConnectivity (Apple Watch).
 @MainActor
 final class WatchWCSession: NSObject, ObservableObject, WCSessionDelegate {
@@ -26,6 +30,24 @@ final class WatchWCSession: NSObject, ObservableObject, WCSessionDelegate {
         guard session.delegate == nil else { return }
         session.delegate = self
         session.activate()
+    }
+
+    /// Poslední známý stav zápasu pro iPhone (`updateApplicationContext` přepisuje celý kontext).
+    func pushMatchEnvelope(_ envelope: MatchWireEnvelope) {
+        guard WCSession.isSupported() else { return }
+        let session = WCSession.default
+        guard session.activationState == .activated else { return }
+
+        let encoder = JSONEncoder()
+        encoder.dateEncodingStrategy = .iso8601
+
+        guard let data = try? encoder.encode(envelope) else { return }
+
+        do {
+            try session.updateApplicationContext([WCKeys.matchEnvelope: data])
+        } catch {
+            lastActivationError = error.localizedDescription
+        }
     }
 
     private func syncState(from session: WCSession) {

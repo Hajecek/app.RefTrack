@@ -79,6 +79,13 @@
 			);
 			target = 07A0765A2D8C613900A8FA05 /* RefTrack */;
 		};
+		07B077002D8C69D400A8FA06 /* Exceptions for "RefTrack Watch App" folder in "RefTrack Watch App" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				"RefTrack-Watch-App-Info.plist",
+			);
+			target = 07A076DE2D8C69D300A8FA05 /* RefTrack Watch App */;
+		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -102,6 +109,9 @@
 		};
 		07A076E02D8C69D300A8FA05 /* RefTrack Watch App */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				07B077002D8C69D400A8FA06 /* Exceptions for "RefTrack Watch App" folder in "RefTrack Watch App" target */,
+			);
 			path = "RefTrack Watch App";
 			sourceTree = "<group>";
 		};

@@ -7,6 +7,8 @@ import SwiftUI
 
 @main
 struct RefTrackWatchApp: App {
+    @StateObject private var matchVM = WatchMatchViewModel()
+
     init() {
         WatchWCSession.shared.activateIfNeeded()
     }
@@ -14,6 +16,7 @@ struct RefTrackWatchApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .environmentObject(matchVM)
         }
     }
 }

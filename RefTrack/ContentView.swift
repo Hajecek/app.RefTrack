@@ -10,30 +10,39 @@ struct ContentView: View {
     @ObservedObject private var phoneSession = PhoneWCSession.shared
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            Text("RefTrack")
-                .font(.title2)
-            Group {
-                Text("Stav: \(activationLabel(phoneSession.activationState))")
-                Text("Spárované hodinky: \(phoneSession.isPaired ? "ano" : "ne")")
-                Text("Watch app nainstalovaná: \(phoneSession.isWatchAppInstalled ? "ano" : "ne")")
-                Text("Dosah (obě app spuštěné): \(phoneSession.isReachable ? "ano" : "ne")")
-                if let err = phoneSession.lastActivationError {
-                    Text("Chyba: \(err)")
-                        .foregroundStyle(.red)
+        NavigationStack {
+            VStack(alignment: .leading, spacing: 0) {
+                connectionStrip
+
+                TimelineView(.periodic(from: .now, by: 0.5)) { timeline in
+                    PhoneMatchMirrorView(
+                        envelope: phoneSession.lastMatchEnvelope,
+                        now: timeline.date
+                    )
                 }
             }
-            .font(.caption)
-            .foregroundStyle(.secondary)
+            .padding()
+            .navigationTitle("RefTrack")
         }
-        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
-        .padding()
+    }
+
+    private var connectionStrip: some View {
+        VStack(alignment: .leading, spacing: 4) {
+            Text("Spojení: \(activationLabel(phoneSession.activationState))")
+            Text("Hodinky: \(phoneSession.isPaired ? "spárováno" : "ne") · App: \(phoneSession.isWatchAppInstalled ? "ano" : "ne")")
+            if let err = phoneSession.lastActivationError {
+                Text(err).font(.caption2).foregroundStyle(.red)
+            }
+        }
+        .font(.caption2)
+        .foregroundStyle(.secondary)
+        .padding(.bottom, 8)
     }
 
     private func activationLabel(_ state: WCSessionActivationState) -> String {
         switch state {
         case .notActivated: return "neaktivní"
-        case .inactive: return "neaktivní (přechod)"
+        case .inactive: return "přechod"
         case .activated: return "aktivní"
         @unknown default: return "neznámý"
         }

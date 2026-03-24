@@ -7,6 +7,10 @@ import Combine
 import Foundation
 import WatchConnectivity
 
+private enum WCKeys {
+    static let matchEnvelope = "matchEnvelope"
+}
+
 /// Aktivuje a drží spojení s watch aplikací přes WatchConnectivity (iPhone).
 @MainActor
 final class PhoneWCSession: NSObject, ObservableObject, WCSessionDelegate {
@@ -17,6 +21,7 @@ final class PhoneWCSession: NSObject, ObservableObject, WCSessionDelegate {
     @Published private(set) var isPaired = false
     @Published private(set) var isWatchAppInstalled = false
     @Published private(set) var lastActivationError: String?
+    @Published private(set) var lastMatchEnvelope: MatchWireEnvelope?
 
     override private init() {
         super.init()
@@ -37,6 +42,15 @@ final class PhoneWCSession: NSObject, ObservableObject, WCSessionDelegate {
         isWatchAppInstalled = session.isWatchAppInstalled
     }
 
+    private func applyMatchContext(_ applicationContext: [String: Any]) {
+        guard let data = applicationContext[WCKeys.matchEnvelope] as? Data else { return }
+        let decoder = JSONDecoder()
+        decoder.dateDecodingStrategy = .iso8601
+        if let env = try? decoder.decode(MatchWireEnvelope.self, from: data) {
+            lastMatchEnvelope = env
+        }
+    }
+
     nonisolated func session(
         _ session: WCSession,
         activationDidCompleteWith activationState: WCSessionActivationState,
@@ -45,6 +59,7 @@ final class PhoneWCSession: NSObject, ObservableObject, WCSessionDelegate {
         Task { @MainActor in
             self.lastActivationError = error?.localizedDescription
             syncState(from: session)
+            applyMatchContext(session.receivedApplicationContext)
         }
     }
 
@@ -57,6 +72,12 @@ final class PhoneWCSession: NSObject, ObservableObject, WCSessionDelegate {
     nonisolated func sessionWatchStateDidChange(_ session: WCSession) {
         Task { @MainActor in
             syncState(from: session)
+        }
+    }
+
+    nonisolated func session(_ session: WCSession, didReceiveApplicationContext applicationContext: [String: Any]) {
+        Task { @MainActor in
+            applyMatchContext(applicationContext)
         }
     }
 

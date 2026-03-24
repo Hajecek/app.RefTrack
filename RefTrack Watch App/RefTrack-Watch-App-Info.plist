@@ -1,5 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
-<dict/>
+<dict>
+	<key>NSHealthShareUsageDescription</key>
+	<string>RefTrack potřebuje číst údaje o aktivitě, aby mohl zobrazit souhrn po zápase.</string>
+	<key>NSHealthUpdateUsageDescription</key>
+	<string>RefTrack uloží fotbalový zápas jako trénink do aplikace Zdraví včetně trvání a uběhnuté vzdálenosti.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Poloha se používá pro přesnější měření vzdálenosti na hřišti během zápasu.</string>
+	<key>WKBackgroundModes</key>
+	<array>
+		<string>workout-processing</string>
+	</array>
+</dict>
 </plist>
