@@ -22,6 +22,11 @@ enum MatchPhase: String, Codable, CaseIterable, Sendable {
 struct MatchConfiguration: Codable, Equatable, Sendable {
     var halfLengthSeconds: Int
     var halftimeSeconds: Int
+
+    static let `default` = MatchConfiguration(
+        halfLengthSeconds: 45 * 60,
+        halftimeSeconds: 15 * 60
+    )
 }
 
 struct MatchEngineState: Codable, Equatable, Sendable {

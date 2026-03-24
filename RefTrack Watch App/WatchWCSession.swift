@@ -9,6 +9,11 @@ import WatchConnectivity
 
 private enum WCKeys {
     static let matchEnvelope = "matchEnvelope"
+    static let matchSettings = "matchSettings"
+}
+
+private enum WatchSettingsPersistence {
+    static let configData = "reftrack.synced.matchConfiguration.data"
 }
 
 /// Aktivuje spojení s companion iOS aplikací přes WatchConnectivity (Apple Watch).
@@ -50,6 +55,21 @@ final class WatchWCSession: NSObject, ObservableObject, WCSessionDelegate {
         }
     }
 
+    /// Konfigurace z iPhonu (UserDefaults), jinak výchozí 45 / 15.
+    var resolvedMatchConfiguration: MatchConfiguration {
+        if let d = UserDefaults.standard.data(forKey: WatchSettingsPersistence.configData),
+           let c = try? JSONDecoder().decode(MatchConfiguration.self, from: d) {
+            return c
+        }
+        return .default
+    }
+
+    private func applyIPhoneApplicationContext(_ applicationContext: [String: Any]) {
+        guard let data = applicationContext[WCKeys.matchSettings] as? Data,
+              let config = try? JSONDecoder().decode(MatchConfiguration.self, from: data) else { return }
+        UserDefaults.standard.set(data, forKey: WatchSettingsPersistence.configData)
+    }
+
     private func syncState(from session: WCSession) {
         activationState = session.activationState
         isReachable = session.isReachable
@@ -63,6 +83,13 @@ final class WatchWCSession: NSObject, ObservableObject, WCSessionDelegate {
         Task { @MainActor in
             self.lastActivationError = error?.localizedDescription
             syncState(from: session)
+            applyIPhoneApplicationContext(session.receivedApplicationContext)
+        }
+    }
+
+    nonisolated func session(_ session: WCSession, didReceiveApplicationContext applicationContext: [String: Any]) {
+        Task { @MainActor in
+            applyIPhoneApplicationContext(applicationContext)
         }
     }
 

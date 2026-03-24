@@ -38,9 +38,11 @@ final class MatchTimerEngine: ObservableObject {
 
     // MARK: - Veřejné akce
 
-    func beginNewMatchFlow() {
+    /// `matchConfiguration` z iPhonu / výchozí z hodinek — platí pro nadcházející zápas.
+    func beginNewMatchFlow(matchConfiguration: MatchConfiguration) {
         guard state.phase == .idle || state.phase == .finished else { return }
         state = .initial
+        state.config = matchConfiguration
         state.phase = .readyToStart
     }
 

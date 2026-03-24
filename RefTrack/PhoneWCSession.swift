@@ -9,6 +9,7 @@ import WatchConnectivity
 
 private enum WCKeys {
     static let matchEnvelope = "matchEnvelope"
+    static let matchSettings = "matchSettings"
 }
 
 /// Aktivuje a drží spojení s watch aplikací přes WatchConnectivity (iPhone).
@@ -43,11 +44,27 @@ final class PhoneWCSession: NSObject, ObservableObject, WCSessionDelegate {
     }
 
     private func applyMatchContext(_ applicationContext: [String: Any]) {
-        guard let data = applicationContext[WCKeys.matchEnvelope] as? Data else { return }
-        let decoder = JSONDecoder()
-        decoder.dateDecodingStrategy = .iso8601
-        if let env = try? decoder.decode(MatchWireEnvelope.self, from: data) {
-            lastMatchEnvelope = env
+        if let data = applicationContext[WCKeys.matchEnvelope] as? Data {
+            let decoder = JSONDecoder()
+            decoder.dateDecodingStrategy = .iso8601
+            if let env = try? decoder.decode(MatchWireEnvelope.self, from: data) {
+                lastMatchEnvelope = env
+            }
+        }
+    }
+
+    /// Odešle konfiguraci délek na Apple Watch (poslední hodnota přepíše předchozí kontext z iPhonu).
+    func pushMatchSettings(configuration: MatchConfiguration) {
+        guard WCSession.isSupported() else { return }
+        let session = WCSession.default
+        guard session.activationState == .activated else { return }
+
+        guard let data = try? JSONEncoder().encode(configuration) else { return }
+
+        do {
+            try session.updateApplicationContext([WCKeys.matchSettings: data])
+        } catch {
+            lastActivationError = error.localizedDescription
         }
     }
 
@@ -60,6 +77,7 @@ final class PhoneWCSession: NSObject, ObservableObject, WCSessionDelegate {
             self.lastActivationError = error?.localizedDescription
             syncState(from: session)
             applyMatchContext(session.receivedApplicationContext)
+            NotificationCenter.default.post(name: .phoneWCSessionDidActivate, object: nil)
         }
     }
 

@@ -50,7 +50,8 @@ final class WatchMatchViewModel: ObservableObject {
     // MARK: - Akce obrazovek
 
     func beginNewMatchFlow() {
-        engine.beginNewMatchFlow()
+        let config = WatchWCSession.shared.resolvedMatchConfiguration
+        engine.beginNewMatchFlow(matchConfiguration: config)
         recompute()
     }
 
