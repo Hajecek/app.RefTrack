@@ -8,79 +8,82 @@ import SwiftUI
 struct WatchPlayingPhaseView: View {
     var accent: Color
     var phaseTitle: String
-    /// SF Symbol pro horní řádek (např. „1“ / „2“).
     var phaseSymbol: String
 
     @EnvironmentObject private var vm: WatchMatchViewModel
 
     var body: some View {
         let snap = vm.snapshot
+        let inStoppage = snap.isStoppageActive
 
         ZStack {
             LinearGradient(
-                colors: [
-                    accent.opacity(0.55),
-                    Color.black.opacity(0.92),
-                ],
-                startPoint: .topLeading,
-                endPoint: .bottomTrailing
+                colors: inStoppage
+                    ? [Color.orange.opacity(0.45), Color.black.opacity(0.94)]
+                    : [accent.opacity(0.5), Color.black.opacity(0.94)],
+                startPoint: .top,
+                endPoint: .bottom
             )
 
-            VStack(alignment: .leading, spacing: 0) {
-                HStack(spacing: 6) {
+            VStack(spacing: 0) {
+                Spacer(minLength: 6)
+
+                HStack(spacing: 5) {
                     Image(systemName: phaseSymbol)
-                        .font(.caption.weight(.semibold))
-                        .foregroundStyle(.secondary)
+                        .font(.caption2.weight(.semibold))
                     Text(phaseTitle)
-                        .font(.subheadline.weight(.semibold))
-                        .foregroundStyle(.secondary)
+                        .font(.caption.weight(.semibold))
                 }
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .padding(.bottom, 10)
+                .foregroundStyle(.white.opacity(0.72))
 
                 Text(MatchTimeFormat.mmss(snap.mainClockSeconds))
-                    .font(.system(size: 46, weight: .bold, design: .rounded))
+                    .font(.system(size: 52, weight: .bold, design: .rounded))
                     .monospacedDigit()
-                    .foregroundStyle(.primary)
-                    .minimumScaleFactor(0.35)
+                    .foregroundStyle(.white)
+                    .minimumScaleFactor(0.3)
                     .lineLimit(1)
-                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(.top, 10)
 
-                if snap.isStoppageActive {
-                    VStack(alignment: .leading, spacing: 4) {
-                        Label("Nastavení", systemImage: "timer")
-                            .font(.caption.weight(.medium))
-                            .foregroundStyle(.secondary)
-                        Text(MatchTimeFormat.mmss(snap.stoppageSeconds))
-                            .font(.title2.bold().monospacedDigit())
-                            .foregroundStyle(.primary)
-                    }
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .padding(.vertical, 10)
-                    .padding(.horizontal, 12)
-                    .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
-                    .padding(.top, 12)
+                if inStoppage {
+                    stoppageAccessory(stoppageSeconds: snap.stoppageSeconds)
+                        .padding(.top, 10)
                 }
 
-                Spacer(minLength: 8)
+                Spacer(minLength: 6)
 
-                HStack(spacing: 6) {
+                HStack(spacing: 5) {
                     Image(systemName: "figure.run")
-                        .font(.caption2.weight(.semibold))
-                        .foregroundStyle(.tertiary)
+                        .font(.caption2)
                     Text(MatchTimeFormat.formatDistanceMeters(snap.distanceMeters))
-                        .font(.caption)
-                        .foregroundStyle(.tertiary)
+                        .font(.caption2)
                 }
-                .frame(maxWidth: .infinity, alignment: .leading)
+                .foregroundStyle(.white.opacity(0.55))
+                .padding(.bottom, 4)
             }
-            .padding(.horizontal, 14)
-            .padding(.vertical, 16)
+            .multilineTextAlignment(.center)
+            .frame(maxWidth: .infinity)
+            .padding(.horizontal, 10)
         }
         .contentShape(Rectangle())
         .ignoresSafeArea()
         .onTapGesture {
             vm.handlePlayfieldTap()
+        }
+    }
+
+    /// Jedna kompaktní řádka — žádný druhý „obří“ čas ani materiálový panel.
+    private func stoppageAccessory(stoppageSeconds: Int) -> some View {
+        HStack(spacing: 5) {
+            Image(systemName: "timer")
+                .font(.caption2.weight(.semibold))
+                .foregroundStyle(.orange.opacity(0.9))
+            Text("Nastavení")
+                .font(.caption2.weight(.semibold))
+                .foregroundStyle(.white.opacity(0.65))
+            Text(MatchTimeFormat.mmss(stoppageSeconds))
+                .font(.callout.weight(.semibold))
+                .monospacedDigit()
+                .foregroundStyle(.white.opacity(0.88))
         }
     }
 }
