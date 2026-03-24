@@ -1,6 +1,6 @@
 //
 //  ContentView.swift
-//  RefTrack
+//  RefTrack Watch App
 //
 
 import SwiftUI

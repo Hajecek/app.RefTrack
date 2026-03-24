@@ -1,12 +1,12 @@
 //
-//  RefTrackApp.swift
-//  RefTrack
+//  RefTrackWatchApp.swift
+//  RefTrack Watch App
 //
 
 import SwiftUI
 
 @main
-struct RefTrackApp: App {
+struct RefTrackWatchApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
