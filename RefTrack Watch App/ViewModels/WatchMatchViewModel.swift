@@ -44,6 +44,28 @@ final class WatchMatchViewModel: ObservableObject {
             }
             .store(in: &cancellables)
 
+        WatchWCSession.shared.setMatchResetHandler { [weak self] in
+            self?.resetMatchFromPhoneRemote()
+        }
+
+        recompute()
+    }
+
+    /// Reset z iPhonu — ukončí workout (pokud běží) a vrátí stav do nečinnosti.
+    func resetMatchFromPhoneRemote() {
+        showEndFirstHalfConfirm = false
+        showHalftimeContinueConfirm = false
+        showEndMatchConfirm = false
+
+        let phase = engine.state.phase
+        if phase != .idle, phase != .finished {
+            workout.endWorkout(at: Date()) { _ in }
+        }
+
+        workout.resetPublishedMetrics()
+        engine.resetToIdle()
+        lastPhase = .idle
+        didFireHalftimeZeroHaptic = false
         recompute()
     }
 

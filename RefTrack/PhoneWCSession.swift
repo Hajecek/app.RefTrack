@@ -10,6 +10,8 @@ import WatchConnectivity
 private enum WCKeys {
     static let matchEnvelope = "matchEnvelope"
     static let matchSettings = "matchSettings"
+    static let action = "action"
+    static let resetToIdle = "resetToIdle"
 }
 
 /// Aktivuje a drží spojení s watch aplikací přes WatchConnectivity (iPhone).
@@ -65,6 +67,40 @@ final class PhoneWCSession: NSObject, ObservableObject, WCSessionDelegate {
             try session.updateApplicationContext([WCKeys.matchSettings: data])
         } catch {
             lastActivationError = error.localizedDescription
+        }
+    }
+
+    /// Vynutí na hodinkách návrat do nečinnosti (ukončí workout, smaže stav zápasu).
+    func sendResetMatchToWatch(completion: @escaping (Result<String?, Error>) -> Void) {
+        guard WCSession.isSupported() else {
+            completion(.failure(NSError(domain: "RefTrack", code: 1, userInfo: [NSLocalizedDescriptionKey: "WatchConnectivity není k dispozici."])))
+            return
+        }
+        let session = WCSession.default
+        guard session.activationState == .activated else {
+            completion(.failure(NSError(domain: "RefTrack", code: 2, userInfo: [NSLocalizedDescriptionKey: "Spojení není aktivní."])))
+            return
+        }
+
+        let payload: [String: Any] = [WCKeys.action: WCKeys.resetToIdle]
+
+        if session.isReachable {
+            session.sendMessage(
+                payload,
+                replyHandler: { _ in
+                    Task { @MainActor in
+                        completion(.success(nil))
+                    }
+                },
+                errorHandler: { error in
+                    Task { @MainActor in
+                        completion(.failure(error))
+                    }
+                }
+            )
+        } else {
+            session.transferUserInfo(payload)
+            completion(.success("Otevři aplikaci na hodinkách — reset dorazí na pozadí."))
         }
     }
 

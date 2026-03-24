@@ -10,6 +10,8 @@ import WatchConnectivity
 private enum WCKeys {
     static let matchEnvelope = "matchEnvelope"
     static let matchSettings = "matchSettings"
+    static let action = "action"
+    static let resetToIdle = "resetToIdle"
 }
 
 private enum WatchSettingsPersistence {
@@ -70,6 +72,18 @@ final class WatchWCSession: NSObject, ObservableObject, WCSessionDelegate {
         UserDefaults.standard.set(data, forKey: WatchSettingsPersistence.configData)
     }
 
+    /// Callback z `WatchMatchViewModel` — reset zápasu z iPhonu.
+    private var matchResetHandler: (() -> Void)?
+
+    func setMatchResetHandler(_ handler: @escaping () -> Void) {
+        matchResetHandler = handler
+    }
+
+    private func handlePhoneCommand(_ message: [String: Any]) {
+        guard message[WCKeys.action] as? String == WCKeys.resetToIdle else { return }
+        matchResetHandler?()
+    }
+
     private func syncState(from session: WCSession) {
         activationState = session.activationState
         isReachable = session.isReachable
@@ -96,6 +110,19 @@ final class WatchWCSession: NSObject, ObservableObject, WCSessionDelegate {
     nonisolated func sessionReachabilityDidChange(_ session: WCSession) {
         Task { @MainActor in
             self.isReachable = session.isReachable
+        }
+    }
+
+    nonisolated func session(_ session: WCSession, didReceiveMessage message: [String: Any], replyHandler: @escaping ([String: Any]) -> Void) {
+        Task { @MainActor in
+            handlePhoneCommand(message)
+            replyHandler(["ok": true])
+        }
+    }
+
+    nonisolated func session(_ session: WCSession, didReceiveUserInfo userInfo: [String: Any]) {
+        Task { @MainActor in
+            handlePhoneCommand(userInfo)
         }
     }
 }

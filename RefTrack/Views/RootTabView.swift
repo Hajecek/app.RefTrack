@@ -11,10 +11,10 @@ struct RootTabView: View {
     var body: some View {
         TabView {
             NavigationStack {
-                MatchLiveView(matchSettings: settings)
+                MatchLiveView()
             }
             .tabItem {
-                Label("Zápas", systemImage: "sportscourt.fill")
+                Label("Čas", systemImage: "timer")
             }
 
             NavigationStack {

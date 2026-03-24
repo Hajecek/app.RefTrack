@@ -98,13 +98,14 @@ struct IOSDurationWheelPickers: View {
     struct PreviewWrapper: View {
         @State private var t = 45 * 60
         var body: some View {
-            Form {
+            VStack {
                 IOSDurationWheelPickers(
                     totalSeconds: $t,
                     minTotal: 15,
                     maxTotal: 7200
                 )
             }
+            .background(Color(.systemGroupedBackground))
         }
     }
     return PreviewWrapper()
