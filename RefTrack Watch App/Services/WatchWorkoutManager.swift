@@ -27,8 +27,6 @@ final class WatchWorkoutManager: NSObject, ObservableObject {
     private var typesToShare: Set<HKSampleType> {
         [
             HKObjectType.workoutType(),
-            Self.distanceQuantityType,
-            Self.energyQuantityType,
         ]
     }
 
@@ -102,23 +100,24 @@ final class WatchWorkoutManager: NSObject, ObservableObject {
         }
 
         session.end()
+        // HealthKit: `finishWorkout` zavolej až po dokončení `endCollection`.
+        // Jinak se může stát, že některé metriky (např. vzdálenost) se uloží odděleně a v aplikaci Fitness pak
+        // vidíš trvání a vzdálenost jako dvě různé „věci“.
         builder.endCollection(withEnd: endDate) { [weak self] success, error in
-            Task { @MainActor in
-                if !success {
-                    self?.lastErrorDescription = error?.localizedDescription
-                }
-            }
-        }
+            builder.finishWorkout { [weak self] _, finishError in
+                Task { @MainActor in
+                    if !success {
+                        self?.lastErrorDescription = error?.localizedDescription
+                    }
+                    if let finishError {
+                        self?.lastErrorDescription = finishError.localizedDescription
+                    }
 
-        builder.finishWorkout { [weak self] _, error in
-            Task { @MainActor in
-                if let error {
-                    self?.lastErrorDescription = error.localizedDescription
+                    self?.session = nil
+                    self?.builder = nil
+                    self?.workoutState = .ended
+                    completion(success && finishError == nil)
                 }
-                self?.session = nil
-                self?.builder = nil
-                self?.workoutState = .ended
-                completion(error == nil)
             }
         }
     }
