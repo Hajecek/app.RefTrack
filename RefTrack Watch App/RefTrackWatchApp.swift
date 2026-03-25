@@ -15,7 +15,7 @@ struct RefTrackWatchApp: App {
 
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            WatchLaunchGateView()
                 .environmentObject(matchVM)
         }
     }

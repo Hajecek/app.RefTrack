@@ -15,13 +15,7 @@ struct RefTrackApp: App {
 
     var body: some Scene {
         WindowGroup {
-            RootTabView(settings: matchSettings)
-                .onAppear {
-                    MatchLiveActivityController.shared.startObserving(phone: PhoneWCSession.shared)
-                }
-                .onReceive(NotificationCenter.default.publisher(for: .phoneWCSessionDidActivate)) { _ in
-                    matchSettings.syncToWatch()
-                }
+            RefTrackLaunchGateView(settings: matchSettings)
         }
     }
 }
