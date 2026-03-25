@@ -402,13 +402,12 @@ private struct CompactTrailingTime: View {
     let state: RefTrackMatchAttributes.ContentState
 
     var body: some View {
-        Text(compactTimeString(state: state))
+        Text("ČAS")
             .font(.caption2.weight(.bold))
-            .monospacedDigit()
             .lineLimit(1)
             .minimumScaleFactor(0.8)
             .foregroundStyle(.primary)
-            .accessibilityLabel("Čas \(compactTimeString(state: state))")
+            .accessibilityLabel("Čas")
     }
 }
 
@@ -416,9 +415,19 @@ private struct MinimalIslandIcon: View {
     let state: RefTrackMatchAttributes.ContentState
 
     var body: some View {
-        Image(systemName: phaseSymbol(for: state.engineState.phase))
-            .foregroundStyle(.tint)
-            .imageScale(.small)
-            .accessibilityLabel(phaseTitle(for: state.engineState.phase))
+        // Minimal slot používáme bez textového času, protože některé kombinace UI mohou přestat průběžně aktualizovat.
+        // Pravá strana je jen statická ikona, aby ostrov vypadal vyplněně.
+        HStack(spacing: 4) {
+            Image(systemName: phaseSymbol(for: state.engineState.phase))
+                .foregroundStyle(.tint)
+                .imageScale(.small)
+
+            Image(systemName: "clock.fill")
+                .foregroundStyle(.secondary)
+                .imageScale(.small)
+                .accessibilityHidden(true)
+        }
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel(phaseTitle(for: state.engineState.phase))
     }
 }
