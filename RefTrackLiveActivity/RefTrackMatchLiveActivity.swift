@@ -2,7 +2,7 @@
 //  RefTrackMatchLiveActivity.swift
 //  RefTrackLiveActivity
 //
-//  Čas: `TimelineView` + lokální výpočet (běží i když je iPhone uspaný). Pauza: `Text(timerInterval:)`.
+//  Rozvržení inspirované „BOLT“: tmavá karta, logo + název, čas / pod-čas, gradient bar.
 //
 
 import ActivityKit
@@ -14,71 +14,74 @@ struct RefTrackMatchLiveActivity: Widget {
         ActivityConfiguration(for: RefTrackMatchAttributes.self) { context in
             RefTrackLiveActivityLockView(state: context.state)
         } dynamicIsland: { context in
-            let look = PhaseLook(phase: context.state.engineState.phase)
             return DynamicIsland {
                 DynamicIslandExpandedRegion(.leading) {
-                    IslandExpandedLeading(state: context.state, look: look)
-                }
-                DynamicIslandExpandedRegion(.trailing) {
-                    IslandExpandedTrailing(state: context.state)
+                    IslandExpandedCard(state: context.state)
                 }
             } compactLeading: {
-                Image(systemName: look.glyph)
+                Image(systemName: "sportscourt.fill")
                     .font(.system(size: 14, weight: .semibold))
-                    .foregroundStyle(look.accentGradient)
+                    .foregroundStyle(LivePalette.brandOrange)
             } compactTrailing: {
-                MatchClockText(state: context.state, font: .caption2.weight(.bold), textScale: 0.45)
+                MatchClockText(
+                    state: context.state,
+                    font: .caption.weight(.bold),
+                    textScale: 0.55,
+                    foreground: .primary
+                )
             } minimal: {
-                Image(systemName: look.glyph)
+                Image(systemName: "sportscourt.fill")
                     .font(.system(size: 12, weight: .semibold))
-                    .foregroundStyle(look.accentGradient)
+                    .foregroundStyle(LivePalette.brandOrange)
             }
         }
     }
 }
 
-// MARK: - Barvy a ikony podle fáze
+// MARK: - Paleta (tmavá karta jako na referenci)
 
-private struct PhaseLook {
-    let glyph: String
-    let accent: Color
-    let accent2: Color
+private enum LivePalette {
+    static let cardBackground = Color(red: 0.11, green: 0.11, blue: 0.12)
+    static let trackGray = Color(white: 0.22)
+    static let subtext = Color(white: 0.45)
+    static let brandOrange = Color(red: 1.0, green: 0.48, blue: 0.12)
+    static let barGradientEnd = Color(red: 1.0, green: 0.28, blue: 0.2)
 
-    var accentGradient: LinearGradient {
-        LinearGradient(colors: [accent, accent2], startPoint: .topLeading, endPoint: .bottomTrailing)
-    }
-
-    init(phase: MatchPhase) {
-        switch phase {
-        case .readyToStart:
-            glyph = "figure.soccer"
-            accent = Color(red: 0.25, green: 0.52, blue: 1.0)
-            accent2 = Color(red: 0.55, green: 0.35, blue: 1.0)
-        case .firstHalfRunning, .secondHalfRunning:
-            glyph = "timer"
-            accent = Color(red: 0.1, green: 0.72, blue: 0.42)
-            accent2 = Color(red: 0.25, green: 0.82, blue: 0.55)
-        case .firstHalfStoppageTime, .secondHalfStoppageTime:
-            glyph = "plus.circle.fill"
-            accent = Color(red: 1.0, green: 0.48, blue: 0.1)
-            accent2 = Color(red: 1.0, green: 0.65, blue: 0.25)
-        case .halftimeBreak:
-            glyph = "pause.circle.fill"
-            accent = Color(red: 0.45, green: 0.38, blue: 0.95)
-            accent2 = Color(red: 0.62, green: 0.4, blue: 0.98)
-        case .readyForSecondHalf:
-            glyph = "figure.run"
-            accent = Color(red: 0.15, green: 0.75, blue: 0.88)
-            accent2 = Color(red: 0.3, green: 0.55, blue: 0.98)
-        case .idle, .finished:
-            glyph = "sportscourt.fill"
-            accent = Color.secondary
-            accent2 = Color.secondary
-        }
+    static var barGradient: LinearGradient {
+        LinearGradient(
+            colors: [brandOrange, barGradientEnd],
+            startPoint: .leading,
+            endPoint: .trailing
+        )
     }
 }
 
-// MARK: - Pauza = systémový interval; jinak lokální tikání
+// MARK: - Progress 0…1
+
+private enum MatchJourneyProgress {
+    static func value(engine: MatchEngineState, snap: MatchDisplaySnapshot) -> CGFloat {
+        let H = max(1, engine.config.halfLengthSeconds)
+        let totalReg = CGFloat(H * 2)
+        let mc = CGFloat(snap.mainClockSeconds)
+
+        switch snap.phase {
+        case .firstHalfRunning:
+            return min(0.5, max(0, mc / totalReg))
+        case .firstHalfStoppageTime, .readyForSecondHalf:
+            return 0.5
+        case .halftimeBreak:
+            let ht = max(1, engine.config.halftimeSeconds)
+            let elapsed = CGFloat(ht - snap.halftimeRemainingSeconds)
+            return 0.5 + min(0.08, (elapsed / CGFloat(ht)) * 0.08)
+        case .secondHalfRunning:
+            return min(1, max(0.5, mc / totalReg))
+        case .secondHalfStoppageTime, .finished:
+            return 1
+        case .readyToStart, .idle:
+            return 0
+        }
+    }
+}
 
 private func halftimeCountdownRange(_ engine: MatchEngineState) -> ClosedRange<Date>? {
     guard engine.phase == .halftimeBreak, let start = engine.halftimeStartedAt else { return nil }
@@ -87,43 +90,75 @@ private func halftimeCountdownRange(_ engine: MatchEngineState) -> ClosedRange<D
     return start...end
 }
 
+// MARK: - Čas
+
 private struct MatchClockText: View {
     let state: RefTrackMatchAttributes.ContentState
     var font: Font
     var textScale: CGFloat = 0.75
+    var foreground: Color = .primary
 
     var body: some View {
-        if let range = halftimeCountdownRange(state.engineState) {
-            Text(timerInterval: range, countsDown: true)
-                .font(font)
-                .monospacedDigit()
-                .foregroundStyle(.primary)
-                .lineLimit(1)
-                .minimumScaleFactor(textScale)
-        } else {
-            TimelineView(.periodic(from: .now, by: 1.0)) { context in
-                let snap = MatchMirrorDisplayFormatter.snapshot(
-                    state: state.engineState,
-                    at: context.date,
-                    distanceMeters: state.distanceMeters,
-                    energyKilocalories: state.energyKilocalories
-                )
-                let secs = snap.phase == .halftimeBreak ? snap.halftimeRemainingSeconds : snap.mainClockSeconds
-                Text(MatchMirrorTimeFormat.mmss(secs))
+        Group {
+            if let range = halftimeCountdownRange(state.engineState) {
+                Text(timerInterval: range, countsDown: true)
                     .font(font)
                     .monospacedDigit()
-                    .foregroundStyle(.primary)
-                    .contentTransition(.numericText())
+                    .foregroundStyle(foreground)
                     .lineLimit(1)
                     .minimumScaleFactor(textScale)
+            } else {
+                TimelineView(.periodic(from: .now, by: 1.0)) { context in
+                    let snap = MatchMirrorDisplayFormatter.snapshot(
+                        state: state.engineState,
+                        at: context.date,
+                        distanceMeters: state.distanceMeters,
+                        energyKilocalories: state.energyKilocalories
+                    )
+                    let secs = snap.phase == .halftimeBreak ? snap.halftimeRemainingSeconds : snap.mainClockSeconds
+                    Text(MatchMirrorTimeFormat.mmss(secs))
+                        .font(font)
+                        .monospacedDigit()
+                        .foregroundStyle(foreground)
+                        .contentTransition(.numericText())
+                        .lineLimit(1)
+                        .minimumScaleFactor(textScale)
+                }
             }
         }
     }
 }
 
-private struct MatchSecondaryText: View {
+/// Druhý řádek: délka segmentu (poločas / pauza) jako na referenci „01:30“ pod hlavním časem.
+private struct SegmentTotalText: View {
     let state: RefTrackMatchAttributes.ContentState
-    var font: Font = .subheadline.weight(.semibold)
+    var font: Font
+
+    var body: some View {
+        TimelineView(.periodic(from: .now, by: 1.0)) { _ in
+            let total = totalSecondsForSegment(state.engineState)
+            Text(MatchMirrorTimeFormat.mmss(total))
+                .font(font)
+                .monospacedDigit()
+                .foregroundStyle(LivePalette.subtext)
+        }
+    }
+
+    private func totalSecondsForSegment(_ engine: MatchEngineState) -> Int {
+        switch engine.phase {
+        case .halftimeBreak:
+            return max(1, engine.config.halftimeSeconds)
+        default:
+            return max(1, engine.config.halfLengthSeconds)
+        }
+    }
+}
+
+// MARK: - Progress bar (oranžovo-červený gradient)
+
+private struct JourneyProgressBar: View {
+    let state: RefTrackMatchAttributes.ContentState
+    var height: CGFloat = 6
 
     var body: some View {
         TimelineView(.periodic(from: .now, by: 1.0)) { context in
@@ -133,72 +168,87 @@ private struct MatchSecondaryText: View {
                 distanceMeters: state.distanceMeters,
                 energyKilocalories: state.energyKilocalories
             )
-            if let line = LiveActivitySecondaryLine.text(snap: snap) {
-                Text(line)
-                    .font(font)
-                    .foregroundStyle(.secondary)
-                    .lineLimit(2)
-                    .minimumScaleFactor(0.85)
+            let p = MatchJourneyProgress.value(engine: state.engineState, snap: snap)
+            GeometryReader { geo in
+                let w = geo.size.width
+                let clamped = min(1, max(0, p))
+                ZStack(alignment: .leading) {
+                    Capsule()
+                        .fill(LivePalette.trackGray)
+                    Capsule()
+                        .fill(LivePalette.barGradient)
+                        .frame(width: max(height, w * clamped))
+                }
             }
+            .frame(height: height)
         }
     }
 }
 
-private struct IslandSecondaryText: View {
+// MARK: - Sdílený obsah karty
+
+private struct LiveActivityCardContent: View {
     let state: RefTrackMatchAttributes.ContentState
+    var primaryTimeSize: CGFloat
+    var secondaryTimeSize: CGFloat
+    var headerIconSize: CGFloat
+    var sectionSpacing: CGFloat
+    var horizontalPadding: CGFloat
 
     var body: some View {
-        TimelineView(.periodic(from: .now, by: 1.0)) { context in
-            let snap = MatchMirrorDisplayFormatter.snapshot(
-                state: state.engineState,
-                at: context.date,
-                distanceMeters: state.distanceMeters,
-                energyKilocalories: state.energyKilocalories
-            )
-            if let line = LiveActivitySecondaryLine.text(snap: snap) {
-                Text(line)
-                    .font(.caption2.weight(.semibold))
-                    .foregroundStyle(.tertiary)
-                    .multilineTextAlignment(.trailing)
-                    .lineLimit(3)
-                    .minimumScaleFactor(0.8)
+        VStack(spacing: sectionSpacing) {
+            HStack(spacing: 8) {
+                Image(systemName: "sportscourt.fill")
+                    .font(.system(size: headerIconSize, weight: .semibold))
+                    .foregroundStyle(LivePalette.brandOrange)
+                Text("REFTRACK")
+                    .font(.system(size: headerIconSize + 1, weight: .heavy))
+                    .tracking(2)
+                    .foregroundStyle(.white)
             }
+            .frame(maxWidth: .infinity)
+
+            VStack(spacing: 6) {
+                MatchClockText(
+                    state: state,
+                    font: .system(size: primaryTimeSize, weight: .bold, design: .rounded),
+                    textScale: 0.62,
+                    foreground: .white
+                )
+                SegmentTotalText(
+                    state: state,
+                    font: .system(size: secondaryTimeSize, weight: .semibold, design: .rounded)
+                )
+            }
+            .frame(maxWidth: .infinity)
+
+            JourneyProgressBar(state: state, height: max(5, primaryTimeSize * 0.12))
+        }
+        .frame(maxWidth: .infinity)
+        .padding(.horizontal, horizontalPadding)
+        .padding(.vertical, horizontalPadding * 0.85)
+        .background {
+            RoundedRectangle(cornerRadius: 22, style: .continuous)
+                .fill(LivePalette.cardBackground)
         }
     }
 }
 
-// MARK: - Dynamic Island
+// MARK: - Dynamic Island rozšířený
 
-private struct IslandExpandedLeading: View {
-    let state: RefTrackMatchAttributes.ContentState
-    let look: PhaseLook
-
-    var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            HStack(spacing: 6) {
-                Image(systemName: look.glyph)
-                    .font(.caption.weight(.bold))
-                    .foregroundStyle(look.accentGradient)
-                Text(state.headline)
-                    .font(.caption.weight(.semibold))
-                    .foregroundStyle(.secondary)
-                    .lineLimit(2)
-                    .minimumScaleFactor(0.85)
-            }
-            MatchClockText(state: state, font: .title2.weight(.bold), textScale: 0.8)
-        }
-    }
-}
-
-private struct IslandExpandedTrailing: View {
+private struct IslandExpandedCard: View {
     let state: RefTrackMatchAttributes.ContentState
 
     var body: some View {
-        VStack(alignment: .trailing, spacing: 0) {
-            IslandSecondaryText(state: state)
-            Spacer(minLength: 0)
-        }
-        .frame(maxHeight: .infinity, alignment: .top)
+        LiveActivityCardContent(
+            state: state,
+            primaryTimeSize: 26,
+            secondaryTimeSize: 15,
+            headerIconSize: 11,
+            sectionSpacing: 12,
+            horizontalPadding: 14
+        )
+        .frame(maxWidth: .infinity, alignment: .center)
     }
 }
 
@@ -207,40 +257,15 @@ private struct IslandExpandedTrailing: View {
 private struct RefTrackLiveActivityLockView: View {
     let state: RefTrackMatchAttributes.ContentState
 
-    private var look: PhaseLook { PhaseLook(phase: state.engineState.phase) }
-
     var body: some View {
-        HStack(alignment: .top, spacing: 18) {
-            ZStack {
-                RoundedRectangle(cornerRadius: 16, style: .continuous)
-                    .fill(look.accentGradient.opacity(0.28))
-                Image(systemName: look.glyph)
-                    .font(.title.weight(.semibold))
-                    .foregroundStyle(look.accentGradient)
-            }
-            .frame(width: 56, height: 56)
-            .accessibilityHidden(true)
-
-            VStack(alignment: .leading, spacing: 16) {
-                Text(state.headline)
-                    .font(.title3.weight(.semibold))
-                    .foregroundStyle(.secondary)
-                    .lineLimit(3)
-                    .minimumScaleFactor(0.88)
-                    .fixedSize(horizontal: false, vertical: true)
-
-                MatchClockText(
-                    state: state,
-                    font: .system(size: 52, weight: .bold, design: .rounded),
-                    textScale: 0.65
-                )
-
-                MatchSecondaryText(state: state, font: .body.weight(.semibold))
-            }
-            .frame(maxWidth: .infinity, alignment: .leading)
-        }
-        .padding(.vertical, 10)
-        .padding(.horizontal, 2)
-        .activityBackgroundTint(look.accent.opacity(0.2))
+        LiveActivityCardContent(
+            state: state,
+            primaryTimeSize: 52,
+            secondaryTimeSize: 22,
+            headerIconSize: 14,
+            sectionSpacing: 18,
+            horizontalPadding: 20
+        )
+        .activityBackgroundTint(Color.black.opacity(0.35))
     }
 }
