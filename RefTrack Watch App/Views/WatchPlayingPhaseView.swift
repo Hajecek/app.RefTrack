@@ -36,17 +36,34 @@ struct WatchPlayingPhaseView: View {
                 }
                 .foregroundStyle(.white.opacity(0.72))
 
-                Text(MatchTimeFormat.mmss(snap.mainClockSeconds))
-                    .font(.system(size: 52, weight: .bold, design: .rounded))
-                    .monospacedDigit()
-                    .foregroundStyle(.white)
-                    .minimumScaleFactor(0.3)
-                    .lineLimit(1)
-                    .padding(.top, 10)
-
                 if inStoppage {
-                    stoppageAccessory(stoppageSeconds: snap.stoppageSeconds)
+                    VStack(spacing: 8) {
+                        Text(MatchTimeFormat.mmss(snap.stoppageSeconds))
+                            .font(.system(size: 56, weight: .bold, design: .rounded))
+                            .monospacedDigit()
+                            .foregroundStyle(.white)
+                            .minimumScaleFactor(0.3)
+                            .lineLimit(1)
+                            .transition(.asymmetric(
+                                insertion: .move(edge: .top).combined(with: .opacity),
+                                removal: .move(edge: .bottom).combined(with: .opacity)
+                            ))
+
+                        stoppageAccessory(mainClockSeconds: snap.mainClockSeconds)
+                    }
+                    .padding(.top, 10)
+                } else {
+                    Text(MatchTimeFormat.mmss(snap.mainClockSeconds))
+                        .font(.system(size: 52, weight: .bold, design: .rounded))
+                        .monospacedDigit()
+                        .foregroundStyle(.white)
+                        .minimumScaleFactor(0.3)
+                        .lineLimit(1)
                         .padding(.top, 10)
+                        .transition(.asymmetric(
+                            insertion: .move(edge: .bottom).combined(with: .opacity),
+                            removal: .move(edge: .top).combined(with: .opacity)
+                        ))
                 }
 
                 Spacer(minLength: 6)
@@ -69,21 +86,19 @@ struct WatchPlayingPhaseView: View {
         .onTapGesture {
             vm.handlePlayfieldTap()
         }
+        .animation(.easeInOut(duration: 0.28), value: inStoppage)
     }
 
-    /// Jedna kompaktní řádka — žádný druhý „obří“ čas ani materiálový panel.
-    private func stoppageAccessory(stoppageSeconds: Int) -> some View {
-        HStack(spacing: 5) {
-            Image(systemName: "timer")
+    /// Během nastavení ukáže pod hlavním časem zastavený zápasový čas.
+    private func stoppageAccessory(mainClockSeconds: Int) -> some View {
+        VStack(spacing: 2) {
+            Text("Zastaveno")
                 .font(.caption2.weight(.semibold))
-                .foregroundStyle(.orange.opacity(0.9))
-            Text("Nastavení")
-                .font(.caption2.weight(.semibold))
-                .foregroundStyle(.white.opacity(0.65))
-            Text(MatchTimeFormat.mmss(stoppageSeconds))
-                .font(.callout.weight(.semibold))
+                .foregroundStyle(.white.opacity(0.62))
+            Text(MatchTimeFormat.mmss(mainClockSeconds))
+                .font(.title3.weight(.semibold))
                 .monospacedDigit()
-                .foregroundStyle(.white.opacity(0.88))
+                .foregroundStyle(.white.opacity(0.9))
         }
     }
 }
